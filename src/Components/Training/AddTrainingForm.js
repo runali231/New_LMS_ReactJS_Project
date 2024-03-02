@@ -34,7 +34,7 @@ const AddTrainingForm = () => {
   const [trId, setTrId] = useState("");
   const [allTraining, setAllTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage] = useState(10);
   const [editingIndex, setEditingIndex] = useState([]);
   // const [editIndex, setEditIndex] = useState(null);
   const [editIndex1, setEditIndex1] = useState();
