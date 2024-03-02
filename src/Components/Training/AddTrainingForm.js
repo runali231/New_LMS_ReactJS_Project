@@ -25,22 +25,19 @@ const AddTrainingForm = () => {
   const [selectedDepartment, setSelectedDepartment] = useState([]);
   const [designation, setDesignation] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState([]);
-  const [empCode, setEmpCode] = useState("");
-  const [empName, setEmpName] = useState("");
   const [trainingDept, setTrainingDept] = useState("");
   const [trainingDate, setTrainingDate] = useState("");
-  const [trainingTopic, setTrainingTopic] = useState("");
+  const [trainingTopic, setTrainingTopic] = useState([]);
   const [selectedTrainingTopic, setSelectedTrainingTopic] = useState([]);
   const [trId, setTrId] = useState("");
   const [allTraining, setAllTraining] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [editingIndex, setEditingIndex] = useState([]);
   // const [editIndex, setEditIndex] = useState(null);
   const [editIndex1, setEditIndex1] = useState();
   // const [allByDepartments, setAllByDepartments] = useState([]);
   const [allByDepartments, setAllByDepartments] = useState([]);
-  const [getAllTrainingCalled, setGetAllTrainingCalled] = useState(false);
   const [empCodeOptions, setEmpCodeOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [empNameOptions, setEmpNameOptions] = useState([]);
@@ -175,18 +172,27 @@ const AddTrainingForm = () => {
   };
 
   const GetAllByDepart = () => {
+    console.log(departments);
     axios
       .get(
-        new URL(UrlData + `TrainingForm/GetAllByDepart?td_dept=${departments}`)
+        new URL(
+          UrlData + `TrainingForm/GetAllByDepart?td_dept=${departments.value}`
+        )
       )
       .then((response) => {
         console.log("response", response.data.data);
         const modifiedData = response.data.data.map((item) => ({
           ...item,
-
           td_req_dept: trainingDept,
           td_date_training: trainingDate,
-          td_topic_training: trainingTopic,
+          td_topic_training: trainingTopic
+            .map((item) => item.value)
+            .join(", ")
+            .toString(),
+          td_topic_training_name: trainingTopic
+            .map((item) => item.label)
+            .join(", ")
+            .toString(),
         }));
         setAllByDepartments([...allByDepartments, ...modifiedData]);
         console.log([...allByDepartments, ...modifiedData], "309");
@@ -198,11 +204,11 @@ const AddTrainingForm = () => {
       });
   };
 
-  const handleDepartment = (e) => {
-    const selectedValue = e.target.value;
-    setDepartments(selectedValue);
-    console.log(selectedValue);
-    setIsEmployeeNameDisabled(selectedValue !== "");
+  const handleDepartment = (selected) => {
+    // const selectedValue = e.target.value;
+    setDepartments(selected);
+    console.log(selected);
+    setIsEmployeeNameDisabled(selected !== "");
     getAllDepartment();
   };
   const getAllDepartment = () => {
@@ -212,15 +218,18 @@ const AddTrainingForm = () => {
     })
       .then((response) => {
         console.log("response", response.data.data);
-        setSelectedDepartment(response.data.data);
-        console.log(selectedDepartment, "department");
+        const department = response.data.data.map((item, index) => ({
+          value: item.d_department_name,
+          label: item.d_department_name,
+        }));
+        setSelectedDepartment(department);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const handleDesignation = (e) => {
-    const selectedValue = e.target.value;
+  const handleDesignation = (selectedValue) => {
+    // const selectedValue = e.target.value;
     setDesignation(selectedValue);
     console.log(selectedValue);
     GetAllDesignation();
@@ -240,36 +249,70 @@ const AddTrainingForm = () => {
       });
   };
 
-  const handleTopics = (e) => {
-    const selectedValue = e.target.value;
-    setTrainingTopic(selectedValue);
-    console.log(selectedValue);
-    getAllTrainingTopic();
-  };
-
   const getAllTrainingTopic = () => {
-    // resetForm();
     axios
       .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
       .then((response) => {
         console.log("response", response.data.data);
-        setSelectedTrainingTopic(response.data.data);
+        const trainingTopics = response.data.data.map((item, index) => ({
+          value: item.t_id,
+          label: item.t_description,
+        }));
+        setSelectedTrainingTopic(trainingTopics);
+        console.log(trainingTopic);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+  const handleTopics = (selected) => {
+    const selectedData = selected.map((option) => ({
+      value: option.value,
+      label: option.label,
+    }));
+    setTrainingTopic(selectedData);
+    console.log(selectedData);
+  };
+
   const addSingleTraining = () => {
-    console.log(selectedOption.value, "272 emp code");
+    console.log(trainingTopic, "300");
+    const data = trainingTopic.map((data1) => {
+      return {
+        value: data1.value,
+        label: data1.label,
+      };
+    });
+    console.log(
+      data
+        .map((item) => item.value)
+        .join(", ")
+        .toString(),
+      "data value"
+    );
+    console.log(
+      data
+        .map((item) => item.label)
+        .join(", ")
+        .toString(),
+      "data value"
+    );
+    console.log(departments.value, "272 emp code");
     const newTraining = {
-      td_dept: departments,
-      td_des: designation,
+      td_dept: departments.value,
+      td_des: designation.value,
       td_emp_code: selectedOption.value,
       td_emp_name: selectedNameOption.value,
       td_req_dept: trainingDept,
       td_date_training: trainingDate,
-      td_topic_training: trainingTopic,
+      td_topic_training: data
+        .map((item) => item.value)
+        .join(", ")
+        .toString(),
+      td_topic_training_name: data
+        .map((item) => item.label)
+        .join(", ")
+        .toString(),
     };
 
     setAllByDepartments((prevAllByDepartments) => [
@@ -279,13 +322,12 @@ const AddTrainingForm = () => {
     console.log(allByDepartments, "269 single add training");
     resetForm();
   };
-  // useEffect(() => {
-  //   console.log(allByDepartments);
-  // }, [allByDepartments]);
+
   const [editIndex, setEditIndex] = useState(null);
   useEffect(() => {
     console.log("Inside useEffect:", editIndex);
   }, [editIndex]);
+
   const getSingleTraining = (index) => {
     console.log("Received index:", index);
 
@@ -308,8 +350,14 @@ const AddTrainingForm = () => {
     const var1 = trainingToEdit.td_date_training.split(" ")[0];
     const var2 = formatDate(var1);
 
-    setDepartments(trainingToEdit.td_dept);
-    setDesignation(trainingToEdit.td_des);
+    setDepartments({
+      value: trainingToEdit.td_dept,
+      label: trainingToEdit.td_dept,
+    });
+    setDesignation({
+      value: trainingToEdit.td_des,
+      label: trainingToEdit.td_des,
+    });
     setSelectedOption({
       value: trainingToEdit.td_emp_code,
       label: trainingToEdit.td_emp_code,
@@ -320,9 +368,16 @@ const AddTrainingForm = () => {
     });
     setTrainingDept(trainingToEdit.td_req_dept);
     setTrainingDate(var2);
-    setTrainingTopic(trainingToEdit.td_topic_training);
 
-    // setEditIndex1(index); // Update editIndex1 as well
+    const topicValues = trainingToEdit.td_topic_training.split(",");
+    const topicLabels = trainingToEdit.td_topic_training_name.split(",");
+
+    const selectedTrainingTopic1 = topicValues.map((value, index) => ({
+      value: topicValues[index],
+      label: topicLabels[index],
+    }));
+
+    setTrainingTopic(selectedTrainingTopic1);
   };
 
   const updateSingleTraining = () => {
@@ -334,13 +389,20 @@ const AddTrainingForm = () => {
       const updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
       updatedTrainings[editIndex] = {
         // Update the training item at editIndex
-        td_dept: departments,
-        td_des: designation,
+        td_dept: departments.value,
+        td_des: designation.value,
         td_emp_code: selectedOption.value,
         td_emp_name: selectedNameOption.value,
         td_req_dept: trainingDept,
         td_date_training: trainingDate,
-        td_topic_training: trainingTopic,
+        td_topic_training: trainingTopic
+          .map((item) => item.value)
+          .join(", ")
+          .toString(),
+        td_topic_training_name: trainingTopic
+          .map((item) => item.label)
+          .join(", ")
+          .toString(),
       };
       setAllByDepartments(updatedTrainings);
       console.log(updatedTrainings, "update training 1");
@@ -380,8 +442,16 @@ const AddTrainingForm = () => {
           value: response.data.data.td_emp_name,
           label: response.data.data.td_emp_name,
         });
-        setDepartments(response.data.data.td_dept);
-        setDesignation(response.data.data.td_des);
+        // setDepartments(response.data.data.td_dept);
+        setDepartments({
+          value: response.data.data.td_dept,
+          label: response.data.data.td_dept,
+        });
+        setDesignation({
+          value: response.data.data.td_des,
+          label: response.data.data.td_des,
+        });
+        // setDesignation(response.data.data.td_des);
       })
       .catch((error) => {
         console.log(error);
@@ -409,64 +479,6 @@ const AddTrainingForm = () => {
         console.log(error);
       });
   };
-
-  // const handleEmpCodeChange = (selected) => {
-  //   // const code = e.target.value;
-  //   setSelectedOption(selected);
-
-  //   // setSelectedOption(code);
-  //   console.log(selected.value, "empCode 366");
-  //   setCode(selected);
-  //   console.log(code, "Code");
-
-  //   // Fetch employee data based on entered code
-  //   axios({
-  //     method: "get",
-  //     url: new URL(
-  //       UrlData + `TrainingForm/GetByCode?td_emp_code=${selected.value}`
-  //     ),
-  //   })
-  //     .then((response) => {
-  //       console.log(response.data.data, "handleEmpCodeChange");
-  //       setSelectedNameOption(response.data.data.td_emp_name);
-  //       console.log(selectedNameOption,"376")
-  //       setDepartments(response.data.data.td_dept);
-  //       setDesignation(response.data.data.td_des);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // const handleEmpNameChange = (selected) => {
-  //   setSelectedNameOption(selected);
-
-  //   // setSelectedOption(code);
-  //   console.log(selected.value, "empName 388");
-  //   axios({
-  //     method: "get",
-  //     url: new URL(
-  //       UrlData + `TrainingForm/GetByName?td_emp_name=${selected.value}`
-  //     ),
-  //   })
-  //     .then((response) => {
-  //       console.log(response.data.data, "handleEmpNameChange");
-  //       const empCodeVariable = response.data.data.td_emp_code;
-  //       setSelectedOption(empCodeVariable);
-  //       console.log(selectedOption, "397");
-  //       setDepartments(response.data.data.td_dept);
-  //       console.log(departments, "departments");
-  //       setDesignation(response.data.data.td_des);
-  //       console.log(response.data.data.td_emp_code, "399");
-
-  //       // You can access the updated selectedOption here
-  //       console.log(response.data.data.td_emp_code, "Updated selectedOption");
-  //       console.log(selectedOption);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   useEffect(() => {
     console.log(selectedOption);
@@ -746,6 +758,13 @@ const AddTrainingForm = () => {
                             <th scope="col" style={headerCellStyle}>
                               Date of training required
                             </th>
+                            <th
+                              scope="col"
+                              style={headerCellStyle}
+                              className="d-none"
+                            >
+                              Topic for training required
+                            </th>
                             <th scope="col" style={headerCellStyle}>
                               Topic for training required
                             </th>
@@ -765,13 +784,35 @@ const AddTrainingForm = () => {
                                 <td>{departmentItem.td_emp_name}</td>
                                 <td>{departmentItem.td_dept}</td>
                                 <td>{departmentItem.td_des}</td>
-                                {/* <td>
-                                  {
-                                    formatDate(departmentItem.td_date_training)
-                                  }
-                                </td> */}
-                                <td>{departmentItem.td_date_training}</td>
-                                <td>{departmentItem.td_topic_training}</td>
+                                <td>
+                                  {formatDate(departmentItem.td_date_training)}
+                                </td>
+                                {/* <td>{departmentItem.td_date_training}</td> */}
+                                <td
+                                  style={{ whiteSpace: "pre-line" }}
+                                  className="d-none"
+                                >
+                                  {departmentItem.td_topic_training &&
+                                  typeof departmentItem.td_topic_training ===
+                                    "string"
+                                    ? departmentItem.td_topic_training
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
+                                    : departmentItem.td_topic_training}
+                                </td>
+                                <td style={{ whiteSpace: "pre-line" }}>
+                                  {departmentItem.td_topic_training_name &&
+                                  typeof departmentItem.td_topic_training_name ===
+                                    "string"
+                                    ? departmentItem.td_topic_training_name
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
+                                    : departmentItem.td_topic_training_name}
+                                </td>
                                 <td>
                                   <Edit
                                     className="text-success mr-2"
@@ -921,21 +962,12 @@ const AddTrainingForm = () => {
                       <label className="control-label fw-bold">
                         Department
                       </label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
+                      <Select
+                        options={selectedDepartment}
                         value={departments}
                         onChange={handleDepartment}
-                      >
-                        <option value="" disabled>
-                          Select Department
-                        </option>
-                        {selectedDepartment.map((data, index) => (
-                          <option key={index} value={data.d_department_name}>
-                            {data.d_department_name}
-                          </option>
-                        ))}
-                      </select>
+                        className="mt-2"
+                      />
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
@@ -943,21 +975,12 @@ const AddTrainingForm = () => {
                       <label className="control-label fw-bold">
                         Designation:
                       </label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
+                      <Select
+                        options={selectedDesignation}
                         value={designation}
                         onChange={handleDesignation}
-                      >
-                        <option value="" disabled>
-                          Select Designation
-                        </option>
-                        {selectedDesignation.map((data, index) => (
-                          <option key={index} value={data.de_designation_name}>
-                            {data.de_designation_name}
-                          </option>
-                        ))}
-                      </select>
+                        className="mt-2"
+                      />
                     </div>
                   </div>
                 </div>
@@ -967,27 +990,12 @@ const AddTrainingForm = () => {
                       <label className="control-label fw-bold">
                         Employee Code:
                       </label>
-                      {/* <input
-                        type="text"
-                        id="empCode"
-                        className="form-control "
-                        placeholder="Enter Employee Code"
-                        value={empCode}
-                        onChange={handleEmpCodeChange}
-                        disabled={isEmployeeNameDisabled}
-                        
-                      /> */}
                       <Select
-                        // options={empCodeOptions.map((option) => ({
-                        //   value: option.emp_code,
-                        //   label: option.emp_code,
-                        // }))}
                         options={empCodeOptions}
                         value={selectedOption}
                         onChange={handleEmpCodeChange}
                         isDisabled={isEmployeeNameDisabled}
                         className="mt-2"
-                        // defaultInputValue={selectedNameOption}
                       />
                     </div>
                   </div>
@@ -996,20 +1004,10 @@ const AddTrainingForm = () => {
                       <label className="control-label fw-bold">
                         Employee Name:
                       </label>
-                      {/* <input
-                        type="text"
-                        id="empName"
-                        className="form-control "
-                        placeholder="Enter Employee Name"
-                        value={empName}
-                        onChange={handleEmpNameChange}
-                        disabled={isEmployeeNameDisabled}
-                      /> */}
                       <Select
                         options={empNameOptions}
                         value={selectedNameOption}
                         onChange={handleEmpNameChange}
-                        // disabled={isEmployeeNameDisabled}
                         isDisabled={isEmployeeNameDisabled}
                         className="mt-2"
                       />
@@ -1055,49 +1053,18 @@ const AddTrainingForm = () => {
                       <label className="control-label fw-bold">
                         Topics for Training Required:
                       </label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
+                      <Select
+                        options={selectedTrainingTopic}
+                        isMulti
                         value={trainingTopic}
                         onChange={handleTopics}
-                      >
-                        <option value="" disabled>
-                          Select Topics
-                        </option>
-                        {selectedTrainingTopic.map((data, index) => (
-                          <option key={index} value={data.t_description}>
-                            {data.t_description}
-                          </option>
-                        ))}
-                      </select>
+                        className="mt-2"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
               <div className="modal-footer">
-                {/* {editIndex !== null ? (
-                  <button
-                    onClick={updateTraining}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Update Training
-                  </button>
-                ) : (
-                  <button
-                    // onClick={addTraining}
-                    onClick={GetAllByDepart}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Add Training
-                  </button>
-                )} */}
-
                 {departments && !code ? (
                   <button
                     onClick={() => {
@@ -1108,7 +1075,7 @@ const AddTrainingForm = () => {
                     style={{ backgroundColor: "#1B5A90" }}
                     data-bs-dismiss="modal"
                   >
-                    Add Training
+                    Add Department Training
                   </button>
                 ) : editIndex !== null ? (
                   // departments && code ?
@@ -1131,7 +1098,7 @@ const AddTrainingForm = () => {
                     style={{ backgroundColor: "#1B5A90" }}
                     data-bs-dismiss="modal"
                   >
-                    Add Training
+                    Add Single Training
                   </button>
                 )}
 
