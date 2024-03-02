@@ -1,0 +1,74 @@
+
+.certificate {
+    background-image: url('/src/assets/Images/certificate3.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    padding: 378px 0;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    height: 90vh;
+    position: relative;
+}
+
+.certificate-text {
+    color: black;
+    padding: 15px;
+    background-color: transparent;
+    /* margin: 0 auto;  */
+    width: 70%;
+    font-family: 'Brittany', sans-serif;
+    font-size: 40px;
+    font-style: italic;
+    position: absolute;
+    left: 15%;
+    /* text-align: center; */
+
+}
+
+.date {
+    color: #333;
+    padding: 15px;
+    background-color: transparent;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-style: italic;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.instructor-name {
+
+    color: #333;
+    padding: 15px;
+    background-color: transparent;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-style: italic;
+    margin-top: 100px;
+    margin-left: -35%;
+}
+.officer-name {
+
+    color: #333;
+    padding: 15px;
+    background-color: transparent;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-style: italic;
+    margin-top: -66px;
+    margin-left: 33%;
+}
+
+@media (max-width: 768px) {
+
+    /* Adjust padding and font size for smaller screens */
+    .certificate {
+        padding: 70% 0;
+        /* Adjust as needed */
+        font-size: 20px;
+        /* Adjust as needed */
+    }
+}

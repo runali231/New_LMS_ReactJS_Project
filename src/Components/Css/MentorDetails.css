@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Roboto:300,400,500,700');
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+img {
+    max-width: 100%;
+}
+a:focus, input:focus, textarea:focus, button:focus {
+    text-decoration: none;
+    outline: none;
+}
+a:focus, a:hover {
+    text-decoration: none;
+}
+i, span, a {
+    display: inline-block;
+}
+/* h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #1d2025;
+    margin: 0px;
+} */
+h1 {
+    font-weight: 500;
+}
+h2 {
+    font-size: 36px;
+}
+h3 {
+    font-size: 28px;
+}
+h4 {
+    font-size: 22px;
+}
+h5 {
+    font-size: 18px;
+}
+h6 {
+    font-size: 16px;
+}
+ul, ol {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+p {
+    font-size: 16px;
+    font-weight: 400;
+    /* line-height: 28px; */
+    color: #505050;
+    margin: 0px;
+}
+
+/*=====================================================
+     TEACHERS SInGEL PAGE css 
+======================================================*/
+
+.teachers-left {
+    padding: 40px 50px 35px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.teachers-left .hero img {
+    width: 100%;
+    border-radius: 5px;
+}
+.teachers-left .name {
+    padding-top: 25px;
+}
+.teachers-left .name h6 {
+    font-size: 18px;
+    color: #000;
+}
+.teachers-left .name span {
+    font-size: 15px;
+    color: #8a8a8a;
+}
+.teachers-left .social {
+    padding-top: 15px;
+}
+.teachers-left .social ul li {
+    display: inline-block;
+}
+.teachers-left .social ul li a {
+    font-size: 30px;
+    margin-right: 7px;
+}
+.teachers-left .social ul li:nth-of-type(1) a {
+    color: #212798;
+}
+.teachers-left .social ul li:nth-of-type(2) a {
+    color: #3c9bff;
+}
+.teachers-left .social ul li:nth-of-type(3) a {
+    color: #fe1f59;
+}
+.teachers-left .social ul li:nth-of-type(4) a {
+    color: #474b8c;
+}
+.teachers-left .description {
+    padding-top: 20px;
+}
+.teachers-right {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.teachers-right .nav .nav-item a {
+    padding: 20px 0;
+    background-color: #315377;
+    color: #fff;
+    font-weight: 15;
+    color: #fff;
+    display: block;
+    font-weight: 600;
+    -webkit-transition: all 0.4s linear;
+    transition: all 0.4s linear;
+}
+.teachers-right .nav .nav-item a.active, .teachers-right .nav .nav-item a:hover {
+    background-color: #fff;
+    color: #315377;
+}
+.teachers-right .tab-content {
+    padding: 0px 50px 35px;
+    background-color: #fff;
+}
+
+.teachers-right .tab-content .dashboard-cont .single-dashboard h5 {
+    font-size: 18px;
+    color: #000;
+    font-weight: 600;
+    padding-bottom: 15px;
+}
+.teachers-right .tab-content .reviews-cont {
+    padding: 45px 0 15px;
+}
+
+
