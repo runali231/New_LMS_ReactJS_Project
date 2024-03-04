@@ -12,7 +12,9 @@ const AddTrainingForm = () => {
   const { id } = useParams();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+  const [allTrainingNature, setAllTrainingNature] = useState([]);
   const [trainingNature, setTrainingNature] = useState("");
+  const [allTrainingType, setAllTrainingType] = useState([]);
   const [trainingType, setTrainingType] = useState("");
   const [trainingReqNo, setTrainingReqNo] = useState("");
   const [trainingReqDate, setTrainingReqDate] = useState("");
@@ -79,6 +81,8 @@ const AddTrainingForm = () => {
     getAllTrainingTopic();
     getAllTraining();
     getAllEmployee();
+    getAllTrainingNature();
+    getAllTrainingType();
     if (id) {
       axios({
         method: "get",
@@ -95,6 +99,7 @@ const AddTrainingForm = () => {
           setTrainingHours(response.data.data.tr_hours);
           setTrainingDay(response.data.data.tr_days);
           setTrId(response.data.data.tr_id);
+          setAction(response.data.data.tr_action)
           console.log(response.data.data.tr_id, "trId");
           getAllTrainingTopic();
           getAllTraining();
@@ -105,6 +110,30 @@ const AddTrainingForm = () => {
     }
   }, [trId]);
 
+  const getAllTrainingNature = () => {
+    axios
+      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`))
+      .then((response) => {
+        console.log("get all training nature", response.data.data);
+        setAllTrainingNature(response.data.data)
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllTrainingType = () => {
+    axios
+      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`))
+      .then((response) => {
+        console.log("get all training Type", response.data.data);
+        setAllTrainingType(response.data.data)
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getByOrder = () => {
     axios
       .get(new URL(UrlData + `TrainingForm/GetOrder`))
@@ -116,6 +145,15 @@ const AddTrainingForm = () => {
         console.log(error);
       });
   };
+
+  // function getCurrentDate() {
+  //   const currentDate = new Date();
+  //   const year = currentDate.getFullYear();
+  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  //   const day = String(currentDate.getDate()).padStart(2, '0');
+  //   return `${year}-${month}-${day}`;
+  // }
+  const currentDate = new Date();
   const addTrainingNeedForm = () => {
     console.log(allByDepartments, "101");
     let data = {
@@ -127,8 +165,8 @@ const AddTrainingForm = () => {
       tr_hours: trainingHours,
       tr_days: trainingDay,
       tr_action: action,
-      tr_createddate: "2024-02-26T10:56:05.214Z",
-      tr_updateddate: "2024-02-26T10:56:05.214Z",
+      tr_createddate: currentDate,
+      tr_updateddate: currentDate,
       tr_creadtedby: "",
       tr_updatedby: "",
       tr_isactive: "1",
@@ -187,11 +225,11 @@ const AddTrainingForm = () => {
           td_date_training: trainingDate,
           td_topic_training: trainingTopic
             .map((item) => item.value)
-            .join(", ")
+            .join(",")
             .toString(),
           td_topic_training_name: trainingTopic
             .map((item) => item.label)
-            .join(", ")
+            .join(",")
             .toString(),
         }));
         setAllByDepartments([...allByDepartments, ...modifiedData]);
@@ -242,7 +280,13 @@ const AddTrainingForm = () => {
     })
       .then((response) => {
         console.log("response", response.data.data);
-        setSelectedDesignation(response.data.data);
+        // setSelectedDesignation(response.data.data);
+        const designation = response.data.data.map((item, index) => ({
+          value: item.de_designation_name,
+          label: item.de_designation_name,
+        }));
+        setSelectedDesignation(designation)
+        console.log(selectedDesignation, "all designation")
       })
       .catch((error) => {
         console.log(error);
@@ -286,14 +330,14 @@ const AddTrainingForm = () => {
     console.log(
       data
         .map((item) => item.value)
-        .join(", ")
+        .join(",")
         .toString(),
       "data value"
     );
     console.log(
       data
         .map((item) => item.label)
-        .join(", ")
+        .join(",")
         .toString(),
       "data value"
     );
@@ -397,11 +441,11 @@ const AddTrainingForm = () => {
         td_date_training: trainingDate,
         td_topic_training: trainingTopic
           .map((item) => item.value)
-          .join(", ")
+          .join(",")
           .toString(),
         td_topic_training_name: trainingTopic
           .map((item) => item.label)
-          .join(", ")
+          .join(",")
           .toString(),
       };
       setAllByDepartments(updatedTrainings);
@@ -568,9 +612,17 @@ const AddTrainingForm = () => {
                         value={trainingNature}
                         onChange={(e) => setTrainingNature(e.target.value)}
                       >
-                        <option>Please Select</option>
+                        {/* <option>Please Select</option>
                         <option>Induction</option>
-                        <option>New Training</option>
+                        <option>New Training</option> */}
+                        <option value="" disabled>
+                          Select Training Nature
+                        </option>
+                        {allTrainingNature.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -584,14 +636,14 @@ const AddTrainingForm = () => {
                         value={trainingType}
                         onChange={(e) => setTrainingType(e.target.value)}
                       >
-                        <option>Please Select</option>
-                        <option value="IDP">IDP</option>
-                        <option value="NPD">NPD</option>
-                        <option value="QRT">QRT</option>
-                        <option value="AO">AO</option>
-                        <option value="PP">PP</option>
-                        <option value="NCR">NCR</option>
-                        <option value="CC">CC</option>
+                      <option value="" disabled>
+                          Select Training Type
+                        </option>
+                        {allTrainingType.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -787,7 +839,6 @@ const AddTrainingForm = () => {
                                 <td>
                                   {formatDate(departmentItem.td_date_training)}
                                 </td>
-                                {/* <td>{departmentItem.td_date_training}</td> */}
                                 <td
                                   style={{ whiteSpace: "pre-line" }}
                                   className="d-none"
@@ -836,45 +887,59 @@ const AddTrainingForm = () => {
 
                       <div className="row">
                         <div className="col-lg-4">
-                          <h6>Showing 1 to 3 of 3 entries</h6>
+                          {/* <h6>Showing 1 to 3 of 3 entries</h6> */}
                         </div>
                         <div className="col-lg-4"></div>
-                        <div className="col-lg-4">
-                          <nav aria-label="Page navigation example">
+                        <div className="col-lg-4 mt-3">
+                          <nav aria-label="Page navigation example ">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
                                   className="page-link"
-                                  /* onClick={handlePrevious} */ aria-label="Previous"
+                                  onClick={() =>
+                                    setCurrentPage(currentPage - 1)
+                                  }
+                                  disabled={currentPage === 1}
+                                  aria-label="Previous"
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
-                              <li className="page-item active">
-                                <button
-                                  className="page-link" /* onClick={handlePageClick(1)} */
-                                >
-                                  1
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button
-                                  className="page-link" /* onClick={handlePageClick(2)} */
-                                >
-                                  2
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button
-                                  className="page-link" /* onClick={handlePageClick(3)} */
-                                >
-                                  3
-                                </button>
-                              </li>
+                              {Array.from(
+                                {
+                                  length: Math.ceil(
+                                    allByDepartments.length / itemsPerPage
+                                  ),
+                                },
+                                (_, index) => (
+                                  <li
+                                    className={`page-item ${
+                                      currentPage === index + 1 ? "active" : ""
+                                    }`}
+                                    key={index}
+                                  >
+                                    <button
+                                      className="page-link"
+                                      onClick={() => setCurrentPage(index + 1)}
+                                    >
+                                      {index + 1}
+                                    </button>
+                                  </li>
+                                )
+                              )}
                               <li className="page-item">
                                 <button
                                   className="page-link"
-                                  /* onClick={handleNext} */ aria-label="Next"
+                                  onClick={() =>
+                                    setCurrentPage(currentPage + 1)
+                                  }
+                                  disabled={
+                                    currentPage ===
+                                    Math.ceil(
+                                      allByDepartments.length / itemsPerPage
+                                    )
+                                  }
+                                  aria-label="Next"
                                 >
                                   <span aria-hidden="true">&raquo;</span>
                                 </button>

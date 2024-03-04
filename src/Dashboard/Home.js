@@ -160,6 +160,30 @@ const Home = (props) => {
                       Role Master
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/countryMaster"
+                      onClick={() => setSidebar(!sidebar)}
+                    >
+                      Country Master
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/stateMaster"
+                      onClick={() => setSidebar(!sidebar)}
+                    >
+                      State Master
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/cityMaster"
+                      onClick={() => setSidebar(!sidebar)}
+                    >
+                      City Master
+                    </NavLink>
+                  </li>
                 </ul>
               </li>
               <li className="dropdown">

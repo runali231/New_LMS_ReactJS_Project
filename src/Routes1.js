@@ -101,6 +101,12 @@ import TrainingScheduleApproval from './Components/Approval/TrainingScheduleAppr
 import AddTrainingScheduleApproval from './Components/Approval/AddTrainingScheduleApproval';
 import RoleMaster from './Components/RoleMaster/RoleMaster';
 import AddRoleMaster from './Components/RoleMaster/AddRoleMaster';
+import AddCityMaster from './Components/CityMaster/AddCityMaster';
+import CityMaster from './Components/CityMaster/CityMaster';
+import AddStateMaster from './Components/StateMaster/AddStateMaster';
+import StateMaster from './Components/StateMaster/StateMaster';
+import CountryMaster from './Components/CountryMaster/CountryMaster';
+import AddCountryMaster from './Components/CountryMaster/AddCountryMaster';
 
 const routes1=[
     { path: '/', exact: true, name: 'Home', element:HomePage },
@@ -211,6 +217,15 @@ const routes1=[
     { path: '/trainingApprovalForm', name: 'TrainingApprovalForm', element:TrainingApprovalForm},
     { path: '/trainingScheduleApproval', name: 'TrainingScheduleApproval', element:TrainingScheduleApproval},
     { path: '/addTrainingScheduleApproval', name: 'AddTrainingScheduleApproval', element:AddTrainingScheduleApproval},
+    { path: '/addCityMaster/:coId/:coName/:stateId/:stateName', name: 'AddCityMaster', element:AddCityMaster},
+    { path: '/cityMaster/:coId/:coName/:stateId/:stateName', name: 'CityMaster', element:CityMaster},
+    { path: '/addStateMaster', name: 'AddStateMaster', element:AddStateMaster},
+    { path: '/addStateMaster/:countryId/:countryName', name: 'AddStateMaster', element:AddStateMaster},
+    { path: '/addStateMaster/:id', name: 'AddStateMaster', element:AddStateMaster},
+    { path: '/stateMaster/:id/:countryName', name: 'StateMaster', element:StateMaster},
+    { path: '/countryMaster', name: 'CountryMaster', element:CountryMaster},
+    { path: '/addCountryMaster', name: 'AddCountryMaster', element:AddCountryMaster},
+    { path: '/addCountryMaster/:id', name: 'AddCountryMaster', element:AddCountryMaster},
     // { path: '/sample', name: 'Sample', element:Sample  },
 
 ]

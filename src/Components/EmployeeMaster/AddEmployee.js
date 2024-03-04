@@ -7,7 +7,6 @@ import { getAllDepartment , GetAllDesignation} from "../Api/DesignationAndDepart
 
 const AddEmployee = () => {
   const navigate = useNavigate();
-
   const [empCode, setEmpCode] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -19,8 +18,11 @@ const AddEmployee = () => {
   const [hodToEmployee, setHodToEmployee] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
+  const [allCity, setAllCity] = useState([]);
   const [city, setCity] = useState("");
+  const [allState, setAllState] = useState([]);
   const [state, setState] = useState("");
+  const [allCountry, setAllCountry] = useState([]);
   const [country, setCountry] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [mobileNo, setMobileNo] = useState("");
@@ -32,6 +34,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
    getAllData()
+   getAllCity()
   }, []);
 
   useEffect(() => {
@@ -152,6 +155,35 @@ const AddEmployee = () => {
     }
   };
 
+  const getAllCity = () => {
+    axios
+      .get(new URL(UrlData +`CityMaster/GetAll?status=1`))
+      .then((response) => {
+        console.log("response", response.data.data);
+        setAllCity(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const CityHandleChange =(e, selected)=>{
+    setCity(e.target.value)
+    // console.log(e.target.value)
+    // console.log(city, "city")
+    axios
+      .get(new URL(UrlData +`CityMaster/GetCityById?status=1&ci_id=${e.target.value}`))
+      .then((response) => {
+        console.log("response", response.data.data);
+        setState(response.data.data.ci_state_name);
+        setCountry(response.data.data.ci_country_name)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  
+ 
   const getAllData = async () => {
     const designationData = await GetAllDesignation();
     const departmentData = await getAllDepartment();
@@ -458,16 +490,17 @@ const AddEmployee = () => {
                       <label className="control-label fw-bold">City:</label>
                       <select
                         className="form-select"
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={CityHandleChange}
                         value={city}
                       >
-                        <option value="" disabled>
-                          Select
+                         <option value="" disabled>
+                          Select City
                         </option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Thane">Thane</option>
-                        <option value="Nagpur">Nagpur</option>
-                        <option value="Pune">Pune</option>
+                        {allCity.map((data, index) => (
+                          <option key={index} value={data.ci_id}>
+                            {data.ci_city_name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
