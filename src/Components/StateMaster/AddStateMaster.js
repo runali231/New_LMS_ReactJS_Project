@@ -57,12 +57,12 @@ console.log(id,"id")
         s_state_name: stateName,
         s_state_code: stateCode,
         s_isactive: "1",
-        s_id: id
+        /* s_id: id */
       };
-    //   if (id !== null && id !== undefined && id !== ":id") {
-    //     data.s_id = "43ae886d-ae67-445b-8140-fe172c59f035";
-    //     console.log(data.s_id ,"id")
-    //   }
+      if (id !== null && id !== undefined && id !== ":id") {
+        data.s_id = id;
+        console.log(data.s_id ,"id")
+      }
 
       axios({
         method: "post",
@@ -72,7 +72,15 @@ console.log(id,"id")
         .then((response) => {
           console.log(response, "add state");
           alert("State added successfully");
-          navigate(`/stateMaster/${countryId}/${countryName}`);
+         
+          if (id !== null && id !== undefined && id !== ":id") {
+            data.s_id = id;
+            console.log(data.s_id ,"id")
+            navigate(`/stateMaster/${countryId}/${countryName}`);
+          }
+          else{
+            navigate(`/stateMaster/${countryId}/${countryName}`);
+          }
         })
         .catch((error) => {
           console.log(error);

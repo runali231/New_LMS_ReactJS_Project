@@ -1,16 +1,56 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { Add, Edit, Delete } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
-
+import UrlData from "../UrlData";
+import axios from "axios";
 
 const TrainingSchedule = () => {
   const navigate = useNavigate();
+  const [allTrainingSchedule, setAllTrainingSchedule] = useState([]);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
   };
 
+  useEffect(() => {
+    getAllTrainingSchedule();
+  }, []);
+
+  const getAllTrainingSchedule = () => {
+    axios
+      .get(
+        new URL(
+          UrlData +
+            `TrainingSchedule/GetAllTrainingSchedule?user_id=3fa85f64-5717-4562-b3fc-2c963f66afa6&ts_isactive=1`
+        )
+      )
+      .then((response) => {
+        console.log("get all Schedule", response.data.data);
+        setAllTrainingSchedule(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const GetTrainingSchedule = (ts_Id) => {
+    navigate(`/addTrainingSchedule/${ts_Id}`);
+  };
+  const DeleteTrainingSchedule = (ts_Id) => {
+    const data = {
+      // userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      ts_id: ts_Id,
+    };
+    axios
+      .post(new URL(UrlData + `TrainingSchedule/DeleteTrainingSchedule`), data)
+      .then((response) => {
+        console.log("delete topics", response);
+        getAllTrainingSchedule();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <>
       <div className="container-fluid">
@@ -55,7 +95,7 @@ const TrainingSchedule = () => {
                 </div>
               </div>
               <div className="card-body pt-3">
-              <div className="row ">
+                <div className="row ">
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
@@ -113,73 +153,61 @@ const TrainingSchedule = () => {
                         Status
                       </th>
                       <th
-                        scope="col" style={headerCellStyle}
+                        scope="col"
+                        style={headerCellStyle}
                         className="fw-bold" /* style={headerCellStyle} */
                       >
-                       Action
-                      </th> 
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    <tr>
-                      <td>1</td>
-                      <td>T001</td>
-                      <td>Rakesh</td>
-                      <td>Acct</td>
-                      <td>Javascript</td>
-                      <td>Subjective</td>
-                      <td>xyz</td>
-                      <td>Enterable</td>
-                      <td>Monthly</td>
-                      <td>10/3/2024</td>
-                      <td>10/4/2024</td>
-                      <td>Completed</td>
-                      <td>
-                        <Edit className="text-success mr-2" type="button" />
-                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>T003</td>
-                      <td>Rakesh</td>
-                      <td>Acct</td>
-                      <td>Javascript</td>
-                      <td>Subjective</td>
-                      <td>xyz</td>
-                      <td>Enterable</td>
-                      <td>Monthly</td>
-                      <td>10/3/2024</td>
-                      <td>10/4/2024</td>
-                      <td>Completed</td>
-                      <td>
-                        <Edit className="text-success mr-2" type="button" />
-                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>T004</td>
-                      <td>Rakesh</td>
-                      <td>Acct</td>
-                      <td>Javascript</td>
-                      <td>Subjective</td>
-                      <td>xyz</td>
-                      <td>Enterable</td>
-                      <td>Monthly</td>
-                      <td>10/3/2024</td>
-                      <td>10/4/2024</td>
-                      <td>Completed</td>
-                      <td>
-                        <Edit className="text-success mr-2" type="button" />
-                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-                      </td>
-                    </tr>
+                    {allTrainingSchedule.map((data, index) => (
+                      <tr key={data.ts_id}>
+                        <td>{index}</td>
+                        <td>{data.ts_training_no}</td>
+                        <td>{data.ts_trainer_name}</td>
+                        <td>{data.ts_training_dept}</td>
+                        <td>{data.ts_topic}</td>
+                        <td>{data.ts_training_type}</td>
+                        <td>{data.ts_training_agency}</td>
+                        <td>{data.ts_no_que}</td>
+                        <td>{data.ts_reoccurence}</td>
+                        <td>
+                          {
+                            new Date(data.ts_dt_tm_fromtraining)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>
+                          {
+                            new Date(data.ts_dt_tm_totraining)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>{data.ts_status}</td>
+                        <td>
+                          <Edit
+                            className="text-success mr-2"
+                            onClick={() => GetTrainingSchedule(data.ts_id)}
+                          />
+                          <Delete
+                            className="text-danger"
+                            style={{ marginLeft: "0.5rem" }}
+                            onClick={() => DeleteTrainingSchedule(data.ts_id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
-                    <h6 className="text-lg-start text-center">Showing 1 to 3 of 3 entries</h6>
+                    <h6 className="text-lg-start text-center">
+                      Showing 1 to 3 of 3 entries
+                    </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
@@ -230,7 +258,6 @@ const TrainingSchedule = () => {
             </div>
           </div>
         </div>
-
       </div>
     </>
   );

@@ -13,11 +13,17 @@ import {
 
 const StateMaster = () => {
   const navigate = useNavigate();
-  const { id, countryName  } = useParams();
+  // const { id, countryName  } = useParams();
   const [allState, setAllState] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
-  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); // State for dropdown value
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
+  const { id, countryId, countryName } = useParams();
+  const [stateName, setStateName] = useState("");
+  const [stateCode, setStateCode] = useState("");
+  const [active, setActive] = useState(true);
+  const [stateId, setStateId] = useState("");
+  // State for dropdown value
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
     color: "#fff",
@@ -32,7 +38,7 @@ const StateMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `StateMaster/GetStateMasterByCoId?CountryId=${id}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6&status=1`
+          `StateMaster/GetStateMasterByCoId?CountryId=${countryId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6&status=1`
       ), // Include pageSize and pageNumber in the URL
     })
       .then((response) => {
@@ -50,22 +56,77 @@ const StateMaster = () => {
     setCurrentPage(1); // Reset currentPage to 1 when changing items per page
   };
 
-//   const GetState = (sId, countryId, countryName) => {
-//     navigate(`/addStateMaster/${sId}/${countryId}/${encodeURIComponent(countryName)}`);
-//   };
-const GetState = (sId, countryId, countryName) => {
-    window.location.href = `/addStateMaster/${sId}`;
-    localStorage.setItem('countryId', countryId);
-    localStorage.setItem('countryName', countryName);
+  //   const GetState = (sId, countryId, countryName) => {
+  //     navigate(`/addStateMaster/${sId}/${countryId}/${encodeURIComponent(countryName)}`);
+  //   };
+  const GetState = (sId) => {
+    axios({
+      method: "get",
+      url: new URL(UrlData + `StateMaster/GetStateById?status=1&s_id=${sId}`),
+    })
+      .then((response) => {
+        console.log(response.data.data.s_state_name, "state_name");
+        setStateName(response.data.data.s_state_name);
+        setStateCode(response.data.data.s_state_code);
+        setStateId(sId);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
-  const DeleteState = (dId) => {
+  const addState = () => {
+    let data;
+
+    if (stateName === "" || stateCode === "") {
+      alert("Please fill all the details");
+    }
+    // else if (!/^[a-zA-Z\s~`!@#$%^&*()-_+=|{}[\]:;"'<>,.?/]+$/.test(stateName)) {
+    //   alert(
+    //     "Please enter a valid designation name (alphabetic characters only)"
+    //   );
+    // }
+    else {
+      data = {
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        s_country_name: countryName,
+        s_country_id: countryId,
+        s_state_name: stateName,
+        s_state_code: stateCode,
+        s_isactive: "1"
+      };
+
+      if (stateId) { // If stateId exists, include it in the data object
+        data.s_id = stateId;
+        console.log(data.s_id, "id");
+      }
+
+      axios({
+        method: "post",
+        url: new URL(UrlData + `StateMaster`),
+        data: data,
+      })
+        .then((response) => {
+          console.log(response, "add state");
+          alert("State added successfully");
+          getAllData();
+          setStateCode("")
+          setStateName("")
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Something went wrong");
+        });
+    }
+};
+
+  const DeleteState = (sId) => {
     const data = {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      de_id: dId,
+      s_id: sId,
     };
     axios({
       method: "post",
-      url: new URL(UrlData + `StateMaster/Delete`),
+      url: new URL(UrlData + `StateMaster/DeleteState`),
       data: data,
     })
       .then((response) => {
@@ -77,7 +138,7 @@ const GetState = (sId, countryId, countryName) => {
       });
   };
 
-  const handleStateNameClick = (sId,stateName,coId,countryName ) => {
+  const handleStateNameClick = (coId, countryName, sId, stateName, ) => {
     console.log("Clicked on state:", countryName);
     navigate(`/cityMaster/${coId}/${countryName}/${sId}/${stateName}`);
   };
@@ -113,10 +174,12 @@ const GetState = (sId, countryId, countryName) => {
                         className="btn btn-md text-light"
                         type="button"
                         style={{ backgroundColor: "#1B5A90" }}
-                        onClick={() => {
-                          // navigate("/addState/:d_id");
-                          navigate(`/addStateMaster/${id}/${countryName}`);
-                        }}
+                        data-bs-toggle="modal"
+                        data-bs-target="#stateForm"
+                        // onClick={() => {
+
+                        //   navigate(`/addStateMaster/${id}/${countryName}`);
+                        // }}
                       >
                         <Add />
                       </button>
@@ -169,18 +232,32 @@ const GetState = (sId, countryId, countryName) => {
                               {(currentPage - 1) * itemsPerPage + index + 1}
                             </td>
                             <td>{data.s_state_code}</td>
-                            <td type="button" onClick={() => handleStateNameClick(data.s_id,data.s_state_name, data.s_country_name, data.s_country_id)}>{data.s_state_name}</td>
+                            <td
+                              type="button"
+                              onClick={() =>
+                                handleStateNameClick(
+                                  data.s_country_id,
+                                  data.s_country_name,
+                                  data.s_id,
+                                  data.s_state_name,
+                                )
+                              }
+                            >
+                              {data.s_state_name}
+                            </td>
                             <td>
                               <Edit
                                 className="text-success mr-2"
                                 type="button"
-                                onClick={() => GetState(data.s_id, data.s_country_name,data.s_country_id)}
+                                data-bs-toggle="modal"
+                                data-bs-target="#stateForm"
+                                onClick={() => GetState(data.s_id)}
                               />
                               <Delete
                                 className="text-danger"
                                 type="button"
                                 style={{ marginLeft: "0.5rem" }}
-                                onClick={() => DeleteState(data.de_id)}
+                                onClick={() => DeleteState(data.s_id)}
                               />
                             </td>
                           </tr>
@@ -256,6 +333,116 @@ const GetState = (sId, countryId, countryName) => {
                       </ul>
                     </nav>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="modal fade"
+        id="stateForm"
+        tabIndex="-1"
+        aria-labelledby="stateFormLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title fw-bold" id="stateFormLabel">
+                State Master
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <div className="row">
+                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
+                  <div className="form-group form-group-sm">
+                    <label className="control-label fw-bold">State Code:</label>
+                    <input
+                      type="number"
+                      id="stateCode"
+                      name="stateCode"
+                      className="form-control "
+                      autoComplete="off"
+                      placeholder="Enter State Code"
+                      value={stateCode}
+                      onChange={(e) => setStateCode(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
+                  <div className="form-group form-group-sm">
+                    <label className="control-label fw-bold">State Name:</label>
+                    <input
+                      type="text"
+                      id="stateName"
+                      name="stateName"
+                      className="form-control "
+                      autoComplete="off"
+                      placeholder="Enter State Name"
+                      value={stateName}
+                      onChange={(e) => setStateName(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row mt-4">
+                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                  <div className="form-group form-group-sm">
+                    <label className="control-label fw-bold">
+                      {/* Department Head: */}
+                    </label>
+                    <div className="form-group form-group-sm">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          checked={active}
+                          onChange={(e) => setActive(e.target.checked)}
+                          id="defaultCheck1"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="defaultCheck1"
+                        >
+                          Is Active
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <div className="row">
+                <div className="col-lg-12 text-end">
+                  <button
+                    className="btn text-light"
+                    type="button"
+                    data-bs-dismiss="modal"
+                    style={{ backgroundColor: "#1B5A90" }}
+                    onClick={() => {
+                      addState();
+                      // editDesignation();
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary mx-2"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>

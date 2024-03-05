@@ -295,14 +295,14 @@ const Home = (props) => {
                       Training Approval
                     </NavLink>
                   </li>
-                  {/* <li>
+                  <li>
                     <NavLink
-                      to="/employeeCompetency"
+                      to="/trainingScheduleApproval"
                       onClick={() => setSidebar(!sidebar)}
                     >
-                      Employee Competency 
+                      Training Schedule Approval
                     </NavLink>
-                  </li> */}
+                  </li>
 
                 </ul>
               </li>
