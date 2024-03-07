@@ -152,6 +152,9 @@ const TrainingSchedule = () => {
                       <th scope="col" style={headerCellStyle}>
                         Status
                       </th>
+                      <th scope="col" style={headerCellStyle}>
+                        Status 1
+                      </th>
                       <th
                         scope="col"
                         style={headerCellStyle}
@@ -161,7 +164,7 @@ const TrainingSchedule = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="text-center">
+                  <tbody className="text-left">
                     {allTrainingSchedule.map((data, index) => (
                       <tr key={data.ts_id}>
                         <td>{index}</td>
@@ -174,20 +177,23 @@ const TrainingSchedule = () => {
                         <td>{data.ts_no_que}</td>
                         <td>{data.ts_reoccurence}</td>
                         <td>
-                          {
+                          {/* {
                             new Date(data.ts_dt_tm_fromtraining)
                               .toISOString()
                               .split("T")[0]
-                          }
+                          } */}
+                          {data.ts_dt_tm_fromtraining.replace('T', ' ').substring(0, 16)}
                         </td>
                         <td>
-                          {
+                          {/* {
                             new Date(data.ts_dt_tm_totraining)
                               .toISOString()
                               .split("T")[0]
-                          }
+                          } */}
+                          {data.ts_dt_tm_totraining.replace('T', ' ').substring(0, 16)}
                         </td>
                         <td>{data.ts_status}</td>
+                        <td>{data.ts_action}</td>
                         <td>
                           <Edit
                             className="text-success mr-2"

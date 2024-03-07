@@ -452,7 +452,7 @@ const AddTrainingApprovalForm = () => {
       // url: new URL(UrlData +`ApproveStages/Get?roleid=C4E34142-1525-4E06-9D31-D40150CBB573`),
     })
       .then((response) => {
-        console.log("response", response.data.data);
+        console.log("get all action", response.data.data);
         setSelectedAction(response.data.data);
       })
       .catch((error) => {

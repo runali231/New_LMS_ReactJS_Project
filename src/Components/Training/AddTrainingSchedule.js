@@ -32,7 +32,7 @@ const AddTrainingSchedule = () => {
   const [completionStatus, setCompletionStatus] = useState("");
   const [trainingStatus, setTrainingStatus] = useState("");
   const [reTrainingRequired, setReTrainingRequired] = useState("");
-  const [trainingCertificate, setTrainingCertificate] = useState("");
+  const [trainingCertificate, setTrainingCertificate] = useState();
   const [status1, setStatus1] = useState("");
   const [remark, setRemark] = useState("");
   const [allSubTrainingSchedule, setAllSubTrainingSchedule] = useState([]);
@@ -40,7 +40,12 @@ const AddTrainingSchedule = () => {
   const [tsId, setTsId] = useState("");
   const [tss_id, setTss_id] = useState("");
   const [action, setAction] = useState("");
-
+  const [pdfFile, setPdfFile] = useState();
+  const [fileName, setFileName] = useState("");
+  const [fileType, setFileType] = useState("");
+  const [certificateUploaded, setCertificateUploaded] = useState(false);
+  const [imageSrc, setImageSrc] = useState("");
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -67,14 +72,20 @@ const AddTrainingSchedule = () => {
           setTrainingType(response.data.data.ts_training_type);
           setReoccurrence(response.data.data.ts_reoccurence);
           setTrainingFrom(
-            new Date(response.data.data.ts_dt_tm_fromtraining)
-              .toISOString()
-              .split("T")[0]
+            // new Date(response.data.data.ts_dt_tm_fromtraining)
+            //   .toISOString()
+            //   .split("T")[0]
+            response.data.data.ts_dt_tm_fromtraining
+              .replace("T", " ")
+              .substring(0, 16)
           );
           setTrainingTo(
-            new Date(response.data.data.ts_dt_tm_totraining)
-              .toISOString()
-              .split("T")[0]
+            // new Date(response.data.data.ts_dt_tm_totraining)
+            //   .toISOString()
+            //   .split("T")[0]
+            response.data.data.ts_dt_tm_totraining
+              .replace("T", " ")
+              .substring(0, 16)
           );
           setStatus(response.data.data.ts_status);
           setTsId(id);
@@ -111,6 +122,8 @@ const AddTrainingSchedule = () => {
 
   const addTrainingScheduleForm = () => {
     console.log(allSubTrainingSchedule, "trainingArray");
+    console.log(trainingFrom, "training from");
+    console.log(trainingTo, "training to");
     let data = {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       ts_training_no: trainingNo,
@@ -122,8 +135,8 @@ const AddTrainingSchedule = () => {
       ts_training_agency: trainingAgency,
       ts_training_type: trainingType,
       ts_reoccurence: reoccurrence,
-      ts_dt_tm_fromtraining: trainingFrom,
-      ts_dt_tm_totraining: trainingTo,
+      ts_dt_tm_fromtraining: (trainingFrom + ":00").replace(" ", "T"),
+      ts_dt_tm_totraining: (trainingTo + ":00").replace(" ", "T"),
       ts_status: status,
       ts_isactive: "1",
       ts_action: action,
@@ -154,6 +167,7 @@ const AddTrainingSchedule = () => {
     setTss_id(tss_id);
   };
   const getSingleHodTraining = (tss_id) => {
+    setSelectedRowIndex(tss_id);
     console.log("Received index:", tss_id);
     setTss_id(tss_id);
   };
@@ -175,11 +189,12 @@ const AddTrainingSchedule = () => {
         // If the current sub-training schedule doesn't match the one being edited, return it unchanged
         return training;
       }
+      
     );
     // Update the state with the updated array
     setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
     console.log(allSubTrainingSchedule, "all single sub training");
-    // resetForm();
+    resetForm();
   };
   const addSingleHodTraining = () => {
     // Create a new array by mapping over the existing sub-training schedules
@@ -204,10 +219,11 @@ const AddTrainingSchedule = () => {
         return training;
       }
     );
+    
     // Update the state with the updated array
     setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
     console.log(allSubTrainingSchedule, "all single sub training");
-    // resetForm();
+    resetForm();
   };
 
   const deleteTrainingSchedule = (tss_id) => {
@@ -219,6 +235,80 @@ const AddTrainingSchedule = () => {
     // Update the state with the filtered array
     setAllSubTrainingSchedule(updatedTraining);
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log(e.target.files[0], "target value");
+    console.log(file.name, "237");
+    setFileName(file.name);
+    setFileType(file.type);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result.split(",")[1]; // Remove data url prefix
+        setTrainingCertificate(base64String);
+        console.log(base64String, "base64String");
+        console.log(trainingCertificate, "cerificate");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const ViewModal = (file) => {
+    setPdfFile(file);
+    console.log(file, "file 265");
+    console.log(pdfFile, "file 266");
+  };
+  useEffect(() => {
+    console.log(pdfFile, "pdfFile");
+    setPdfFile(pdfFile);
+    console.log(pdfFile, "pdfFile1"); // This will reflect the updated value of pdfFile
+  }, [pdfFile]);
+
+  const getBase64Type = (base64String) => {
+    // Remove metadata prefix from base64 string if present
+    if (!base64String) {
+      return "unknown"; // Return 'unknown' if base64String is undefined
+    }
+
+    // Remove metadata prefix from base64 string if present
+    const base64PrefixRemoved = base64String
+      .replace(/^data:image\/[a-z]+;base64,/, "")
+      .replace(/^data:application\/pdf;base64,/, "");
+
+    // Get the first few characters of the base64 string
+    const prefix = base64PrefixRemoved.substring(0, 10);
+
+    // Check if it matches the signature of an image or a PDF
+    if (
+      prefix.startsWith("/9j/") ||
+      prefix.startsWith("iVBORw") ||
+      prefix.startsWith("R0lGOD")
+    ) {
+      return "image";
+    } else if (prefix.startsWith("JVBERi0xLj")) {
+      return "pdf";
+    } else {
+      return "unknown";
+    }
+  };
+  const fileType1 = getBase64Type(pdfFile);
+  // Empty dependency array ensures that this effect runs only once after the initial render
+
+  const resetForm = () => {
+    setTrainingAttended("");
+    setScheduledHours("");
+    setActualHoursAttended();
+    setTotalMarks("");
+    setMarksObtained("")
+    setCompletionStatus("")
+    setTrainingStatus("")
+    setReTrainingRequired("")
+    setTrainingCertificate("")
+    setStatus1("");
+    setRemark("")
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -410,7 +500,8 @@ const AddTrainingSchedule = () => {
                         Date/ Time of Training Form:
                       </label>
                       <input
-                        type="date"
+                        // type="date"
+                        type="datetime-local"
                         id="trainingFrom"
                         className="form-control "
                         placeholder="Training Request No"
@@ -425,7 +516,8 @@ const AddTrainingSchedule = () => {
                         Date/ Time of Training To:
                       </label>
                       <input
-                        type="date"
+                        // type="date"
+                        type="datetime-local"
                         id="trainingTo"
                         className="form-control "
                         placeholder="Search"
@@ -469,35 +561,7 @@ const AddTrainingSchedule = () => {
                             onClick={() => {
                               // navigate("/addTopic");
                             }}
-                          >
-                            {/* <button
-                              className="btn btn-md text-light"
-                              type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#addTrainingSchedule"
-                              style={{ backgroundColor: "#1B5A90" }}
-                            >
-                              <Add />
-                            </button>
-                            <button
-                              className="btn btn-md text-light"
-                              type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#addTrainingSchedule1"
-                              style={{ backgroundColor: "#1B5A90" }}
-                            >
-                              <Add /> Hr
-                            </button>
-                            <button
-                              className="btn btn-md text-light"
-                              type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#addTrainingSchedule2"
-                              style={{ backgroundColor: "#1B5A90" }}
-                            >
-                              <Add /> Hod
-                            </button> */}
-                          </div>
+                          ></div>
                         </div>
                       </div>
                     </div>
@@ -576,7 +640,7 @@ const AddTrainingSchedule = () => {
                             <th
                               scope="col"
                               style={headerCellStyle}
-                              className="fw-bold" /* style={headerCellStyle} */
+                               /* style={headerCellStyle} */
                             >
                               Action
                             </th>
@@ -585,7 +649,7 @@ const AddTrainingSchedule = () => {
                         <tbody className="text-center">
                           {allSubTrainingSchedule.map((data, index) => (
                             <tr>
-                              <td>{index + 1}</td>
+                              <td>{index}</td>
                               <td>{data.tss_emp_code}</td>
                               <td>{data.tss_emp_name}</td>
                               <td>{data.tss_traning_attend}</td>
@@ -597,7 +661,73 @@ const AddTrainingSchedule = () => {
                               <td>{data.tss_marks_obt}</td>
                               <td>{data.tss_traning_status}</td>
                               <td>{data.tss_re_traning_req}</td>
-                              <td>{data.tss_traning_cert}</td>
+
+                              <td>
+                                {data.tss_traning_cert !== null &&
+                                  data.tss_id && (
+                                    <span
+                                      type="button"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#viewModal"
+                                      onClick={() =>
+                                        ViewModal(data.tss_traning_cert)
+                                      }
+                                    >
+                                      {
+                                        fileName === data.tss_traning_cert
+                                          ? fileName
+                                          : `File uploaded`
+                                        // {fileName}
+                                      }
+                                    </span>
+                                  )}
+                                {!data.tss_traning_cert && (
+                                  <span
+                                    type="button"
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#viewModal"
+                                  >
+                                    File not uploaded
+                                  </span>
+                                )}
+                              </td>
+                              {/* <td>
+                                {data.tss_traning_cert !== null &&
+                                  data.tss_id && (
+                                    <span
+                                      type="button"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#viewModal"
+                                      onClick={() =>
+                                        ViewModal(data.tss_traning_cert)
+                                      }
+                                    >
+                                      {fileName}
+                                    </span>
+                                  )}
+                                {data.tss_traning_cert !== null && (
+                                  <span
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#viewModal"
+                                    onClick={() =>
+                                      ViewModal(data.tss_traning_cert)
+                                    }
+                                  >
+                                    file uploaded
+                                  </span>
+                                )}
+                                {data.tss_traning_cert === null && (
+                                  <span
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#viewModal"
+                                  >
+                                    file not uploaded
+                                  </span>
+                                )}
+                              </td>  */}
+
                               <td>{data.tss_status}</td>
                               <td>{data.tss_remark}</td>
                               <td>
@@ -612,7 +742,7 @@ const AddTrainingSchedule = () => {
                                   }
                                 />
                                 <Edit
-                                  className="text-success mr-2"
+                                  className="text-primary mr-2"
                                   type="button"
                                   data-bs-toggle="modal"
                                   data-bs-target="#addTrainingSchedule2"
@@ -729,21 +859,18 @@ const AddTrainingSchedule = () => {
           </div>
         </div>
 
-        {/* <div
+        <div
           className="modal fade"
-          id="addTrainingSchedule"
+          id="viewModal"
           tabIndex="-1"
-          aria-labelledby="addTrainingScheduleLabel"
+          aria-labelledby="viewModalLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog modal-lg">
+          <div className="modal-dialog modal-md">
             <div className="modal-content">
               <div className="modal-header">
-                <h5
-                  className="modal-title fw-bold"
-                  id="addTrainingScheduleLabel"
-                >
-                  Add Training Schedule
+                <h5 className="modal-title fw-bold" id="viewModalLabel">
+                  Training Certificate
                 </h5>
                 <button
                   type="button"
@@ -754,234 +881,35 @@ const AddTrainingSchedule = () => {
               </div>
               <div className="modal-body">
                 <div className="row">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Employee Code:
-                      </label>
-                      <input
-                        type="text"
-                        id="empCode"
-                        className="form-control "
-                        placeholder="Enter Employee Code"
-                        value={empCode}
-                        onChange={(e) => setEmpCode(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Employee Name:
-                      </label>
-                      <input
-                        type="text"
-                        id="empName"
-                        className="form-control "
-                        placeholder="Enter Employee Name"
-                        value={empName}
-                        onChange={(e) => setEmpName(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Training Attended:
-                      </label>
-                      <input
-                        type="text"
-                        id="trainingAttended"
-                        className="form-control"
-                        placeholder="Enter Training Attended"
-                        value={trainingAttended}
-                        onChange={(e) => setTrainingAttended(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Designation:
-                      </label>
-                      <input
-                        type="text"
-                        id="designation"
-                        className="form-control "
-                        placeholder="Enter Designation"
-                        value={designation}
-                        onChange={(e) => setDesignation(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Scheduled Hours:
-                      </label>
-                      <input
-                        type="text"
-                        id="scheduledHours"
-                        className="form-control "
-                        placeholder="Enter Scheduled Hours"
-                        value={scheduledHours}
-                        onChange={(e) => setScheduledHours(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Actual Hours Attended:
-                      </label>
-                      <input
-                        type="text"
-                        id="actualHoursAttended"
-                        className="form-control "
-                        placeholder="Enter Actual Hours Attended"
-                        value={actualHoursAttended}
-                        onChange={(e) => setActualHoursAttended(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Total Marks:
-                      </label>
-                      <input
-                        type="number"
-                        id="totalMarks"
-                        className="form-control "
-                        placeholder="Enter Total Marks"
-                        value={totalMarks}
-                        onChange={(e) => setTotalMarks(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Marks Obtained:
-                      </label>
-                      <input
-                        type="number"
-                        id="marksObtained"
-                        className="form-control "
-                        placeholder="Enter Marks Obtained"
-                        value={marksObtained}
-                        onChange={(e) => setMarksObtained(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Completion Status:
-                      </label>
-                      <input
-                        type="text"
-                        id="completionStatus"
-                        className="form-control "
-                        placeholder="Enter completion status"
-                        value={completionStatus}
-                        onChange={(e) => setCompletionStatus(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Training Status:
-                      </label>
-                      <input
-                        type="text"
-                        id="trainingStatus"
-                        className="form-control "
-                        placeholder="Enter Training status"
-                        value={trainingStatus}
-                        onChange={(e) => setTrainingStatus(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Re-training Required:
-                      </label>
-                      <select
-                        className="form-select "
-                        aria-label="Default select example"
-                        value={reTrainingRequired}
-                        onChange={(e) => setReTrainingRequired(e.target.value)}
-                      >
-                        <option defaultValue>Yes</option>
-                        <option value="1">No</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Training Certificate:
-                      </label>
-                      <input
-                        type="file"
-                        id="trainingCertificate"
-                        className="mt-3"
-                        placeholder="Training Request No"
-                        value={trainingCertificate}
-                        onChange={(e) => setTrainingCertificate(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Status:</label>
-                      <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        value={status1}
-                        onChange={(e) => setStatus1(e.target.value)}
-                      >
-                        <option defaultValue>Open this select menu</option>
-                        <option value="1">Open</option>
-                        <option value="2">Close</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Remark:</label>
-                      <input
-                        type="text"
-                        id="remark"
-                        className="form-control "
-                        placeholder="Enter Remark"
-                        value={remark}
-                        onChange={(e) => setRemark(e.target.value)}
-                      />
-                    </div>
+                    {pdfFile ? (
+                      fileType1 === "pdf" ? (
+                        <embed
+                          src={`data:application/pdf;base64,${pdfFile}`}
+                          type="application/pdf"
+                          width="200%"
+                          height="550px"
+                        />
+                      ) : (
+                        <img
+                          src={`data:image/png;base64,${pdfFile}`}
+                          type="image/png"
+                          className="img-fluid"
+                          width="auto"
+                          height="auto"
+                          alt=""
+                        />
+                      )
+                    ) : null}
                   </div>
                 </div>
               </div>
-              <div className="modal-footer">
+              {/* <div className="modal-footer">
                 <button
                   type="button"
                   className="btn text-white"
                   style={{ backgroundColor: "#1B5A90" }}
+                  data-bs-dismiss="modal"
                 >
                   Save
                 </button>
@@ -992,10 +920,10 @@ const AddTrainingSchedule = () => {
                 >
                   Close
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
-        </div> */}
+        </div>
         <div
           className="modal fade"
           id="addTrainingSchedule1"
@@ -1168,14 +1096,16 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Training Status:
                       </label>
-                      <input
-                        type="text"
-                        id="trainingStatus"
-                        className="form-control "
-                        placeholder="Enter Training status"
+                       <select
+                        className="form-select"
+                        aria-label="Default select example"
                         value={trainingStatus}
                         onChange={(e) => setTrainingStatus(e.target.value)}
-                      />
+                      >
+                        <option defaultValue>Select Training Status</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -1191,8 +1121,11 @@ const AddTrainingSchedule = () => {
                         value={reTrainingRequired}
                         onChange={(e) => setReTrainingRequired(e.target.value)}
                       >
-                        <option defaultValue>Yes</option>
-                        <option value="1">No</option>
+                        <option defaultValue>
+                          Select Re-training Required
+                        </option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
                       </select>
                     </div>
                   </div>
@@ -1206,8 +1139,7 @@ const AddTrainingSchedule = () => {
                         id="trainingCertificate"
                         className="mt-3"
                         placeholder="Training Request No"
-                        value={trainingCertificate}
-                        onChange={(e) => setTrainingCertificate(e.target.value)}
+                        onChange={handleFileChange}
                       />
                     </div>
                   </div>
@@ -1222,9 +1154,9 @@ const AddTrainingSchedule = () => {
                         value={status1}
                         onChange={(e) => setStatus1(e.target.value)}
                       >
-                        <option defaultValue>Open this select menu</option>
-                        <option value="1">Open</option>
-                        <option value="2">Close</option>
+                        <option defaultValue>select status</option>
+                        <option value="Open">Open</option>
+                        <option value="Close">Close</option>
                       </select>
                     </div>
                   </div>

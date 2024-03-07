@@ -4,6 +4,8 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../Css/MeetingCalendar.css';
 import { Modal, Button } from 'react-bootstrap';
+import UrlData from '../UrlData';
+import axios from 'axios';
 
 const localizer = momentLocalizer(moment);
 
@@ -15,6 +17,8 @@ function MeetingCalendar() {
     const [meetingDate, setMeetingDate] = useState(''); // Change to empty string
     const [meetingTime, setMeetingTime] = useState('');
     const [showModal, setShowModal] = useState(false)
+    const [allTrainingSchedule, setAllTrainingSchedule] = useState([])
+    const [fromDate, setFromDate] = useState("")
 
     // Your Zoom API credentials
     const ZOOM_API_KEY = 'YOUR_ZOOM_API_KEY';
@@ -26,52 +30,73 @@ function MeetingCalendar() {
     };
 
     useEffect(() => {
-        // Function to create a Zoom meeting
-        const createZoomMeeting = async () => {
-            const startTime = new Date(`${meetingDate}T${meetingTime}`);
-            const endTime = moment(startTime).add(1, 'hour').toDate();
+        getAllTrainingSchedule();
+      }, []);
+    
+      const getAllTrainingSchedule = () => {
+        axios
+          .get(
+            new URL(
+              UrlData +
+                `TrainingSchedule/GetAllTrainingSchedule?user_id=3fa85f64-5717-4562-b3fc-2c963f66afa6&ts_isactive=1`
+            )
+          )
+          .then((response) => {
+            console.log("get all Schedule", response.data.data);
+            setAllTrainingSchedule(response.data.data[0].ts_trainer_name);
+            setFromDate(response.data.data[0].ts_dt_tm_fromtraining)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+    // useEffect(() => {
+    //     // Function to create a Zoom meeting
+    //     const createZoomMeeting = async () => {
+    //         const startTime = new Date(`${meetingDate}T${meetingTime}`);
+    //         const endTime = moment(startTime).add(1, 'hour').toDate();
 
-            try {
-                const response = await fetch('https://api.zoom.us/v2/users/me/meetings', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${ZOOM_API_SECRET}`,
-                    },
-                    body: JSON.stringify({
-                        topic: meetingTitle,
-                        type: 2, // Scheduled meeting
-                        start_time: startTime.toISOString(),
-                        duration: 60, // Meeting duration in minutes (1 hour)
-                        timezone: 'UTC', // Timezone
-                    }),
-                });
+    //         try {
+    //             const response = await fetch('https://api.zoom.us/v2/users/me/meetings', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     Authorization: `Bearer ${ZOOM_API_SECRET}`,
+    //                 },
+    //                 body: JSON.stringify({
+    //                     topic: meetingTitle,
+    //                     type: 2, // Scheduled meeting
+    //                     start_time: startTime.toISOString(),
+    //                     duration: 60, // Meeting duration in minutes (1 hour)
+    //                     timezone: 'UTC', // Timezone
+    //                 }),
+    //             });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const newMeeting = {
-                        title: meetingTitle,
-                        start: startTime,
-                        end: endTime,
-                        desc: meetingTitle,
-                        zoomMeetingId: data.id,
-                    };
-                    setEvents([...events, newMeeting]);
-                    setIsModalOpen(false); // Close the modal after scheduling
-                } else {
-                    // Handle errors
-                    alert('Failed to create a Zoom meeting. Please try again later.');
-                }
-            } catch (error) {
-                console.error('Error creating Zoom meeting:', error);
-                alert('An error occurred while creating the Zoom meeting.');
-            }
-        };
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 const newMeeting = {
+    //                     title: meetingTitle,
+    //                     start: startTime,
+    //                     end: endTime,
+    //                     desc: meetingTitle,
+    //                     zoomMeetingId: data.id,
+    //                 };
+    //                 setEvents([...events, newMeeting]);
+    //                 setIsModalOpen(false); // Close the modal after scheduling
+    //             } else {
+    //                 // Handle errors
+    //                 alert('Failed to create a Zoom meeting. Please try again later.');
+    //             }
+    //         } catch (error) {
+    //             console.error('Error creating Zoom meeting:', error);
+    //             alert('An error occurred while creating the Zoom meeting.');
+    //         }
+    //     };
 
-        if (isModalOpen && meetingTitle && meetingDate && meetingTime) {
-            createZoomMeeting();
-        }
-    }, [isModalOpen, meetingTitle, meetingDate, meetingTime, events]);
+    //     if (isModalOpen && meetingTitle && meetingDate && meetingTime) {
+    //         createZoomMeeting();
+    //     }
+    // }, [isModalOpen, meetingTitle, meetingDate, meetingTime, events]);
 
     const handleSelectSlot = (slotInfo) => {
         setSelectedSlot(slotInfo);
