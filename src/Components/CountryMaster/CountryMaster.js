@@ -66,7 +66,7 @@ const CountryMaster = () => {
         co_country_code: countryCode,
         co_isactive: "1",
       };
-      if (countryId !== null && countryId !== undefined) {
+      if (countryId) {
         data.co_id = countryId;
       }
       axios({

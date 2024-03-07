@@ -4,6 +4,7 @@ import { Add, ArrowBack, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
+import Select from "react-select";
 
 const AddTrainingSchedule = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const AddTrainingSchedule = () => {
   const [trainingDept, setTrainingDept] = useState("");
   const [trainingReqBy, setTrainingReqBy] = useState("");
   const [trainingTopics, setTrainingTopics] = useState("");
+  const [selectedTrainingTopic, setSelectedTrainingTopic] = useState([]);
   const [noOfQues, setNoOfQues] = useState("");
   const [trainingAgency, setTrainingAgency] = useState("");
   const [trainingType, setTrainingType] = useState("");
@@ -46,6 +48,12 @@ const AddTrainingSchedule = () => {
   const [certificateUploaded, setCertificateUploaded] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+  const [allTrainingScheduleTypes, setAllTrainingScheduleTypes] = useState([]);
+  const [allTrainingStatus, setAllTrainingStatus] = useState([]);
+  const [allTrainingRequestedBy, setAllTrainingRequestedBy] = useState([]);
+  const [allTrainingReoccurrence, setAllTrainingReoccurrence] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -66,7 +74,11 @@ const AddTrainingSchedule = () => {
           setTrainerName(response.data.data.ts_trainer_name);
           setTrainingDept(response.data.data.ts_training_dept);
           setTrainingReqBy(response.data.data.ts_req_by);
-          setTrainingTopics(response.data.data.ts_topic);
+          setTrainingTopics({
+            value: response.data.data.ts_topic,
+            label: response.data.data.ts_topic,
+          });
+
           setNoOfQues(response.data.data.ts_no_que);
           setTrainingAgency(response.data.data.ts_training_agency);
           setTrainingType(response.data.data.ts_training_type);
@@ -100,6 +112,11 @@ const AddTrainingSchedule = () => {
 
   useEffect(() => {
     getAllSubTrainingSchedule();
+    getAllTrainingScheduleTypes();
+    getAllTrainingStatus();
+    getAllTrainingRequestedBy();
+    getAllTrainingReoccurrence();
+    getAllTrainingTopic();
   }, []);
 
   const getAllSubTrainingSchedule = () => {
@@ -120,6 +137,32 @@ const AddTrainingSchedule = () => {
       });
   };
 
+  const getAllTrainingTopic = () => {
+    axios
+      .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
+      .then((response) => {
+        console.log("response", response.data.data);
+        const trainingTopics = response.data.data.map((item, index) => ({
+          value: item.t_id,
+          label: item.t_description,
+        }));
+        setSelectedTrainingTopic(trainingTopics);
+        console.log(trainingTopics);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleTopics = (selected) => {
+    // const selectedData = selected.map((option) => ({
+    //   value: option.value,
+    //   label: option.label,
+    // }));
+    setTrainingTopics(selected);
+    console.log(selected);
+  };
+
   const addTrainingScheduleForm = () => {
     console.log(allSubTrainingSchedule, "trainingArray");
     console.log(trainingFrom, "training from");
@@ -130,7 +173,7 @@ const AddTrainingSchedule = () => {
       ts_trainer_name: trainerName,
       ts_training_dept: trainingDept,
       ts_req_by: trainingReqBy,
-      ts_topic: trainingTopics,
+      ts_topic: trainingTopics.value,
       ts_no_que: noOfQues,
       ts_training_agency: trainingAgency,
       ts_training_type: trainingType,
@@ -157,6 +200,70 @@ const AddTrainingSchedule = () => {
         // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
         // getAllTraining();
         navigate("/trainingSchedule");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllTrainingScheduleTypes = () => {
+    axios
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=B019FBF2-7B14-4A0A-ADC0-F9F12FC4DB88&status=1`
+        )
+      )
+      .then((response) => {
+        console.log("get all training types", response.data.data);
+        setAllTrainingScheduleTypes(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllTrainingStatus = () => {
+    axios
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=107FAF5C-04BD-4D6F-A6FD-AF919556FD91&status=1`
+        )
+      )
+      .then((response) => {
+        console.log("get all training Status", response.data.data);
+        setAllTrainingStatus(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllTrainingRequestedBy = () => {
+    axios
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=CFE554B4-18F8-4DBE-91B4-BFDD878C32B9&status=1`
+        )
+      )
+      .then((response) => {
+        console.log("get all training Requested by", response.data.data);
+        setAllTrainingRequestedBy(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllTrainingReoccurrence = () => {
+    axios
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=4CB055B0-AD3C-4CD8-87E5-932FAB77E74C&status=1`
+        )
+      )
+      .then((response) => {
+        console.log("get all training Reoccurrence", response.data.data);
+        setAllTrainingReoccurrence(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -189,7 +296,6 @@ const AddTrainingSchedule = () => {
         // If the current sub-training schedule doesn't match the one being edited, return it unchanged
         return training;
       }
-      
     );
     // Update the state with the updated array
     setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
@@ -219,7 +325,7 @@ const AddTrainingSchedule = () => {
         return training;
       }
     );
-    
+
     // Update the state with the updated array
     setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
     console.log(allSubTrainingSchedule, "all single sub training");
@@ -300,14 +406,18 @@ const AddTrainingSchedule = () => {
     setScheduledHours("");
     setActualHoursAttended();
     setTotalMarks("");
-    setMarksObtained("")
-    setCompletionStatus("")
-    setTrainingStatus("")
-    setReTrainingRequired("")
-    setTrainingCertificate("")
+    setMarksObtained("");
+    setCompletionStatus("");
+    setTrainingStatus("");
+    setReTrainingRequired("");
+    setTrainingCertificate("");
     setStatus1("");
-    setRemark("")
+    setRemark("");
   };
+
+  // const indexOfLastItem = currentPage * itemsPerPage;
+  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // const currentItems = allTraining.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <>
@@ -406,9 +516,14 @@ const AddTrainingSchedule = () => {
                         value={trainingReqBy}
                         onChange={(e) => setTrainingReqBy(e.target.value)}
                       >
-                        <option>Please Select</option>
-                        <option>HOD</option>
-                        <option>Employee</option>
+                        <option value="" disabled>
+                          Select Status
+                        </option>
+                        {allTrainingRequestedBy.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -417,7 +532,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Training Topics:
                       </label>
-                      <select
+                      {/* <select
                         className="form-select"
                         value={trainingTopics}
                         onChange={(e) => setTrainingTopics(e.target.value)}
@@ -425,7 +540,14 @@ const AddTrainingSchedule = () => {
                         <option>Please Select</option>
                         <option>HTML</option>
                         <option>Javascript</option>
-                      </select>
+                      </select> */}
+                      <Select
+                        options={selectedTrainingTopic}
+                        value={trainingTopics}
+                        // value={selectedTrainingTopic.filter(option => trainingTopics.includes(option.value))}
+                        onChange={handleTopics}
+                        className="mt-2"
+                      />
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
@@ -470,9 +592,14 @@ const AddTrainingSchedule = () => {
                         value={trainingType}
                         onChange={(e) => setTrainingType(e.target.value)}
                       >
-                        <option>Please Select</option>
-                        <option /* value="Subjective" */>Subjective</option>
-                        <option /* value="Informative" */>Informative</option>
+                        <option value="" disabled>
+                          Select Training Types
+                        </option>
+                        {allTrainingScheduleTypes.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -486,9 +613,14 @@ const AddTrainingSchedule = () => {
                         value={reoccurrence}
                         onChange={(e) => setReoccurrence(e.target.value)}
                       >
-                        <option>Please Select</option>
-                        <option>One Time</option>
-                        <option>Monthly</option>
+                        <option value="" disabled>
+                          Select Reoccurrence
+                        </option>
+                        {allTrainingReoccurrence.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -534,9 +666,14 @@ const AddTrainingSchedule = () => {
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
                       >
-                        <option>Please Select</option>
-                        <option>Planned</option>
-                        <option>Completed</option>
+                        <option value="" disabled>
+                          Select Status
+                        </option>
+                        {allTrainingStatus.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -640,7 +777,7 @@ const AddTrainingSchedule = () => {
                             <th
                               scope="col"
                               style={headerCellStyle}
-                               /* style={headerCellStyle} */
+                              /* style={headerCellStyle} */
                             >
                               Action
                             </th>
@@ -649,7 +786,7 @@ const AddTrainingSchedule = () => {
                         <tbody className="text-center">
                           {allSubTrainingSchedule.map((data, index) => (
                             <tr>
-                              <td>{index}</td>
+                              <td>{index + 1}</td>
                               <td>{data.tss_emp_code}</td>
                               <td>{data.tss_emp_name}</td>
                               <td>{data.tss_traning_attend}</td>
@@ -766,46 +903,60 @@ const AddTrainingSchedule = () => {
                       <div className="row mt-4 mt-xl-3">
                         <div className="col-lg-4 col-12 ">
                           <h6 className="text-lg-start text-center">
-                            Showing 1 to 3 of 3 entries
+                            {/* Showing 1 to 3 of 3 entries */}
                           </h6>
                         </div>
                         <div className="col-lg-4 col-12"></div>
                         <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                          <nav aria-label="Page navigation example">
-                            <ul className="pagination justify-content-lg-end justify-content-center">
+                        <nav aria-label="Page navigation example ">
+                            <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
                                   className="page-link"
-                                  /* onClick={handlePrevious} */ aria-label="Previous"
+                                  onClick={() =>
+                                    setCurrentPage(currentPage - 1)
+                                  }
+                                  disabled={currentPage === 1}
+                                  aria-label="Previous"
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
-                              <li className="page-item active">
-                                <button
-                                  className="page-link" /* onClick={handlePageClick(1)} */
-                                >
-                                  1
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button
-                                  className="page-link" /* onClick={handlePageClick(2)} */
-                                >
-                                  2
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button
-                                  className="page-link" /* onClick={handlePageClick(3)} */
-                                >
-                                  3
-                                </button>
-                              </li>
+                              {Array.from(
+                                {
+                                  length: Math.ceil(
+                                    allSubTrainingSchedule.length / itemsPerPage
+                                  ),
+                                },
+                                (_, index) => (
+                                  <li
+                                    className={`page-item ${
+                                      currentPage === index + 1 ? "active" : ""
+                                    }`}
+                                    key={index}
+                                  >
+                                    <button
+                                      className="page-link"
+                                      onClick={() => setCurrentPage(index + 1)}
+                                    >
+                                      {index + 1}
+                                    </button>
+                                  </li>
+                                )
+                              )}
                               <li className="page-item">
                                 <button
                                   className="page-link"
-                                  /* onClick={handleNext} */ aria-label="Next"
+                                  onClick={() =>
+                                    setCurrentPage(currentPage + 1)
+                                  }
+                                  disabled={
+                                    currentPage ===
+                                    Math.ceil(
+                                      allSubTrainingSchedule.length / itemsPerPage
+                                    )
+                                  }
+                                  aria-label="Next"
                                 >
                                   <span aria-hidden="true">&raquo;</span>
                                 </button>
@@ -1096,7 +1247,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Training Status:
                       </label>
-                       <select
+                      <select
                         className="form-select"
                         aria-label="Default select example"
                         value={trainingStatus}

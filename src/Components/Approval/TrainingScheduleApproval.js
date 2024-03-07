@@ -4,11 +4,18 @@ import { Add, Edit, Delete } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import UrlData from "../UrlData";
 import axios from "axios";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
 
 const TrainingScheduleApproval = () => {
   const navigate = useNavigate();
   const [allTrainingSchedule, setAllTrainingSchedule] = useState([]);
-  const [allTrainingScheduleApproval, setAllTrainingScheduleApproval] = useState("")
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -16,6 +23,7 @@ const TrainingScheduleApproval = () => {
 
   useEffect(() => {
     // getAllTrainingSchedule();
+    getAllApproval();
   }, []);
 
   const getAllTrainingSchedule = () => {
@@ -52,14 +60,13 @@ const TrainingScheduleApproval = () => {
         console.log(error);
       });
   };
-  useEffect(() => {
-    getAllApproval();
-  }, []);
-  
+
   const getLoginId = localStorage.getItem("loginId");
   const getAllApproval = () => {
     axios
-      .get(new URL(UrlData +`TrainingSchedule/GetAllApprove?roleid=${getLoginId}`))
+      .get(
+        new URL(UrlData + `TrainingSchedule/GetAllApprove?roleid=${getLoginId}`)
+      )
       .then((response) => {
         console.log("response", response.data.data, "get approval");
         setAllTrainingSchedule(response.data.data);
@@ -68,6 +75,14 @@ const TrainingScheduleApproval = () => {
         console.log(error);
       });
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = allTrainingSchedule.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
   return (
     <>
       <div className="container-fluid">
@@ -82,7 +97,9 @@ const TrainingScheduleApproval = () => {
               >
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold">Training Schedule</h4>
+                    <h4 className="card-title fw-bold">
+                      Training Schedule Approval
+                    </h4>
                   </div>
                   <div className="col-md-2  justify-content-end d-none">
                     <input
@@ -93,11 +110,11 @@ const TrainingScheduleApproval = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                    <div
+                    {/* <div
                       className="btn btn-add"
                       title="Add New"
                       onClick={() => {
-                        navigate("/addTrainingSchedule");
+                        navigate("/addTrainingScheduleApproval");
                       }}
                     >
                       <button
@@ -107,7 +124,7 @@ const TrainingScheduleApproval = () => {
                       >
                         <Add />
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -169,6 +186,9 @@ const TrainingScheduleApproval = () => {
                       <th scope="col" style={headerCellStyle}>
                         Status
                       </th>
+                      {/* <th scope="col" style={headerCellStyle}>
+                        Status 1
+                      </th> */}
                       <th
                         scope="col"
                         style={headerCellStyle}
@@ -178,91 +198,121 @@ const TrainingScheduleApproval = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="text-center">
-                    {allTrainingSchedule.map((data, index) => (
-                      <tr key={data.ts_id}>
-                        <td>{index}</td>
-                        <td>{data.ts_training_no}</td>
-                        <td>{data.ts_trainer_name}</td>
-                        <td>{data.ts_training_dept}</td>
-                        <td>{data.ts_topic}</td>
-                        <td>{data.ts_training_type}</td>
-                        <td>{data.ts_training_agency}</td>
-                        <td>{data.ts_no_que}</td>
-                        <td>{data.ts_reoccurence}</td>
-                        <td>
-                          {
+                  <tbody className="text-left">
+                    {allTrainingSchedule &&
+                      currentItems.map((data, index) => (
+                        <tr key={data.ts_id}>
+                          <td>
+                            {(currentPage - 1) * itemsPerPage + index + 1}
+                          </td>
+                          <td>{data.ts_training_no}</td>
+                          <td>{data.ts_trainer_name}</td>
+                          <td>{data.ts_training_dept}</td>
+                          <td>{data.ts_topic}</td>
+                          <td>{data.ts_training_type}</td>
+                          <td>{data.ts_training_agency}</td>
+                          <td>{data.ts_no_que}</td>
+                          <td>{data.ts_reoccurence}</td>
+                          <td>
+                            {/* {
                             new Date(data.ts_dt_tm_fromtraining)
                               .toISOString()
                               .split("T")[0]
-                          }
-                        </td>
-                        <td>
-                          {
+                          } */}
+                            {data.ts_dt_tm_fromtraining
+                              .replace("T", " ")
+                              .substring(0, 16)}
+                          </td>
+                          <td>
+                            {/* {
                             new Date(data.ts_dt_tm_totraining)
                               .toISOString()
                               .split("T")[0]
-                          }
-                        </td>
-                        <td>{data.ts_status}</td>
-                        <td>
-                          <Edit
-                            className="text-success mr-2"
-                            onClick={() => GetTrainingSchedule(data.ts_id)}
-                          />
-                          <Delete
-                            className="text-danger"
-                            style={{ marginLeft: "0.5rem" }}
-                            onClick={() => DeleteTrainingSchedule(data.ts_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                          } */}
+                            {data.ts_dt_tm_totraining
+                              .replace("T", " ")
+                              .substring(0, 16)}
+                          </td>
+                          <td>{data.ts_status}</td>
+                          {/* <td>{data.ts_action}</td> */}
+                          <td>
+                            <Edit
+                              className="text-success mr-2"
+                              onClick={() => GetTrainingSchedule(data.ts_id)}
+                            />
+                            {/* <Delete
+                              className="text-danger"
+                              style={{ marginLeft: "0.5rem" }}
+                              onClick={() => DeleteTrainingSchedule(data.ts_id)}
+                            /> */}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
                     <h6 className="text-lg-start text-center">
-                      Showing 1 to 3 of 3 entries
+                      Showing {indexOfFirstItem + 1} to{" "}
+                      {Math.min(indexOfLastItem, allTrainingSchedule.length)} of{" "}
+                      {allTrainingSchedule.length} entries
                     </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
                     <nav aria-label="Page navigation example">
-                      <ul className="pagination justify-content-lg-end justify-content-center">
+                      <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
                           <button
                             className="page-link"
-                            /* onClick={handlePrevious} */ aria-label="Previous"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
+                            disabled={currentPage === 1}
+                            aria-label="Previous"
                           >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        <li className="page-item active">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(1)} */
+                        {calculatePaginationRange(
+                          currentPage,
+                          allTrainingSchedule,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
                           >
-                            1
-                          </button>
-                        </li>
-                        <li className="page-item">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(2)} */
-                          >
-                            2
-                          </button>
-                        </li>
-                        <li className="page-item">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(3)} */
-                          >
-                            3
-                          </button>
-                        </li>
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
+                          </li>
+                        ))}
                         <li className="page-item">
                           <button
                             className="page-link"
-                            /* onClick={handleNext} */ aria-label="Next"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                allTrainingSchedule,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(
+                                allTrainingSchedule.length / itemsPerPage
+                              )
+                            }
+                            aria-label="Next"
                           >
                             <span aria-hidden="true">&raquo;</span>
                           </button>

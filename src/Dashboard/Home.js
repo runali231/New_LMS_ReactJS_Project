@@ -168,7 +168,7 @@ const Home = (props) => {
                       Country Master
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <NavLink
                       to="/stateMaster"
                       onClick={() => setSidebar(!sidebar)}
@@ -183,7 +183,7 @@ const Home = (props) => {
                     >
                       City Master
                     </NavLink>
-                  </li>
+                  </li> */}
                 </ul>
               </li>
               <li className="dropdown">

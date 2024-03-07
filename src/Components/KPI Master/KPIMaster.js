@@ -10,7 +10,7 @@ const KPIMaster = () => {
   const navigate = useNavigate();
   const [allKpi, setAllKpi] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
     color: "#fff",

@@ -10,7 +10,7 @@ const TopicMaster = () => {
   const navigate = useNavigate();
   const [allTopics, setAllTopics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with your desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background

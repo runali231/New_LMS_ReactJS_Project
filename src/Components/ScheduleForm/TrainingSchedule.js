@@ -4,10 +4,13 @@ import { Add, Edit, Delete } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import UrlData from "../UrlData";
 import axios from "axios";
+import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
 
 const TrainingSchedule = () => {
   const navigate = useNavigate();
   const [allTrainingSchedule, setAllTrainingSchedule] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -51,6 +54,11 @@ const TrainingSchedule = () => {
         console.log(error);
       });
   };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = allTrainingSchedule.slice(indexOfFirstItem, indexOfLastItem);
+
+
   return (
     <>
       <div className="container-fluid">
@@ -76,7 +84,7 @@ const TrainingSchedule = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                    <div
+                    {/* <div
                       className="btn btn-add"
                       title="Add New"
                       onClick={() => {
@@ -90,7 +98,7 @@ const TrainingSchedule = () => {
                       >
                         <Add />
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -165,9 +173,9 @@ const TrainingSchedule = () => {
                     </tr>
                   </thead>
                   <tbody className="text-left">
-                    {allTrainingSchedule.map((data, index) => (
+                    {allTrainingSchedule && currentItems.map((data, index) => (
                       <tr key={data.ts_id}>
-                        <td>{index}</td>
+                        <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                         <td>{data.ts_training_no}</td>
                         <td>{data.ts_trainer_name}</td>
                         <td>{data.ts_training_dept}</td>
@@ -212,47 +220,33 @@ const TrainingSchedule = () => {
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
                     <h6 className="text-lg-start text-center">
-                      Showing 1 to 3 of 3 entries
-                    </h6>
+                    Showing {indexOfFirstItem + 1} to{" "}
+                      {Math.min(indexOfLastItem, allTrainingSchedule.length)} of{" "}
+                      {allTrainingSchedule.length} entries</h6>
+                    
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                    <nav aria-label="Page navigation example">
-                      <ul className="pagination justify-content-lg-end justify-content-center">
+                  <nav aria-label="Page navigation example">
+                      <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
-                          <button
-                            className="page-link"
-                            /* onClick={handlePrevious} */ aria-label="Previous"
-                          >
+                          <button className="page-link"
+                            onClick={() => handlePrevious(currentPage, setCurrentPage)}
+                            disabled={currentPage === 1}
+                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        <li className="page-item active">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(1)} */
-                          >
-                            1
-                          </button>
-                        </li>
+                        {calculatePaginationRange(currentPage, allTrainingSchedule, itemsPerPage).map((number) =>
+                          <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`}>
+                            <button className="page-link" onClick={() => handlePageClick(number, setCurrentPage)}>{number}</button>
+                          </li>
+                        )}
                         <li className="page-item">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(2)} */
-                          >
-                            2
-                          </button>
-                        </li>
-                        <li className="page-item">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(3)} */
-                          >
-                            3
-                          </button>
-                        </li>
-                        <li className="page-item">
-                          <button
-                            className="page-link"
-                            /* onClick={handleNext} */ aria-label="Next"
-                          >
+                          <button className="page-link"
+                            onClick={() => handleNext(currentPage, allTrainingSchedule, itemsPerPage, setCurrentPage)}
+                            disabled={currentPage === Math.ceil(allTrainingSchedule.length / itemsPerPage)}
+                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                           </button>
                         </li>

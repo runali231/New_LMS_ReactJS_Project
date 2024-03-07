@@ -46,6 +46,8 @@ const AddTrainingApprovalForm = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [empNameOptions, setEmpNameOptions] = useState([]);
   const [selectedNameOption, setSelectedNameOption] = useState("");
+  const [allTrainingNature, setAllTrainingNature] = useState([])
+  const [allTrainingType, setAllTrainingType] = useState([])
   const [code, setCode] = useState("");
   // const [action, setAction] = useState([])
 
@@ -84,6 +86,8 @@ const AddTrainingApprovalForm = () => {
     getAllTrainingTopic();
     getAllTraining();
     getAllEmployee();
+    getAllTrainingNature();
+    getAllTrainingType();
     getAllActions()
     if (id) {
       axios({
@@ -110,7 +114,30 @@ const AddTrainingApprovalForm = () => {
         });
     }
   }, [trId]);
-
+  const getAllTrainingNature = () => {
+    axios
+      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`))
+      .then((response) => {
+        console.log("get all training nature", response.data.data);
+        setAllTrainingNature(response.data.data)
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllTrainingType = () => {
+    axios
+      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`))
+      .then((response) => {
+        console.log("get all training Type", response.data.data);
+        setAllTrainingType(response.data.data)
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getByOrder = () => {
     axios
       .get(new URL(UrlData + `TrainingForm/GetOrder`))
@@ -546,12 +573,20 @@ const AddTrainingApprovalForm = () => {
                       <select
                         className="form-select"
                         value={trainingNature}
-                        disabled
                         onChange={(e) => setTrainingNature(e.target.value)}
+                        disabled
                       >
-                        <option>Please Select</option>
+                        {/* <option>Please Select</option>
                         <option>Induction</option>
-                        <option>New Training</option>
+                        <option>New Training</option> */}
+                        <option value="" disabled>
+                          Select Training Nature
+                        </option>
+                        {allTrainingNature.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -566,14 +601,14 @@ const AddTrainingApprovalForm = () => {
                         onChange={(e) => setTrainingType(e.target.value)}
                         disabled
                       >
-                        <option>Please Select</option>
-                        <option value="IDP">IDP</option>
-                        <option value="NPD">NPD</option>
-                        <option value="QRT">QRT</option>
-                        <option value="AO">AO</option>
-                        <option value="PP">PP</option>
-                        <option value="NCR">NCR</option>
-                        <option value="CC">CC</option>
+                      <option value="" disabled>
+                          Select Training Type
+                        </option>
+                        {allTrainingType.map((data, index) => (
+                          <option key={index} value={data.pv_id}>
+                            {data.pv_parametervalue}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -752,7 +787,7 @@ const AddTrainingApprovalForm = () => {
                         </thead>
 
                         <tbody>
-                          {allByDepartments.map((departmentItem, index) => {
+                        {allByDepartments.map((departmentItem, index) => {
                             return (
                               <tr key={index}>
                                 <td>{index + 1}</td>
@@ -761,28 +796,34 @@ const AddTrainingApprovalForm = () => {
                                 <td>{departmentItem.td_emp_name}</td>
                                 <td>{departmentItem.td_dept}</td>
                                 <td>{departmentItem.td_des}</td>
-                                {/* <td>
-                                  {
-                                    formatDate(departmentItem.td_date_training)
-                                  }
-                                </td> */}
-                                <td>{departmentItem.td_date_training}</td>
-                                <td>{departmentItem.td_topic_training}</td>
-                                {/* <td>
-                                  <Edit
-                                    className="text-success mr-2"
-                                    type="button"
-                                    onClick={() => getSingleTraining(index)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addTrainingForm"
-                                  />
-                                  <Delete
-                                    className="text-danger"
-                                    type="button"
-                                    style={{ marginLeft: "0.5rem" }}
-                                    onClick={() => deleteTraining(index)}
-                                  />
-                                </td> */}
+                                <td>
+                                  {formatDate(departmentItem.td_date_training)}
+                                </td>
+                                <td
+                                  style={{ whiteSpace: "pre-line" }}
+                                  className="d-none"
+                                >
+                                  {departmentItem.td_topic_training &&
+                                  typeof departmentItem.td_topic_training ===
+                                    "string"
+                                    ? departmentItem.td_topic_training
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
+                                    : departmentItem.td_topic_training}
+                                </td>
+                                <td style={{ whiteSpace: "pre-line" }}>
+                                  {departmentItem.td_topic_training_name &&
+                                  typeof departmentItem.td_topic_training_name ===
+                                    "string"
+                                    ? departmentItem.td_topic_training_name
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
+                                    : departmentItem.td_topic_training_name}
+                                </td>
                               </tr>
                             );
                           })}

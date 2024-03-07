@@ -3,7 +3,11 @@ import { ArrowBack } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
-import { getAllDepartment , GetAllDesignation} from "../Api/DesignationAndDepartment";
+import Select from "react-select";
+import {
+  getAllDepartment,
+  GetAllDesignation,
+} from "../Api/DesignationAndDepartment";
 
 const AddEmployee = () => {
   const navigate = useNavigate();
@@ -33,8 +37,10 @@ const AddEmployee = () => {
   const { id } = useParams();
 
   useEffect(() => {
-   getAllData()
-   getAllCity()
+    getAllData();
+    getAllCity();
+    getAllCountry();
+    getAllState();
   }, []);
 
   useEffect(() => {
@@ -100,14 +106,11 @@ const AddEmployee = () => {
       alert("Please Enter Only Numbers");
     } else if (officeNo.length !== 10) {
       alert("Please enter valid office number");
-    } 
-   else if (pinCode.length !== 6) {
+    } else if (pinCode.length !== 6) {
       alert("Please enter valid pin code");
-    } 
-    else if (!emailRegex.test(emailId)){
+    } else if (!emailRegex.test(emailId)) {
       alert("Please enter valid email id");
-    }
-    else {
+    } else {
       data = {
         userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         emp_code: empCode,
@@ -142,11 +145,10 @@ const AddEmployee = () => {
           console.log(response);
           if (id !== null && id !== undefined && id !== ":id") {
             alert("Employee edited successfully!");
-          }
-          else{
+          } else {
             alert("Employee added successfully!");
           }
-          
+
           navigate("/employeeMaster");
         })
         .catch((error) => {
@@ -155,9 +157,33 @@ const AddEmployee = () => {
     }
   };
 
+  const getAllCountry = () => {
+    axios
+      .get(new URL(UrlData + `CountryMaster/GetAll?status=1`))
+      .then((response) => {
+        console.log("all country", response.data.data);
+        setAllCountry(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getAllState = () => {
+    axios
+      .get(new URL(UrlData + `StateMaster/GetAll?status=1`))
+      .then((response) => {
+        console.log("all state", response.data.data);
+        setAllState(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const getAllCity = () => {
     axios
-      .get(new URL(UrlData +`CityMaster/GetAll?status=1`))
+      .get(new URL(UrlData + `CityMaster/GetAll?status=1`))
       .then((response) => {
         console.log("response", response.data.data);
         setAllCity(response.data.data);
@@ -166,24 +192,34 @@ const AddEmployee = () => {
         console.log(error);
       });
   };
-  const CityHandleChange =(e, selected)=>{
-    setCity(e.target.value)
-    // console.log(e.target.value)
-    // console.log(city, "city")
+
+  const CityHandleChange = (selected) => {
+    console.log("Selected city:", selected);
+
+    setCity(selected);
+
+    console.log("City state after setting:", city);
+
     axios
-      .get(new URL(UrlData +`CityMaster/GetCityById?status=1&ci_id=${e.target.value}`))
+      .get(
+        new URL(
+          UrlData + `CityMaster/GetCityById?status=1&ci_id=${selected.value}`
+        )
+      )
       .then((response) => {
-        console.log("response", response.data.data);
-        setState(response.data.data.ci_state_name);
-        setCountry(response.data.data.ci_country_name)
+        console.log("API response:", response.data.data);
+        const newState = response.data.data.ci_state_id;
+        const newCountry = response.data.data.ci_country_id;
+        setState(newState);
+        setCountry(newCountry);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("Error fetching city data:", error);
       });
-  }
+};
 
-  
- 
+
+
   const getAllData = async () => {
     const designationData = await GetAllDesignation();
     const departmentData = await getAllDepartment();
@@ -488,7 +524,7 @@ const AddEmployee = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">City:</label>
-                      <select
+                      {/* <select
                         className="form-select"
                         onChange={CityHandleChange}
                         value={city}
@@ -501,7 +537,16 @@ const AddEmployee = () => {
                             {data.ci_city_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={allCity.map((data) => ({
+                          value: data.ci_id,
+                          label: data.ci_city_name,
+                        }))}
+                        value={city}
+                        onChange={CityHandleChange}
+                        className="mt-2"
+                      />
                     </div>
                   </div>
                 </div>
@@ -509,18 +554,32 @@ const AddEmployee = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">State:</label>
-                      <select
+                      {/* <input className="form-control" value={state} onChange={(e) => setState(e.target.value)}
+                      /> */}
+                     <select
                         className="form-select"
-                        onChange={(e) => setState(e.target.value)}
                         value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        
                       >
-                        <option value="" disabled>
-                          Select
+                         <option value="" disabled>
+                          Select State
                         </option>
-                        <option value="Maharashtra">Maharashtra</option>
-                        <option value="Assam">Assam</option>
-                        <option value="Bihar">Bihar</option>
+                        {allState.map((data) => (
+                          <option key={data.s_id} value={data.s_id}>
+                            {data.s_state_name}
+                          </option>
+                        ))}
                       </select>
+                      {/* <Select
+                        options={allCountry.map((data) => ({
+                          value: data.co_id,
+                          label: data.co_country_name,
+                        }))}
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        className="mt-2"
+                      /> */}
                     </div>
                   </div>
 
@@ -532,11 +591,14 @@ const AddEmployee = () => {
                         onChange={(e) => setCountry(e.target.value)}
                         value={country}
                       >
-                        <option>Select</option>
-                        <option>India</option>
-                        <option>Afghanistan</option>
-                        <option>Bangladesh</option>
-                        <option>Canada</option>
+                        <option value="" disabled>
+                          Select Country
+                        </option>
+                        {allCountry.map((data, index) => (
+                          <option key={index} value={data.co_id}>
+                            {data.co_country_name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
