@@ -126,7 +126,7 @@ const AddDesignation = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation Code:
-                      </label>
+                      </label> <span class="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="dsgCode"
@@ -144,7 +144,7 @@ const AddDesignation = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation Name:
-                      </label>
+                      </label> <span class="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="dsgName"

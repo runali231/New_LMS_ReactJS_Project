@@ -606,7 +606,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Nature:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={trainingNature}
@@ -630,7 +630,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Type:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={trainingType}
@@ -654,7 +654,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Request No:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="custom-search"
@@ -662,6 +662,7 @@ const AddTrainingForm = () => {
                         placeholder="Training Request No"
                         value={trainingReqNo}
                         onChange={(e) => setTrainingReqNo(e.target.value)}
+                        disabled
                       />
                     </div>
                   </div>
@@ -669,7 +670,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Request Date:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="date"
                         id="custom-search"
@@ -687,7 +688,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         No of Hours:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="noHours"
@@ -702,7 +703,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         No of Days:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="custom-search"
@@ -1026,7 +1027,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <Select
                         options={selectedDepartment}
                         value={departments}
@@ -1054,7 +1055,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Code:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <Select
                         options={empCodeOptions}
                         value={selectedOption}
@@ -1084,7 +1085,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Required Dept:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="trainingDept"
@@ -1099,7 +1100,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Date of Training Required:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="date"
                         id="trainingDate"
@@ -1117,7 +1118,7 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Topics for Training Required:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <Select
                         options={selectedTrainingTopic}
                         isMulti

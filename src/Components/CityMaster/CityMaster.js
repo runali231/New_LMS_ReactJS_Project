@@ -346,7 +346,7 @@ const CityMaster = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         City Code:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="cityCode"
@@ -364,7 +364,7 @@ const CityMaster = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         City Name:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="cityName"

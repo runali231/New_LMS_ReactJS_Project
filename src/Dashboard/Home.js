@@ -168,22 +168,6 @@ const Home = (props) => {
                       Country Master
                     </NavLink>
                   </li>
-                  {/* <li>
-                    <NavLink
-                      to="/stateMaster"
-                      onClick={() => setSidebar(!sidebar)}
-                    >
-                      State Master
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/cityMaster"
-                      onClick={() => setSidebar(!sidebar)}
-                    >
-                      City Master
-                    </NavLink>
-                  </li> */}
                 </ul>
               </li>
               <li className="dropdown">
@@ -331,16 +315,11 @@ const Home = (props) => {
                   id="exnavbar"
                   className="collapse d-inline-block d-lg-none d-sm-block d-block ms-auto more-button"
                   type="button"
-                  data-bs-toggle="collapse" /* onClick={()=>setSidebarShow(true)} */
-                  // data-bs-target="#navbarSupportedContent"
-                  // aria-controls="navbarSupportedContent"
+                  data-bs-toggle="collapse" 
                   data-bs-target="#sidebar"
                   aria-controls="sidebar"
-                  aria-expanded="true" /* aria-label="Toggle navigation" */
+                  aria-expanded="true" 
                 >
-                  {/* <span className="material-icons" onClick={MoreButton}>
-                    more_vert
-                  </span> */}
                   <ThreeDotsVertical style={{ fontSize: '22px', color: 'white' }} onClick={MoreButton} />
                 </button>
 
@@ -359,25 +338,7 @@ const Home = (props) => {
                         <BellFill style={{ fontSize: '20px', color: 'white' }} />
                         <span className="notification text-white">4</span>
                       </NavLink>
-                      <ul
-                        className="dropdown-menu"
-                        style={{ marginRight: "auto" }}
-                      >
-                        <li>
-                          <NavLink to="/">You have 4 New Message</NavLink>
-                        </li>
-                        <li>
-                          <NavLink to="/">You have 4 New Message</NavLink>
-                        </li>
-                        <li>
-                          <NavLink to="/">You have 4 New Message</NavLink>
-                        </li>
-                        <li>
-                          <NavLink to="/" className="nMsg">
-                            You have 4 New Message
-                          </NavLink>
-                        </li>
-                      </ul>
+                     
                     </li>
 
                     <li className="nav-item">

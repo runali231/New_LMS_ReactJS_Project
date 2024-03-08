@@ -13,17 +13,20 @@ import {
 
 const RoleMaster = () => {
   const navigate = useNavigate();
-  const [allDesignation, setAllDesignation] = useState([]);
+  const [allRoleMaster, setAllRoleMaster] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
-  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); // State for dropdown value
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
+  const [addAccess, setAddAccess] = useState("")
+  // State for dropdown value
+
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
     color: "#fff",
   };
 
   useEffect(() => {
-    // getAllData();
+    getAllData();
   }, [currentPage, itemsPerPage]); // Fetch data when currentPage or itemsPerPage changes
 
   const getAllData = () => {
@@ -31,12 +34,13 @@ const RoleMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `DesignationMaster/GetAll?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          // `RoleMaster/GetAll?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          `RoleMaster/GetAll?status=1`
       ), // Include pageSize and pageNumber in the URL
     })
       .then((response) => {
         console.log("response", response.data.data);
-        setAllDesignation(response.data.data);
+        setAllRoleMaster(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -49,18 +53,18 @@ const RoleMaster = () => {
     setCurrentPage(1); // Reset currentPage to 1 when changing items per page
   };
 
-  const GetDesignation = (dId) => {
-    navigate(`/addDesignation/${dId}`);
+  const GetRoleMaster = (rId) => {
+    navigate(`/addRoleMaster/${rId}`);
   };
 
-  const DeleteDesignation = (dId) => {
+  const DeleteRoleMaster = (rId) => {
     const data = {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      de_id: dId,
+      r_id: rId,
     };
     axios({
       method: "post",
-      url: new URL(UrlData + `DesignationMaster/Delete`),
+      url: new URL(UrlData + `RoleMaster/DeleteRole`),
       data: data,
     })
       .then((response) => {
@@ -74,7 +78,7 @@ const RoleMaster = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allDesignation.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allRoleMaster.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <>
@@ -88,7 +92,7 @@ const RoleMaster = () => {
               <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold">Role Master Master</h4>
+                    <h4 className="card-title fw-bold">Role Master</h4>
                   </div>
                   <div className="col-md-2 justify-content-end d-none">
                     <input
@@ -161,44 +165,47 @@ const RoleMaster = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Admin</td>
-                      <td>Admin</td>
-                      <td>abc</td>
-                      <td>Training form, Training Schedule</td>
-                      <td>
-                        <div className="form-check form-switch">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault"
+                    {allRoleMaster.map((data, index) => (
+                      <tr key={data.r_id}>
+                        <td>{index + 1}</td>
+                        <td>{data.r_rolename}</td>
+                        <td>{data.r_description}</td>
+                        <td>{data.r_module}</td>
+                        <td>{data.m_menuname}</td>
+                        <td>
+                          {/* <div className="form-check form-switch">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="flexSwitchCheckDefault"
+                            />
+                          </div> */}
+                          {data.r_isactive}
+                        </td>
+                        <td>
+                          {" "}
+                          <Edit
+                            className="text-success mr-2"
+                            type="button"                            
+                            onClick={() => GetRoleMaster(data.r_id)}
                           />
-                        </div>
-                      </td>
-                      <td>
-                        {" "}
-                        <Edit
-                          className="text-success mr-2"
-                          type="button"
-                          // onClick={() => GetDesignation(data.de_id)}
-                        />
-                        <Delete
-                          className="text-danger"
-                          type="button"
-                          style={{ marginLeft: "0.5rem" }}
-                          // onClick={() => DeleteDesignation(data.de_id)}
-                        />
-                      </td>
-                    </tr>
+                          <Delete
+                            className="text-danger"
+                            type="button"
+                            style={{ marginLeft: "0.5rem" }}
+                            onClick={() => DeleteRoleMaster(data.r_id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
                     <h6 className="text-lg-start text-center">
                       Showing {indexOfFirstItem + 1} to{" "}
-                      {Math.min(indexOfLastItem, allDesignation.length)} of{" "}
-                      {allDesignation.length} entries
+                      {Math.min(indexOfLastItem, allRoleMaster.length)} of{" "}
+                      {allRoleMaster.length} entries
                     </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
@@ -219,7 +226,7 @@ const RoleMaster = () => {
                         </li>
                         {calculatePaginationRange(
                           currentPage,
-                          allDesignation,
+                          allRoleMaster,
                           itemsPerPage
                         ).map((number) => (
                           <li
@@ -244,14 +251,14 @@ const RoleMaster = () => {
                             onClick={() =>
                               handleNext(
                                 currentPage,
-                                allDesignation,
+                                allRoleMaster,
                                 itemsPerPage,
                                 setCurrentPage
                               )
                             }
                             disabled={
                               currentPage ===
-                              Math.ceil(allDesignation.length / itemsPerPage)
+                              Math.ceil(allRoleMaster.length / itemsPerPage)
                             }
                             aria-label="Next"
                           >

@@ -147,7 +147,7 @@ const CountryMaster = () => {
               <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold">Country Master</h4>
+                    <h4 className="card-title fw-bold">Country Master</h4> 
                   </div>
                   <div className="col-auto d-flex flex-wrap">
                     <div className="btn btn-add" title="Add New">
@@ -324,7 +324,7 @@ const CountryMaster = () => {
             <div className="modal-header">
               <h5 className="modal-title fw-bold" id="countryFormLabel">
                Country Master
-              </h5>
+              </h5> 
               <button
                 type="button"
                 className="btn-close"
@@ -338,7 +338,7 @@ const CountryMaster = () => {
                   <div className="form-group form-group-sm">
                     <label className="control-label fw-bold">
                       Country Code:
-                    </label>
+                    </label> <span className="text-danger fw-bold">*</span>
                     <input
                       type="number"
                       id="countryCode"
@@ -356,7 +356,7 @@ const CountryMaster = () => {
                   <div className="form-group form-group-sm">
                     <label className="control-label fw-bold">
                       Country Name:
-                    </label>
+                    </label> <span className="text-danger fw-bold">*</span>
                     <input
                       type="text"
                       id="countryName"

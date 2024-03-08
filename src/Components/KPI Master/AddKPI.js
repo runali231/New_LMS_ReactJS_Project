@@ -199,7 +199,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Code:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="eCode"
@@ -218,7 +218,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Name:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="eName"
@@ -236,7 +236,7 @@ const AddKPI = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">KPI Code:</label>
+                      <label className="control-label fw-bold">KPI Code:</label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="kpiCode"
@@ -254,7 +254,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         KPI Description:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <textarea
                         className="form-control"
                         id="description"
@@ -271,7 +271,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -293,7 +293,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Departments:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -334,7 +334,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Target Date:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="date"
                         id="targetDate"
@@ -351,7 +351,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Occurrence:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"

@@ -216,9 +216,7 @@ const AddEmployee = () => {
       .catch((error) => {
         console.log("Error fetching city data:", error);
       });
-};
-
-
+  };
 
   const getAllData = async () => {
     const designationData = await GetAllDesignation();
@@ -293,7 +291,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Code:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="eCode"
@@ -311,7 +310,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         First Name:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="fName"
@@ -329,8 +329,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Middle Name:
-                      </label>
-
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="mName"
@@ -350,7 +350,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Last Name:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="lName"
@@ -368,7 +369,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Job Title:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="jobTitle"
@@ -386,7 +388,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -410,7 +413,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Departments
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -430,7 +434,8 @@ const AddEmployee = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">HOD</label>
+                      <label className="control-label fw-bold">HOD</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <br />
                       <div className="form-check form-check-inline mt-2">
                         <input
@@ -493,7 +498,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Address 1:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <textarea
                         className="form-control"
                         rows="2"
@@ -523,7 +529,8 @@ const AddEmployee = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">City:</label>
+                      <label className="control-label fw-bold">City:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       {/* <select
                         className="form-select"
                         onChange={CityHandleChange}
@@ -553,16 +560,16 @@ const AddEmployee = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">State:</label>
+                      <label className="control-label fw-bold">State:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       {/* <input className="form-control" value={state} onChange={(e) => setState(e.target.value)}
                       /> */}
-                     <select
+                      <select
                         className="form-select"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
-                        
                       >
-                         <option value="" disabled>
+                        <option value="" disabled>
                           Select State
                         </option>
                         {allState.map((data) => (
@@ -585,7 +592,8 @@ const AddEmployee = () => {
 
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Country:</label>
+                      <label className="control-label fw-bold">Country:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         onChange={(e) => setCountry(e.target.value)}
@@ -604,7 +612,8 @@ const AddEmployee = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Pin Code:</label>
+                      <label className="control-label fw-bold">Pin Code:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="pinCode"
@@ -624,7 +633,8 @@ const AddEmployee = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Mobile Phone:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="mobile"
@@ -658,7 +668,8 @@ const AddEmployee = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Email Id:</label>
+                      <label className="control-label fw-bold">Email Id:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="emailId"

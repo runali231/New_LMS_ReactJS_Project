@@ -463,7 +463,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training No:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="trainingNo"
@@ -478,7 +479,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Trainer Name:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="trainerName"
@@ -493,7 +495,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Dept:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="trainingDept"
@@ -531,7 +534,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Topics:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       {/* <select
                         className="form-select"
                         value={trainingTopics}
@@ -554,7 +558,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         No of question of evaluation:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="noOfQues"
@@ -586,7 +591,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Type:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={trainingType}
@@ -607,7 +613,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Reoccurrence:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={reoccurrence}
@@ -630,7 +637,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Date/ Time of Training Form:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         // type="date"
                         type="datetime-local"
@@ -646,7 +654,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Date/ Time of Training To:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         // type="date"
                         type="datetime-local"
@@ -660,7 +669,8 @@ const AddTrainingSchedule = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Status:</label>
+                      <label className="control-label fw-bold">Status:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={status}
@@ -828,43 +838,6 @@ const AddTrainingSchedule = () => {
                                   </span>
                                 )}
                               </td>
-                              {/* <td>
-                                {data.tss_traning_cert !== null &&
-                                  data.tss_id && (
-                                    <span
-                                      type="button"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#viewModal"
-                                      onClick={() =>
-                                        ViewModal(data.tss_traning_cert)
-                                      }
-                                    >
-                                      {fileName}
-                                    </span>
-                                  )}
-                                {data.tss_traning_cert !== null && (
-                                  <span
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#viewModal"
-                                    onClick={() =>
-                                      ViewModal(data.tss_traning_cert)
-                                    }
-                                  >
-                                    file uploaded
-                                  </span>
-                                )}
-                                {data.tss_traning_cert === null && (
-                                  <span
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#viewModal"
-                                  >
-                                    file not uploaded
-                                  </span>
-                                )}
-                              </td>  */}
-
                               <td>{data.tss_status}</td>
                               <td>{data.tss_remark}</td>
                               <td>
@@ -908,7 +881,7 @@ const AddTrainingSchedule = () => {
                         </div>
                         <div className="col-lg-4 col-12"></div>
                         <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                        <nav aria-label="Page navigation example ">
+                          <nav aria-label="Page navigation example ">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -953,7 +926,8 @@ const AddTrainingSchedule = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allSubTrainingSchedule.length / itemsPerPage
+                                      allSubTrainingSchedule.length /
+                                        itemsPerPage
                                     )
                                   }
                                   aria-label="Next"
@@ -1089,7 +1063,7 @@ const AddTrainingSchedule = () => {
                   className="modal-title fw-bold"
                   id="addTrainingSchedule1Label"
                 >
-                  Add Training Schedule (hr login)
+                  Add Training Schedule {/* (hr login) */}
                 </h5>
                 <button
                   type="button"
@@ -1104,7 +1078,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Attended:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="trainingAttended"
@@ -1119,7 +1094,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Scheduled Hours:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="scheduledHours"
@@ -1136,7 +1112,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Actual Hours Attended:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="actualHoursAttended"
@@ -1184,7 +1161,7 @@ const AddTrainingSchedule = () => {
                   className="modal-title fw-bold"
                   id="addTrainingSchedule2Label"
                 >
-                  Add Training Schedule(Hod login)
+                  Add Training Schedule {/* (Hod login) */}
                 </h5>
                 <button
                   type="button"
@@ -1199,7 +1176,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Total Marks:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="totalMarks"
@@ -1214,7 +1192,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Marks Obtained:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="marksObtained"
@@ -1231,7 +1210,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Completion Status:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="completionStatus"
@@ -1246,7 +1226,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Status:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -1265,7 +1246,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Re-training Required:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select "
                         aria-label="Default select example"
@@ -1284,7 +1266,8 @@ const AddTrainingSchedule = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Certificate:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="file"
                         id="trainingCertificate"
@@ -1298,7 +1281,8 @@ const AddTrainingSchedule = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Status:</label>
+                      <label className="control-label fw-bold">Status:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"

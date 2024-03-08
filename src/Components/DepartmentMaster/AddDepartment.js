@@ -16,7 +16,6 @@ const AddDepartment = () => {
 
   useEffect(() => {
     GetAllDepartmentHead()
-    // Fetch department details based on the id
     if (id) {
       axios({
         method: "get",
@@ -146,7 +145,7 @@ const AddDepartment = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department Code:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="deptCode"
@@ -156,7 +155,7 @@ const AddDepartment = () => {
                         placeholder="Enter Department Code"
                         value={deptCode}
                         onChange={(e) => setDeptCode(e.target.value)}
-                        required
+                        
                       />
                     </div>
                   </div>
@@ -164,7 +163,7 @@ const AddDepartment = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department Name:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="deptName"
@@ -174,7 +173,7 @@ const AddDepartment = () => {
                         placeholder="Enter Department Name"
                         value={deptName}
                         onChange={(e) => setDeptName(e.target.value)}
-                        required
+                        
                       />
                     </div>
                   </div>
@@ -184,18 +183,7 @@ const AddDepartment = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department Head:
-                      </label>
-                      {/* <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        value={deptHead}
-                        onChange={(e)=>setDeptHead(e.target.value)}
-                      >
-                        <option value="" disabled>select Department Head</option>
-                        <option value="Boss">Boss</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="executive">executive</option>
-                      </select> */}
+                      </label> 
                              <select
                         className="form-select"
                         aria-label="Default select example"

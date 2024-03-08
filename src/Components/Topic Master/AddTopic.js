@@ -221,7 +221,7 @@ const AddTopic = () => {
                 <div className="row">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Code:</label>
+                      <label className="control-label fw-bold">Code:</label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="tCode"
@@ -239,7 +239,7 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Description:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <textarea
                         className="form-control"
                         rows="1"
@@ -257,7 +257,7 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -279,7 +279,7 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Type
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         id="sel1"
@@ -301,7 +301,7 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Duration:
-                      </label>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="time"
                         id="duration"
@@ -574,7 +574,7 @@ const AddTopic = () => {
                       className="col-sm-3 col-form-label fw-bold mt-2"
                     >
                       Content
-                    </label>
+                    </label> {/* <span className="text-danger fw-bold">*</span> */}
                     <div className="col-sm-9">
                       <input
                         type="text"
@@ -594,7 +594,7 @@ const AddTopic = () => {
                       className="col-sm-3 col-form-label fw-bold mt-2"
                     >
                       Sub Content
-                    </label>
+                    </label> {/* <span className="text-danger fw-bold">*</span> */}
                     <div className="col-sm-9">
                       <input
                         type="text"
@@ -614,7 +614,7 @@ const AddTopic = () => {
                       className="col-sm-3 col-form-label fw-bold mt-2"
                     >
                       Subject
-                    </label>
+                    </label> {/* <span className="text-danger fw-bold">*</span> */}
                     <div className="col-sm-9">
                       <input
                         type="text"

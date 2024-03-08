@@ -73,6 +73,7 @@ const routes1=[
     { path: '/designationMaster', name: 'DesignationMaster', element:DesignationMaster},
     { path: '/roleMaster', name: 'RoleMaster', element:RoleMaster},
     { path: '/addRoleMaster', name: 'AddRoleMaster', element:AddRoleMaster},
+    { path: '/addRoleMaster/:id', name: 'AddRoleMaster', element:AddRoleMaster},
     { path: '/addDepartment/:id', name: 'AddDepartment', element:AddDepartment},
     { path: '/addDepartment', name: 'AddDepartment', element:AddDepartment},
     { path: '/departmentMaster', name: 'DepartmentMaster', element:DepartmentMaster},

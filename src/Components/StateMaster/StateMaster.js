@@ -363,7 +363,7 @@ const StateMaster = () => {
               <div className="row">
                 <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                   <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">State Code:</label>
+                    <label className="control-label fw-bold">State Code:</label> <span className="text-danger fw-bold">*</span>
                     <input
                       type="number"
                       id="stateCode"
@@ -379,7 +379,7 @@ const StateMaster = () => {
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
                   <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">State Name:</label>
+                    <label className="control-label fw-bold">State Name:</label> <span className="text-danger fw-bold">*</span>
                     <input
                       type="text"
                       id="stateName"

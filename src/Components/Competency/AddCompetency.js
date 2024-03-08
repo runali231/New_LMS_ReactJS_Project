@@ -58,7 +58,7 @@ const AddCompetency = () => {
         console.log(error);
       });
   };
-  
+
   const addCompetency = () => {
     if (
       designation === "" ||
@@ -70,7 +70,7 @@ const AddCompetency = () => {
       alert("Please fill all the details");
       return;
     }
-  
+
     axios({
       method: "post",
       url: new URL(UrlData + `CompentencyMaster`),
@@ -96,9 +96,9 @@ const AddCompetency = () => {
         alert("Something went wrong");
       });
   };
-  
+
   const handleTopics = (selectedOptions) => {
-    const selectedValues = selectedOptions.map(option => option.value);
+    const selectedValues = selectedOptions.map((option) => option.value);
     setTraining(selectedValues);
     console.log(selectedValues);
   };
@@ -123,7 +123,10 @@ const AddCompetency = () => {
   return (
     <>
       <div className="container-fluid">
-        <div className="card m-3" style={{ boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.1)" }}>
+        <div
+          className="card m-3"
+          style={{ boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.1)" }}
+        >
           <div className="row">
             <div className="col-lg-12">
               <div className="card-header">
@@ -156,8 +159,9 @@ const AddCompetency = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation:
-                      </label>
-                      <select
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
+                      {/* <select
                         className="form-select"
                         aria-label="Default select example"
                         value={designation}
@@ -171,14 +175,35 @@ const AddCompetency = () => {
                             {data.de_designation_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
+                      <Select
+                        options={selectedDesignation.map((data, index) => (
+                          <option key={index} value={data.de_id}>
+                            {data.de_designation_name}
+                          </option>
+                        ))}
+                        className="mt-2"
+                        // value={options.filter(option => training.includes(option.value))}
+                        value={designation}
+                        onChange={handleDesignation}
+                      />
+                      {/* <Select
+                        options={selectedDesignation.map((data) => ({
+                          value: data.de_id,
+                          label: data.de_designation_name,
+                        }))}
+                        className="mt-2"
+                        value={designation}
+                        onChange={handleDesignation}
+                      /> */}
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Qualification:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="qualification"
@@ -196,7 +221,8 @@ const AddCompetency = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Experience:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="experience"
@@ -216,7 +242,8 @@ const AddCompetency = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Skill Requirement:
-                      </label>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <textarea
                         className="form-control"
                         id="skillRequirement"
@@ -230,12 +257,15 @@ const AddCompetency = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Training:</label>
+                      <label className="control-label fw-bold">Training:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <Select
                         options={options}
                         isMulti
                         className="mt-2"
-                        value={options.filter(option => training.includes(option.value))}
+                        value={options.filter((option) =>
+                          training.includes(option.value)
+                        )}
                         onChange={handleTopics}
                       />
                     </div>
