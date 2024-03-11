@@ -13,6 +13,7 @@ const localizer = momentLocalizer(moment);
 function MeetingCalendar() {
   const navigate = useNavigate();
   const [allTrainingSchedule, setAllTrainingSchedule] = useState([]);
+  const colors = ["lightblue", "lightgreen", "lightred", "lightorange", "lightpurple", "lightyellow"];
 
   useEffect(() => {
     getAllTrainingSchedule();
@@ -24,11 +25,12 @@ function MeetingCalendar() {
       .then((response) => {
         console.log("get all Schedule", response.data.data);
         setAllTrainingSchedule(
-          response.data.data.map((event) => ({
+          response.data.data.map((event, index) => ({
             id: event.ts_id,
             title: event.ts_topic,
             start: new Date(event.ts_dt_tm_fromtraining), // Convert start time to Date object
-            end: new Date(event.ts_dt_tm_totraining), // Convert end time to Date object
+            end: new Date(event.ts_dt_tm_totraining),// Convert end time to Date object
+            color: colors[index % colors.length], 
           }))
         );
       })
@@ -41,6 +43,19 @@ function MeetingCalendar() {
     console.log("Selected event:", event);
     navigate(`/addTrainingSchedule/${event.id}`);
     // Handle the selected event
+  };
+
+  const eventStyleGetter = (event) => {
+    return {
+      style: {
+        backgroundColor: event.color, // Set the background color based on the event's color property
+        borderRadius: "5px",
+        opacity: 0.8,
+        color: "black",
+        border: "0px",
+        display: "block",
+      },
+    };
   };
 
   return (
@@ -59,6 +74,7 @@ function MeetingCalendar() {
           startAccessor="start"
           endAccessor="end"
           onSelectEvent={handleSelectEvent}
+          eventPropGetter={eventStyleGetter} 
         />
       </div>
     </>

@@ -36,6 +36,7 @@ import AddRoleMaster from './Components/RoleMaster/AddRoleMaster';
 import CityMaster from './Components/CityMaster/CityMaster';
 import StateMaster from './Components/StateMaster/StateMaster';
 import CountryMaster from './Components/CountryMaster/CountryMaster';
+import UserMaster from './Components/UserMaster/UserMaster';
 
 
 const routes1=[
@@ -84,6 +85,7 @@ const routes1=[
     { path: '/cityMaster/:coId/:coName/:stateId/:stateName', name: 'CityMaster', element:CityMaster},
     { path: '/stateMaster/:countryId/:countryName', name: 'StateMaster', element:StateMaster},
     { path: '/countryMaster', name: 'CountryMaster', element:CountryMaster},
+    { path: '/userMaster', name: 'UserMaster', element:UserMaster},
 
     // { path: '/sample', name: 'Sample', element:Sample  },
 

@@ -78,7 +78,7 @@ const AddTrainingSchedule = () => {
           setTrainingReqBy(response.data.data.ts_req_by);
           setTrainingTopics({
             value: response.data.data.ts_topic,
-            label: response.data.data.ts_topic,
+            label: response.data.data.ts_topic_name,
           });
 
           setNoOfQues(response.data.data.ts_no_que);

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import Select from "react-select";
+import { Eye, EyeFill } from "react-bootstrap-icons";
 
 const AddTrainingSchedule = () => {
   const navigate = useNavigate();
@@ -69,14 +70,14 @@ const AddTrainingSchedule = () => {
       })
         .then((response) => {
           console.log(response, "get Training Schedule");
-          console.log(response.data.data.ts_training_no);
+          console.log(response.data.data.ts_topic);
           setTrainingNo(response.data.data.ts_training_no);
           setTrainerName(response.data.data.ts_trainer_name);
           setTrainingDept(response.data.data.ts_training_dept);
           setTrainingReqBy(response.data.data.ts_req_by);
           setTrainingTopics({
             value: response.data.data.ts_topic,
-            label: response.data.data.ts_topic,
+            label: response.data.data.ts_topic_name,
           });
 
           setNoOfQues(response.data.data.ts_no_que);
@@ -142,12 +143,12 @@ const AddTrainingSchedule = () => {
       .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
       .then((response) => {
         console.log("response", response.data.data);
-        const trainingTopics = response.data.data.map((item, index) => ({
+        const trainingTopics1 = response.data.data.map((item, index) => ({
           value: item.t_id,
           label: item.t_description,
         }));
-        setSelectedTrainingTopic(trainingTopics);
-        console.log(trainingTopics);
+        setSelectedTrainingTopic(trainingTopics1);
+        console.log(trainingTopics1);
       })
       .catch((error) => {
         console.log(error);
@@ -159,6 +160,7 @@ const AddTrainingSchedule = () => {
     //   value: option.value,
     //   label: option.label,
     // }));
+
     setTrainingTopics(selected);
     console.log(selected);
   };
@@ -184,6 +186,7 @@ const AddTrainingSchedule = () => {
       ts_isactive: "1",
       ts_action: action,
       trainingsubschedule: allSubTrainingSchedule,
+    
       // training: allByDepartments,
     };
     if (id !== null && id !== undefined && id !== ":id") {
@@ -197,6 +200,7 @@ const AddTrainingSchedule = () => {
       .then((response) => {
         console.log(response, "add training need Schedule");
         console.log(response.data.data.OutcomeDetail);
+        console.log(data, "201")
         // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
         // getAllTraining();
         navigate("/trainingSchedule");
@@ -823,8 +827,11 @@ const AddTrainingSchedule = () => {
                                       {
                                         fileName === data.tss_traning_cert
                                           ? fileName
-                                          : `File uploaded`
+                                          : 
+                                          // `File uploaded`
                                         // {fileName}
+                                        <EyeFill className="text-success" style={{fontSize:"23px"}}/>
+                                        
                                       }
                                     </span>
                                   )}
@@ -1080,14 +1087,24 @@ const AddTrainingSchedule = () => {
                         Training Attended:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
-                      <input
+                      {/* <input
                         type="text"
                         id="trainingAttended"
                         className="form-control"
                         placeholder="Enter Training Attended"
                         value={trainingAttended}
                         onChange={(e) => setTrainingAttended(e.target.value)}
-                      />
+                      /> */}
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        value={trainingAttended}
+                        onChange={(e) => setTrainingAttended(e.target.value)}
+                      >
+                        <option defaultValue>Select Training Attended</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
@@ -1212,14 +1229,26 @@ const AddTrainingSchedule = () => {
                         Completion Status:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
-                      <input
+                      {/* <input
                         type="text"
                         id="completionStatus"
                         className="form-control "
                         placeholder="Enter completion status"
                         value={completionStatus}
                         onChange={(e) => setCompletionStatus(e.target.value)}
-                      />
+                      /> */}
+                       <select
+                        className="form-select "
+                        aria-label="Default select example"
+                        value={completionStatus}
+                        onChange={(e) => setCompletionStatus(e.target.value)}
+                      >
+                        <option defaultValue>
+                          Select Completion Status
+                        </option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
@@ -1247,7 +1276,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Re-training Required:
                       </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      
                       <select
                         className="form-select "
                         aria-label="Default select example"

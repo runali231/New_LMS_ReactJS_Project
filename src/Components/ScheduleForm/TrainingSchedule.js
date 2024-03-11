@@ -161,12 +161,12 @@ const TrainingSchedule = () => {
                         Status
                       </th>
                       <th scope="col" style={headerCellStyle}>
-                        Status 1
+                        Approval Status
                       </th>
                       <th
                         scope="col"
                         style={headerCellStyle}
-                        className="fw-bold" /* style={headerCellStyle} */
+                        /* style={headerCellStyle} */
                       >
                         Action
                       </th>

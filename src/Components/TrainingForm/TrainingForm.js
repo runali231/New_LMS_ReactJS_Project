@@ -10,7 +10,7 @@ const TrainingForm = () => {
   const navigate = useNavigate();
   const [allTrainingNeed, setAllTrainingNeed] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -190,10 +190,12 @@ const TrainingForm = () => {
                         <td>
                           <Edit
                             className="text-success mr-2"
+                            type="button"
                             onClick={() => GetTrainingNeed(data.tr_id)}
                           />
                           <Delete
                             className="text-danger"
+                            type="button"
                             style={{ marginLeft: "0.5rem" }}
                             onClick={() => DeleteTrainingNeed(data.tr_id)}
                           />

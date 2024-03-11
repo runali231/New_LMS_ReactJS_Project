@@ -82,6 +82,40 @@ const AddRoleMaster = () => {
     console.log(newData);
     console.log(menuDataArray, "118");
   };
+  const handleCheckboxChange1 = (event, menuid) => {
+    const { checked, id } = event.target;
+    let newData = [...menuDataArray];
+    let found = false;
+    newData = newData.map((menuData) => {
+      if (menuData.a_menuid === menuid) {
+        found = true;
+        return {
+          ...menuData,
+          [id]: checked ? "1" : "0",
+          // Set other permissions to the same value as the clicked checkbox
+          a_addaccess: checked ? "1" : "0",
+          a_editaccess: checked ? "1" : "0",
+          a_viewaccess: checked ? "1" : "0",
+          a_deleteaccess: checked ? "1" : "0",
+          a_workflow: checked ? "1" : "0",
+        };
+      }
+      return menuData;
+    });
+    if (!found) {
+      newData.push({
+        a_menuid: menuid,
+        [id]: checked ? "1" : "0",
+        a_addaccess: checked ? "1" : "0",
+        a_editaccess: checked ? "1" : "0",
+        a_viewaccess: checked ? "1" : "0",
+        a_deleteaccess: checked ? "1" : "0",
+        a_workflow: checked ? "1" : "0",
+      });
+    }
+    setMenuDataArray(newData);
+  };
+  
   useEffect(() => {
     console.log(menuDataArray);
   }, [menuDataArray]);
@@ -293,6 +327,9 @@ const AddRoleMaster = () => {
                             className="form-check-input flexCheckDefault"
                             type="checkbox"
                             value=""
+                            onChange={(e) =>
+                              handleCheckboxChange1(e, item.a_menuid)
+                            }
                           />
                         </td>
                         <td style={{ display: "none" }} id="a_menuid">
@@ -310,10 +347,12 @@ const AddRoleMaster = () => {
                                 data.a_addaccess === "1"
                             )}
                             id="a_addaccess"
+
                             onChange={(e) =>
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
+                           
                         </td>
 
                         <td className="pl-4 text-center">
@@ -331,6 +370,7 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
+                          
                         </td>
                         <td className="pl-4 text-center">
                           <input
@@ -347,6 +387,7 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
+                          
                         </td>
                         <td className="pl-4 text-center">
                           <input
@@ -363,6 +404,7 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
+                          
                         </td>
                         <td className="pl-4 text-center">
                           <input
@@ -379,6 +421,7 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
+                          
                         </td>
                       </tr>
                     ))}

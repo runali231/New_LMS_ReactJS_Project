@@ -19,7 +19,7 @@ const AddTrainingApprovalForm = () => {
   const [trainingHours, setTrainingHours] = useState("");
   const [trainingDay, setTrainingDay] = useState("");
   const [action, setAction] = useState("");
-  const [selectedAction, setSelectedAction] = useState([])
+  const [selectedAction, setSelectedAction] = useState([]);
   const [isEmployeeNameDisabled, setIsEmployeeNameDisabled] = useState(false);
   // const [isEmployeeNameEnabled, setIsEmployeeNameEnabled] = useState(true);
   const [departments, setDepartments] = useState("");
@@ -46,9 +46,10 @@ const AddTrainingApprovalForm = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [empNameOptions, setEmpNameOptions] = useState([]);
   const [selectedNameOption, setSelectedNameOption] = useState("");
-  const [allTrainingNature, setAllTrainingNature] = useState([])
-  const [allTrainingType, setAllTrainingType] = useState([])
+  const [allTrainingNature, setAllTrainingNature] = useState([]);
+  const [allTrainingType, setAllTrainingType] = useState([]);
   const [code, setCode] = useState("");
+  const [remark, setRemark] = useState("");
   // const [action, setAction] = useState([])
 
   const [alert, setAlert] = React.useState({
@@ -88,7 +89,7 @@ const AddTrainingApprovalForm = () => {
     getAllEmployee();
     getAllTrainingNature();
     getAllTrainingType();
-    getAllActions()
+    getAllActions();
     if (id) {
       axios({
         method: "get",
@@ -97,7 +98,7 @@ const AddTrainingApprovalForm = () => {
         ),
       })
         .then((response) => {
-          console.log(response, "get topics");
+          console.log(response, "get training approval");
           setTrainingNature(response.data.data.tr_nature);
           setTrainingType(response.data.data.tr_type);
           setTrainingReqNo(response.data.data.tr_req_no);
@@ -105,6 +106,7 @@ const AddTrainingApprovalForm = () => {
           setTrainingHours(response.data.data.tr_hours);
           setTrainingDay(response.data.data.tr_days);
           setTrId(response.data.data.tr_id);
+          setRemark(response.data.data.tr_remark)
           console.log(response.data.data.tr_id, "trId");
           getAllTrainingTopic();
           getAllTraining();
@@ -116,11 +118,15 @@ const AddTrainingApprovalForm = () => {
   }, [trId]);
   const getAllTrainingNature = () => {
     axios
-      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`))
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
+        )
+      )
       .then((response) => {
         console.log("get all training nature", response.data.data);
-        setAllTrainingNature(response.data.data)
-       
+        setAllTrainingNature(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -128,11 +134,15 @@ const AddTrainingApprovalForm = () => {
   };
   const getAllTrainingType = () => {
     axios
-      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`))
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
+        )
+      )
       .then((response) => {
         console.log("get all training Type", response.data.data);
-        setAllTrainingType(response.data.data)
-       
+        setAllTrainingType(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -403,7 +413,7 @@ const AddTrainingApprovalForm = () => {
       .then((response) => {
         console.log(response.data.data, "handleEmpCodeChange");
         setSelectedNameOption(response.data.data.td_emp_name);
-        console.log(selectedNameOption,"376")
+        console.log(selectedNameOption, "376");
         setDepartments(response.data.data.td_dept);
         setDesignation(response.data.data.td_des);
       })
@@ -444,7 +454,6 @@ const AddTrainingApprovalForm = () => {
 
   useEffect(() => {
     console.log(selectedOption);
-    
   }, [selectedOption]);
   const getAllEmployee = () => {
     axios
@@ -474,7 +483,7 @@ const AddTrainingApprovalForm = () => {
   const getAllActions = () => {
     axios({
       method: "get",
-      url: new URL(UrlData +`ApproveStages/Get?roleid=${getLoginId}`),
+      url: new URL(UrlData + `ApproveStages/Get?roleid=${getLoginId}`),
       // url: new URL(UrlData +`ApproveStages/Get?roleid=4CA10CB9-F0EA-406E-8B01-428E62670FE9`),
       // url: new URL(UrlData +`ApproveStages/Get?roleid=C4E34142-1525-4E06-9D31-D40150CBB573`),
     })
@@ -487,33 +496,31 @@ const AddTrainingApprovalForm = () => {
       });
   };
 
-
   const addByAction = () => {
-    console.log(action,"selectedAction")
-    console.log(id, "id")
+    console.log(action, "selectedAction");
+    console.log(id, "id");
     let data;
-    
-      data = {
-        tr_action: action,
-        tr_id: id
-      };
-    
-      axios({
-        method: "post",
-        url: new URL(UrlData + `TrainingForm/UpdateStatus`),
-        data: data, // Make sure to stringify the data object
-      })
-        .then((response) => {
-          console.log(response, "add action");
-          navigate("/trainingApprovalForm")
-        })
-        .catch((error) => {
-          console.log(error);
-          // alert("Something went wrong")
-        });
-    
-  };
 
+    data = {
+      tr_action: action,
+      tr_remark: remark,
+      tr_id: id,
+    };
+
+    axios({
+      method: "post",
+      url: new URL(UrlData + `TrainingForm/UpdateStatus`),
+      data: data, // Make sure to stringify the data object
+    })
+      .then((response) => {
+        console.log(response, "add action");
+        navigate("/trainingApprovalForm");
+      })
+      .catch((error) => {
+        console.log(error);
+        // alert("Something went wrong")
+      });
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -601,7 +608,7 @@ const AddTrainingApprovalForm = () => {
                         onChange={(e) => setTrainingType(e.target.value)}
                         disabled
                       >
-                      <option value="" disabled>
+                        <option value="" disabled>
                           Select Training Type
                         </option>
                         {allTrainingType.map((data, index) => (
@@ -787,7 +794,7 @@ const AddTrainingApprovalForm = () => {
                         </thead>
 
                         <tbody>
-                        {allByDepartments.map((departmentItem, index) => {
+                          {allByDepartments.map((departmentItem, index) => {
                             return (
                               <tr key={index}>
                                 <td>{index + 1}</td>
@@ -890,7 +897,7 @@ const AddTrainingApprovalForm = () => {
                         className="form-select"
                         aria-label="Default select example"
                         value={action}
-                        onChange={(e)=>setAction(e.target.value)}
+                        onChange={(e) => setAction(e.target.value)}
                       >
                         <option value="" disabled>
                           Select Actions
@@ -906,7 +913,14 @@ const AddTrainingApprovalForm = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">Remark:</label>
-                      <textarea className="form-control" id="" rows="3" placeholder="Enter Remark"></textarea>
+                      <textarea
+                        className="form-control"
+                        id=""
+                        rows="3"
+                        placeholder="Enter Remark"
+                        value={remark}
+                        onChange={(e) => setRemark(e.target.value)}
+                      ></textarea>
                     </div>
                   </div>
                 </div>
@@ -927,7 +941,7 @@ const AddTrainingApprovalForm = () => {
                     >
                       Save
                     </button>
-                  
+
                     <button type="button" className="btn btn-secondary me-lg-2">
                       Cancel
                     </button>
@@ -1032,7 +1046,6 @@ const AddTrainingApprovalForm = () => {
                         isDisabled={isEmployeeNameDisabled}
                         className="mt-2"
                         // defaultInputValue={selectedNameOption}
-                        
                       />
                     </div>
                   </div>

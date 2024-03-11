@@ -351,11 +351,11 @@ const AddTrainingForm = () => {
       td_date_training: trainingDate,
       td_topic_training: data
         .map((item) => item.value)
-        .join(", ")
+        .join(",")
         .toString(),
       td_topic_training_name: data
         .map((item) => item.label)
-        .join(", ")
+        .join(",")
         .toString(),
     };
 
