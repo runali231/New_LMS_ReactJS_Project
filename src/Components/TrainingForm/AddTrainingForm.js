@@ -482,6 +482,7 @@ const AddTrainingForm = () => {
       ),
     })
       .then((response) => {
+        console.log(response, "by code")
         setSelectedNameOption({
           value: response.data.data.td_emp_name,
           label: response.data.data.td_emp_name,
@@ -492,16 +493,33 @@ const AddTrainingForm = () => {
           label: response.data.data.td_dept,
         });
         setDesignation({
-          value: response.data.data.td_des,
+          value: response.data.data.td_emp_des,
           label: response.data.data.td_des,
         });
+        console.log(designation,"designation")
+        GetAllTopicsDes()
         // setDesignation(response.data.data.td_des);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const GetAllTopicsDes = () => {
 
+    axios({
+      method: "get",
+      url: new URL(
+        UrlData + `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
+      ),
+    })
+      .then((response) => {
+        console.log(response, "get all topics des")
+        // setDesignation(response.data.data.td_des);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const handleEmpNameChange = (selected) => {
     setSelectedNameOption(selected);
 
