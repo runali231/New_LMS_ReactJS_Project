@@ -55,6 +55,8 @@ const AddTrainingSchedule = () => {
   const [allTrainingReoccurrence, setAllTrainingReoccurrence] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [editIndex, setEditIndex] = useState(null);
+
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -273,17 +275,47 @@ const AddTrainingSchedule = () => {
         console.log(error);
       });
   };
-  const getSingleHrTraining = (tss_id) => {
-    console.log("Received index:", tss_id);
-    setTss_id(tss_id);
+  // const getSingleHrTraining = (tss_id) => {
+  //   console.log("Received index:", tss_id);
+  //   setTss_id(tss_id);  
+  // };
+  const getSingleHrTraining = (index, tsId) => {
+    console.log("Received index:", index);
+    setEditIndex(() => {
+      console.log("current update editIndex1:", index);
+      console.log("current update editIndex3:", editIndex);
+      return index;
+    });
+    setTss_id(tsId);
+    console.log(allSubTrainingSchedule[index], "280");
+    const scheduleToEdit = allSubTrainingSchedule[index];
+    setTrainingAttended(scheduleToEdit.tss_traning_attend)
+    setScheduledHours(scheduleToEdit.tss_sch_hour)
+    setActualHoursAttended(scheduleToEdit.tss_actual_attend)
   };
-  const getSingleHodTraining = (tss_id) => {
-    setSelectedRowIndex(tss_id);
-    console.log("Received index:", tss_id);
-    setTss_id(tss_id);
+
+  const getSingleHodTraining = (index, tsId) => {
+    setSelectedRowIndex(index);
+    console.log("Received index:", index);
+    setTss_id(tsId);
+    setEditIndex(() => {
+      console.log("current update editIndex1:", index);
+      console.log("current update editIndex3:", editIndex);
+      return index;
+    });
+    const scheduleToEdit1 = allSubTrainingSchedule[index];
+    setTotalMarks(scheduleToEdit1.tss_to_marks)
+    setMarksObtained(scheduleToEdit1.tss_marks_obt)
+    setCompletionStatus(scheduleToEdit1.tss_com_status)
+    setTrainingStatus(scheduleToEdit1.tss_traning_status)
+    setReTrainingRequired(scheduleToEdit1.tss_re_traning_req)
+    setTrainingCertificate(scheduleToEdit1.tss_traning_cert)
+    setStatus1(scheduleToEdit1.tss_status)
+    setRemark(scheduleToEdit1.tss_remark)
   };
 
   const addSingleHrTraining = () => {
+    console.log(tss_id, 318)
     // Create a new array by mapping over the existing sub-training schedules
     const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
       (training) => {
@@ -306,6 +338,23 @@ const AddTrainingSchedule = () => {
     console.log(allSubTrainingSchedule, "all single sub training");
     resetForm();
   };
+
+  const updateSingleHrTraining = () => {
+    if (editIndex !== null && editIndex >= 0 && editIndex < allSubTrainingSchedule.length) {
+      const updatedTrainings = [...allSubTrainingSchedule]; // Create a copy of allSubTrainingSchedule
+      // Update the specific training item at editIndex
+      updatedTrainings[editIndex] = {
+        ...updatedTrainings[editIndex], // Keep the existing properties of the training item
+        tss_traning_attend: trainingAttended,
+        tss_sch_hour: scheduledHours,
+        tss_actual_attend: actualHoursAttended,
+        // Update other properties as needed
+      };
+      setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
+      resetForm(); // Reset the form fields
+    }
+  };
+  
   const addSingleHodTraining = () => {
     // Create a new array by mapping over the existing sub-training schedules
     const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
@@ -334,6 +383,27 @@ const AddTrainingSchedule = () => {
     setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
     console.log(allSubTrainingSchedule, "all single sub training");
     resetForm();
+  };
+
+  const updateSingleHodTraining = () => {
+    if (editIndex !== null && editIndex >= 0 && editIndex < allSubTrainingSchedule.length) {
+      const updatedTrainings = [...allSubTrainingSchedule]; // Create a copy of allSubTrainingSchedule
+      // Update the specific training item at editIndex
+      updatedTrainings[editIndex] = {
+        ...updatedTrainings[editIndex], // Keep the existing properties of the training item
+        tss_to_marks: totalMarks,
+        tss_marks_obt: marksObtained,
+        tss_com_status: completionStatus,
+        tss_traning_status: trainingStatus,
+        tss_re_traning_req: reTrainingRequired,
+        tss_traning_cert: trainingCertificate,
+        tss_status: status1,
+        tss_remark: remark,
+        // Update other properties as needed
+      };
+      setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
+      resetForm(); // Reset the form fields
+    }
   };
 
   const deleteTrainingSchedule = (tss_id) => {
@@ -408,7 +478,7 @@ const AddTrainingSchedule = () => {
   const resetForm = () => {
     setTrainingAttended("");
     setScheduledHours("");
-    setActualHoursAttended();
+    setActualHoursAttended("");
     setTotalMarks("");
     setMarksObtained("");
     setCompletionStatus("");
@@ -855,7 +925,7 @@ const AddTrainingSchedule = () => {
                                   data-bs-toggle="modal"
                                   data-bs-target="#addTrainingSchedule1"
                                   onClick={() =>
-                                    getSingleHrTraining(data.tss_id)
+                                    getSingleHrTraining(index, data.tss_id)
                                   }
                                 />
                                 <Edit
@@ -864,7 +934,7 @@ const AddTrainingSchedule = () => {
                                   data-bs-toggle="modal"
                                   data-bs-target="#addTrainingSchedule2"
                                   onClick={() =>
-                                    getSingleHodTraining(data.tss_id)
+                                    getSingleHodTraining(index, data.tss_id)
                                   }
                                   // onClick={() => GetTrainingNeed(data.tr_id)}
                                 />
@@ -1155,6 +1225,15 @@ const AddTrainingSchedule = () => {
                 </button>
                 <button
                   type="button"
+                  className="btn text-white"
+                  style={{ backgroundColor: "#1B5A90" }}
+                  data-bs-dismiss="modal"
+                  onClick={() => updateSingleHrTraining()}
+                >
+                  update
+                </button>
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
@@ -1348,6 +1427,15 @@ const AddTrainingSchedule = () => {
                   data-bs-dismiss="modal"
                 >
                   Save
+                </button>
+                <button
+                  type="button"
+                  className="btn text-white"
+                  style={{ backgroundColor: "#1B5A90" }}
+                  onClick={updateSingleHodTraining}
+                  data-bs-dismiss="modal"
+                >
+                  update
                 </button>
                 <button
                   type="button"

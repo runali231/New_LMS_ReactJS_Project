@@ -38,7 +38,6 @@ const TopicMaster = () => {
 
   const DeleteTopics = (tId) => {
     const data = {
-      // userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       t_id: tId,
     };
     axios
@@ -65,27 +64,16 @@ const TopicMaster = () => {
         >
           <div className="row">
             <div className="col-lg-12">
-              <div
-                className="card-header" /* style={{ backgroundColor: 'white' }} */
-              >
+              <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
                     <h4 className="card-title fw-bold">Topic Master</h4>
-                  </div>
-                  <div className="col-md-2  justify-content-end d-none">
-                    {/* <input
-                      type="text"
-                      id="custom-search"
-                      className="form-control "
-                      placeholder="Search"
-                    /> */}
                   </div>
                   <div className="col-auto d-flex flex-wrap">
                     <div
                       className="btn btn-add"
                       title="Add New"
                       onClick={() => {
-                        // navigate("/addTopic/:id");
                         navigate("/addTopic");
                       }}
                     >
@@ -101,24 +89,6 @@ const TopicMaster = () => {
                 </div>
               </div>
               <div className="card-body pt-3">
-                <div className="row ">
-                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
-                    <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
-                    <select
-                      className="form-select w-auto"
-                      aria-label="Default select example"
-                    >
-                      <option defaultValue>10</option>
-                      <option value="1">10</option>
-                      <option value="2">50</option>
-                      <option value="3">100</option>
-                    </select>
-                    &nbsp;&nbsp;
-                    <h6 className="mt-3">entries</h6>
-                  </div>
-                </div>
-                <br />
-
                 <Table striped hover responsive className="border text-left">
                   <thead>
                     <tr>
@@ -146,7 +116,7 @@ const TopicMaster = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentItems && allTopics.map((data, index) => (
+                    {currentItems && currentItems.map((data, index) => (
                       <tr key={data.t_id}>
                         <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                         <td>{data.t_code}</td>
@@ -180,7 +150,7 @@ const TopicMaster = () => {
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                  <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example">
                       <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
                           <button className="page-link"

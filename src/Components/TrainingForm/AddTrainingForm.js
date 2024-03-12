@@ -391,6 +391,7 @@ const AddTrainingForm = () => {
     };
 
     const trainingToEdit = allByDepartments[index];
+
     const var1 = trainingToEdit.td_date_training.split(" ")[0];
     const var2 = formatDate(var1);
 
