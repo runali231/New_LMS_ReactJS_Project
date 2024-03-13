@@ -19,9 +19,11 @@ import {
   Badge3d,
   CheckCircleFill
 } from "react-bootstrap-icons";
+import axios from "axios";
 import { NavLink, Navigate } from "react-router-dom";
 import TheContent from "../TheContent";
 import '../Components/Css/Profile.css';
+import UrlData from "../Components/UrlData";
 
 
 const Home = (props) => {
@@ -65,7 +67,26 @@ const Home = (props) => {
     localStorage.removeItem("loginId");
     Navigate("/login")
   }
-
+  useEffect(() => {
+    getMenu();
+  }, [])
+  const getLoginId = localStorage.getItem("loginId");
+  const getMenu = () => {
+    console.log(getLoginId, "loginId")
+    axios({
+      method: "get",
+      url: new URL(
+        UrlData +
+          `GetWebMenu/GetAll?RoleId=${getLoginId}`
+      ), // Include pageSize and pageNumber in the URL
+    })
+      .then((response) => {
+        console.log("response get sidebar menu", response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <>
       <div className="wrapper">
