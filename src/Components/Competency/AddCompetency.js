@@ -53,6 +53,7 @@ const AddCompetency = () => {
         } else {
           setTraining([]);
         }
+     
       })
       .catch((error) => {
         console.log(error);

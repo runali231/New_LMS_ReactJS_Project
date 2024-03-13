@@ -60,7 +60,7 @@ const UserMaster = () => {
       url: new URL(UrlData + `RoleMaster/GetAll?status=1`),
     })
       .then((response) => {
-        console.log("response all users", response.data.data);
+        console.log("response all roles", response.data.data);
         const role = response.data.data.map((item, index) => ({
           value: item.r_id,
           label: item.r_rolename,
@@ -78,7 +78,7 @@ const UserMaster = () => {
       url: new URL(UrlData + `EmployeeMaster/GetAll?status=1`),
     })
       .then((response) => {
-        console.log("response all users", response.data.data);
+        console.log("response all employee", response.data.data);
         setAllEmployee(response.data.data);
         const emp = response.data.data.map((item, index) => ({
           value: item.emp_id,

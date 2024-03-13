@@ -1,14 +1,19 @@
-import React,{useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { Add, Delete, Edit } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
-import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
 
 const EmployeeMaster = () => {
   const navigate = useNavigate();
-  const [allEmployee, setAllEmployee] = useState([])
+  const [allEmployee, setAllEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const headerCellStyle = {
@@ -22,7 +27,7 @@ const EmployeeMaster = () => {
 
   const getAllData = () => {
     axios
-      .get(new URL(UrlData +`EmployeeMaster/GetAll?status=1`))
+      .get(new URL(UrlData + `EmployeeMaster/GetAll?status=1`))
       .then((response) => {
         console.log("response", response.data.data);
         setAllEmployee(response.data.data);
@@ -39,10 +44,10 @@ const EmployeeMaster = () => {
   const DeleteEmployee = (emp_Id) => {
     const data = {
       userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      emp_id: emp_Id
+      emp_id: emp_Id,
     };
     axios
-      .post(new URL(UrlData +`EmployeeMaster/Delete`), data)
+      .post(new URL(UrlData + `EmployeeMaster/Delete`), data)
       .then((response) => {
         console.log("response", response);
         getAllData();
@@ -155,66 +160,118 @@ const EmployeeMaster = () => {
                         Email Id
                       </th>
                       <th scope="col" style={headerCellStyle}>
+                        Joining Date
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
                     </tr>
                   </thead>
                   <tbody className="text-left">
-                  {allEmployee && currentItems.map((data, index) => (
-                      <tr key={data.emp_id}>
-                        <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                        <td>{data.emp_code}</td>
-                        <td>{data.emp_fname +" " + data.emp_mname + " " + data.emp_lname}</td>
-                        <td>{data.emp_job_title}</td>
-                        <td>{data.emp_des}</td>
-                        <td>{data.emp_dep}</td>
-                        <td>{data.emp_city}</td>
-                        <td>{data.emp_mob_no}</td>
-                        <td>{data.emp_off_no}</td>
-                        <td>{data.emp_email}</td>
-                        <td>
-                          <Edit
-                            className="text-success mr-2"
-                            onClick={() => GetEmployee(data.emp_id)}
-                          />
-                          <Delete
-                            className="text-danger"
-                            style={{ marginLeft: "0.5rem" }}
-                            onClick={() => DeleteEmployee(data.emp_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                    {allEmployee &&
+                      currentItems.map((data, index) => (
+                        <tr key={data.emp_id}>
+                          <td>
+                            {(currentPage - 1) * itemsPerPage + index + 1}
+                          </td>
+                          <td>{data.emp_code}</td>
+                          <td>
+                            {data.emp_fname +
+                              " " +
+                              data.emp_mname +
+                              " " +
+                              data.emp_lname}
+                          </td>
+                          <td>{data.emp_job_title}</td>
+                          <td>{data.emp_des}</td>
+                          <td>{data.emp_dep}</td>
+                          <td>{data.emp_city}</td>
+                          <td>{data.emp_mob_no}</td>
+                          <td>{data.emp_off_no}</td>
+                          <td>{data.emp_email}</td>
+                          <td>
+                            {data.emp_joiningDate
+                              ? data.emp_joiningDate.split("T")[0]
+                              : null}
+                          </td>
+                          <td>
+                            <Edit
+                              className="text-success mr-2"
+                              onClick={() => GetEmployee(data.emp_id)}
+                            />
+                            <Delete
+                              className="text-danger"
+                              style={{ marginLeft: "0.5rem" }}
+                              onClick={() => DeleteEmployee(data.emp_id)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
-                    <h6 className="text-lg-start text-center"> Showing {indexOfFirstItem + 1} to{" "}
+                    <h6 className="text-lg-start text-center">
+                      {" "}
+                      Showing {indexOfFirstItem + 1} to{" "}
                       {Math.min(indexOfLastItem, allEmployee.length)} of{" "}
-                      {allEmployee.length} entries</h6>
+                      {allEmployee.length} entries
+                    </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                  <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example">
                       <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handlePrevious(currentPage, setCurrentPage)}
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
                             disabled={currentPage === 1}
-                            aria-label="Previous">
+                            aria-label="Previous"
+                          >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        {calculatePaginationRange(currentPage, allEmployee, itemsPerPage).map((number) =>
-                          <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`}>
-                            <button className="page-link" onClick={() => handlePageClick(number, setCurrentPage)}>{number}</button>
+                        {calculatePaginationRange(
+                          currentPage,
+                          allEmployee,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
                           </li>
-                        )}
+                        ))}
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handleNext(currentPage, allEmployee, itemsPerPage, setCurrentPage)}
-                            disabled={currentPage === Math.ceil(allEmployee.length / itemsPerPage)}
-                            aria-label="Next">
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                allEmployee,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(allEmployee.length / itemsPerPage)
+                            }
+                            aria-label="Next"
+                          >
                             <span aria-hidden="true">&raquo;</span>
                           </button>
                         </li>

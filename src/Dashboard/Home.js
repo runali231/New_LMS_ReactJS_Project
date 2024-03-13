@@ -168,6 +168,14 @@ const Home = (props) => {
                       Country Master
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/userMaster"
+                      onClick={() => setSidebar(!sidebar)}
+                    >
+                      User Master
+                    </NavLink>
+                  </li>
                 </ul>
               </li>
               <li className="dropdown">

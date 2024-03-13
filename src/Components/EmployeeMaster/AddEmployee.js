@@ -32,6 +32,7 @@ const AddEmployee = () => {
   const [mobileNo, setMobileNo] = useState("");
   const [officeNo, setOfficeNo] = useState("");
   const [emailId, setEmailId] = useState("");
+  const [joiningDate, setJoiningDate] = useState([])
   const [selectedDesignation, setSelectedDesignation] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState([]);
   const { id } = useParams();
@@ -63,13 +64,19 @@ const AddEmployee = () => {
           setHodToEmployee(response.data.data.emp_hodToEmp);
           setAddress1(response.data.data.emp_add1);
           setAddress2(response.data.data.emp_add2);
-          setCity(response.data.data.emp_city);
+          setCity(
+            {
+              value :response.data.data.emp_city,
+              label: response.data.data.emp_city_name
+            }
+            );
           setState(response.data.data.emp_state);
           setCountry(response.data.data.emp_country);
           setPinCode(response.data.data.emp_pincode);
           setMobileNo(response.data.data.emp_mob_no);
           setOfficeNo(response.data.data.emp_off_no);
           setEmailId(response.data.data.emp_email);
+          setJoiningDate(response.data.data.emp_joiningDate.split('T')[0])
         })
 
         .catch((error) => {
@@ -80,6 +87,7 @@ const AddEmployee = () => {
 
   const addEmployee = () => {
     let data;
+
     var mobNo = /^[0-9\b]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (
@@ -124,13 +132,14 @@ const AddEmployee = () => {
         emp_hodToEmp: hodToEmployee,
         emp_add1: address1,
         emp_add2: address2,
-        emp_city: city,
+        emp_city: city.value,
         emp_state: state,
         emp_country: country,
         emp_pincode: pinCode,
         emp_mob_no: mobileNo,
         emp_off_no: officeNo,
         emp_email: emailId,
+        emp_joiningDate: joiningDate,
         emp_isactive: "1",
       };
       if (id !== null && id !== undefined && id !== ":id") {
@@ -144,7 +153,7 @@ const AddEmployee = () => {
         .then((response) => {
           console.log(response);
           if (id !== null && id !== undefined && id !== ":id") {
-            alert("Employee edited successfully!");
+            alert("Employee updated successfully!");
           } else {
             alert("Employee added successfully!");
           }
@@ -554,6 +563,7 @@ const AddEmployee = () => {
                         onChange={CityHandleChange}
                         className="mt-2"
                       />
+                    
                     </div>
                   </div>
                 </div>
@@ -679,6 +689,27 @@ const AddEmployee = () => {
                         placeholder="Enter Email Id"
                         value={emailId}
                         onChange={(e) => setEmailId(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row mt-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                    <div className="form-group form-group-sm">
+                      <label className="control-label fw-bold">
+                        Joining Date:
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
+                      <input
+                        type="date"
+                        id="joiningDate"
+                        name="joiningDate"
+                        className="form-control "
+                        autoComplete="off"
+                        placeholder="Enter Joining Date"
+                        value={joiningDate}
+                        onChange={(e) => setJoiningDate(e.target.value)}
                         required
                       />
                     </div>

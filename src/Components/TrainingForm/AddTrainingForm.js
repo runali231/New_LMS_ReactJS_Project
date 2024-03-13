@@ -45,6 +45,7 @@ const AddTrainingForm = () => {
   const [empNameOptions, setEmpNameOptions] = useState([]);
   const [selectedNameOption, setSelectedNameOption] = useState("");
   const [code, setCode] = useState("");
+  const [name, setName] = useState("");
 
   const [alert, setAlert] = React.useState({
     type: "error",
@@ -248,6 +249,7 @@ const AddTrainingForm = () => {
     console.log(selected);
     setIsEmployeeNameDisabled(selected !== "");
     getAllDepartment();
+    getAllTrainingTopic();
   };
   const getAllDepartment = () => {
     axios({
@@ -279,10 +281,10 @@ const AddTrainingForm = () => {
       url: new URL(UrlData + `DesignationMaster/GetAll?status=1`),
     })
       .then((response) => {
-        console.log("response", response.data.data);
+        console.log("response get all designation", response.data.data);
         // setSelectedDesignation(response.data.data);
         const designation = response.data.data.map((item, index) => ({
-          value: item.de_designation_name,
+          value: item.de_id,
           label: item.de_designation_name,
         }));
         setSelectedDesignation(designation)
@@ -344,7 +346,8 @@ const AddTrainingForm = () => {
     console.log(departments.value, "272 emp code");
     const newTraining = {
       td_dept: departments.value,
-      td_des: designation.value,
+      td_des: designation.label,
+      td_emp_des: designation.value,
       td_emp_code: selectedOption.value,
       td_emp_name: selectedNameOption.value,
       td_req_dept: trainingDept,
@@ -435,7 +438,8 @@ const AddTrainingForm = () => {
       updatedTrainings[editIndex] = {
         // Update the training item at editIndex
         td_dept: departments.value,
-        td_des: designation.value,
+        td_des: designation.label,
+        td_emp_des: designation.value,
         td_emp_code: selectedOption.value,
         td_emp_name: selectedNameOption.value,
         td_req_dept: trainingDept,
@@ -497,33 +501,23 @@ const AddTrainingForm = () => {
           value: response.data.data.td_emp_des,
           label: response.data.data.td_des,
         });
-        console.log(designation,"designation")
-        GetAllTopicsDes()
+        // console.log(designation,"designation")
+        console.log(departments,"departments")
+       
         // setDesignation(response.data.data.td_des);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const GetAllTopicsDes = () => {
+useEffect(() => {
+  console.log(designation,"designation")
+  GetAllTopicsDes()
+}, [designation])
 
-    axios({
-      method: "get",
-      url: new URL(
-        UrlData + `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
-      ),
-    })
-      .then((response) => {
-        console.log(response, "get all topics des")
-        // setDesignation(response.data.data.td_des);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const handleEmpNameChange = (selected) => {
     setSelectedNameOption(selected);
-
+    setName(selected);
     axios({
       method: "get",
       url: new URL(
@@ -535,8 +529,38 @@ const AddTrainingForm = () => {
           value: response.data.data.td_emp_code,
           label: response.data.data.td_emp_code,
         });
-        setDepartments(response.data.data.td_dept);
-        setDesignation(response.data.data.td_des);
+        // setDepartments(response.data.data.td_dept);
+        // setDesignation(response.data.data.td_des);
+        setDepartments({
+          value: response.data.data.td_dept,
+          label: response.data.data.td_dept,
+        });
+        setDesignation({
+          value: response.data.data.td_emp_des,
+          label: response.data.data.td_des,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const GetAllTopicsDes = () => {
+
+    axios({
+      method: "get",
+      url: new URL(
+        UrlData + `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
+      ),
+    })
+      .then((response) => {
+        console.log(response, "get all topics des")
+        // setDesignation(response.data.data.td_des);
+        const trainingTopics = response.data.data.map((item, index) => ({
+          value: item.t_id,
+          label: item.t_description,
+        }));
+        setSelectedTrainingTopic(trainingTopics);
       })
       .catch((error) => {
         console.log(error);
@@ -854,7 +878,7 @@ const AddTrainingForm = () => {
                                 <td>{departmentItem.td_req_dept}</td>{" "}
                                 <td>{departmentItem.td_emp_code}</td>
                                 <td>{departmentItem.td_emp_name}</td>
-                                <td>{departmentItem.td_dept}</td>
+                                <td>{departmentItem.td_dept}</td>                           
                                 <td>{departmentItem.td_des}</td>
                                 <td>
                                   {formatDate(departmentItem.td_date_training)}
@@ -1150,7 +1174,7 @@ const AddTrainingForm = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                {departments && !code ? (
+                {departments && !code && !name? (
                   <button
                     onClick={() => {
                       GetAllByDepart();
