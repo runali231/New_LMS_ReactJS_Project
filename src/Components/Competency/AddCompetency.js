@@ -5,6 +5,7 @@ import axios from "axios";
 import UrlData from "../UrlData";
 import Select from "react-select";
 import { GetAllDesignation } from "../Api/DesignationAndDepartment";
+import UserId from "../UserId";
 
 const AddCompetency = () => {
   const [designation, setDesignation] = useState("");
@@ -76,7 +77,7 @@ const AddCompetency = () => {
       method: "post",
       url: new URL(UrlData + `CompentencyMaster`),
       data: {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         cp_designation: designation,
         cp_qualification: qualification,
         cp_experiance: experience,

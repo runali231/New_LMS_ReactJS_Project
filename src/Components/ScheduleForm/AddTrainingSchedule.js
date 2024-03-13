@@ -6,6 +6,7 @@ import axios from "axios";
 import UrlData from "../UrlData";
 import Select from "react-select";
 import { Eye, EyeFill } from "react-bootstrap-icons";
+import UserId from "../UserId";
 
 const AddTrainingSchedule = () => {
   const navigate = useNavigate();
@@ -172,7 +173,7 @@ const AddTrainingSchedule = () => {
     console.log(trainingFrom, "training from");
     console.log(trainingTo, "training to");
     let data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       ts_training_no: trainingNo,
       ts_trainer_name: trainerName,
       ts_training_dept: trainingDept,

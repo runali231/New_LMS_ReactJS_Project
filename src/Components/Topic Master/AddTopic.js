@@ -12,6 +12,7 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import { getAllDepartment } from "../Api/DesignationAndDepartment";
+import UserId from "../UserId";
 
 const AddTopic = () => {
   const [subjects, setSubjects] = useState([]);
@@ -65,7 +66,7 @@ const AddTopic = () => {
 
   const addTopic = () => {
     let data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       t_code: trainingCode,
       t_description: description,
       t_department: department,

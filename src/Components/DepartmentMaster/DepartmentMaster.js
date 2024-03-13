@@ -11,6 +11,7 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import UrlData from "../UrlData";
+import UserId from "../UserId";
 
 const DepartmentMaster = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const DepartmentMaster = () => {
 
   const DeleteDepartment = (dId) => {
     const data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       d_id: dId,
     };
     axios({

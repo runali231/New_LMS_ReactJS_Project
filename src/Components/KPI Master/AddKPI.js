@@ -7,6 +7,7 @@ import {
   GetAllDesignation,
   getAllDepartment,
 } from "../Api/DesignationAndDepartment";
+import UserId from "../UserId";
 
 const AddKPI = () => {
   const navigate = useNavigate();
@@ -114,7 +115,7 @@ const AddKPI = () => {
     // }
     else {
       data = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         k_emp_code: empCode,
         k_emp_name: empName,
         k_kpi_code: kpiCode,

@@ -11,6 +11,7 @@ import {
   handleNext,
   calculatePaginationRange,
 } from "../PaginationUtils";
+import UserId from "../UserId";
 
 const UserMaster = () => {
   const navigate = useNavigate();
@@ -110,7 +111,7 @@ const UserMaster = () => {
     //   alert("Please fill all the details");
     // } else {
     data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       um_user_name: userName,
       um_password: "",
       um_staffname: employee.label,
@@ -170,7 +171,7 @@ const UserMaster = () => {
 
   const DeleteRole = (umId) => {
     const data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       um_id: umId,
     };
     axios({

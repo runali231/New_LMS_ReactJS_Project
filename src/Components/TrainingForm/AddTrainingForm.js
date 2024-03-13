@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import Select from "react-select";
+import UserId from "../UserId";
 
 // import Alert from 'react-popup-alert';
 
@@ -158,7 +159,7 @@ const AddTrainingForm = () => {
   const addTrainingNeedForm = () => {
     console.log(allByDepartments, "101");
     let data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       tr_nature: trainingNature,
       tr_type: trainingType,
       tr_req_no: trainingReqNo,

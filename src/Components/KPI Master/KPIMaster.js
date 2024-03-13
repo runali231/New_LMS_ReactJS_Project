@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import UserId from "../UserId";
 
 const KPIMaster = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const KPIMaster = () => {
 
   const DeleteKpi = (kId) => {
     const data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       k_id: kId,
     };
     axios

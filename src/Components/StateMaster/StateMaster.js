@@ -10,6 +10,7 @@ import {
   handleNext,
   calculatePaginationRange,
 } from "../PaginationUtils";
+import UserId from "../UserId";
 
 const StateMaster = () => {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ const StateMaster = () => {
     // }
     else {
       data = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         s_country_name: countryName,
         s_country_id: countryId,
         s_state_name: stateName,
@@ -121,7 +122,7 @@ const StateMaster = () => {
 
   const DeleteState = (sId) => {
     const data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       s_id: sId,
     };
     axios({

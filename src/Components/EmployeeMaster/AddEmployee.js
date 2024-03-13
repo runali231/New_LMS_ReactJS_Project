@@ -8,6 +8,7 @@ import {
   getAllDepartment,
   GetAllDesignation,
 } from "../Api/DesignationAndDepartment";
+import UserId from "../UserId";
 
 const AddEmployee = () => {
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ const AddEmployee = () => {
       alert("Please enter valid email id");
     } else {
       data = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         emp_code: empCode,
         emp_fname: firstName,
         emp_mname: middleName,

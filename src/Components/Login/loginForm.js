@@ -13,26 +13,6 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("")
 
-useEffect(() => {
-  // getLogin();
-}, [])
-
-  // const Login = async () => {
-  //   try {
-  //     if (email === "" || password === "") {
-  //       alert("Please enter the details");
-  //     } else {
-  //       const data = await loginUser(email, password);
-  //       // console.log("token",data.result.outcome.tokens);
-  //       const accessToken =  data.result.outcome.tokens;
-  //       setToken(accessToken)
-  //       navigate('/dashboard')
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred:", error);
-  //     alert(error.message);
-  //   }
-  // };
   const getLogin = () => {
     axios({
       method: "get",
@@ -45,6 +25,7 @@ useEffect(() => {
         console.log("response", response.data.data);
         // setAllDesignation(response.data.data);
         localStorage.setItem("loginId", response.data.data.RoleId);
+        localStorage.setItem("UserId", response.data.data.UserId)
         navigate("/")
       })
       .catch((error) => {

@@ -4,6 +4,7 @@ import { ArrowBack, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
+import UserId from "../UserId";
 
 const AddRoleMaster = () => {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ const AddRoleMaster = () => {
     // }
     else {
       data = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         r_rolename: roleName,
         r_description: roleDescription,
         r_module: module,

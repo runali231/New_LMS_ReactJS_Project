@@ -10,6 +10,7 @@ import {
   handleNext,
   calculatePaginationRange,
 } from "../PaginationUtils";
+import UserId from "../UserId";
 
 const CityMaster = () => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const CityMaster = () => {
     // } 
     else {
       data = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         ci_country_name: coName,
         ci_state_name: stateName,
         ci_country_id: coId,
@@ -121,7 +122,7 @@ const CityMaster = () => {
   };
   const DeleteCity = (ciId) => {
     const data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       ci_id: ciId,
     };
     axios({

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import UserId from "../UserId";
 
 const TrainingApprovalForm = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const TrainingApprovalForm = () => {
 
   const DeleteTrainingNeed = (tr_Id) => {
     const data = {
-      // userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      // userId: UserId,
       tr_id: tr_Id,
     };
     axios

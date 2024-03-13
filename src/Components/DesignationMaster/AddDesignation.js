@@ -3,6 +3,7 @@ import { ArrowBack } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
+import UserId from "../UserId";
 
 const AddDesignation = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const AddDesignation = () => {
     // } 
     else {
       data = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        userId: UserId,
         de_designation_name: dsgName,
         de_designation_code: dsgCode,
         de_isactive: active === true ? "1" : "0",

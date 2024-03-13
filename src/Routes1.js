@@ -64,7 +64,7 @@ const routes1=[
     { path: '/competencyChart', name: 'CompetencyChart', element:CompetencyChart},
     { path: '/addCompetency/:id', name: 'AddCompetencyMaster', element:AddCompetency},
     { path: '/addCompetency', name: 'AddCompetencyMaster', element:AddCompetency},
-    { path: '/competencyMaster', name: 'CompetencyMaster', element:CompetencyMaster},
+    { path: '/CompentencyMaster', name: 'CompetencyMaster', element:CompetencyMaster},
     { path: '/addEmployeeCompetency', name: 'AddEmployeeCompetency', element:AddEmployeeCompetency},
     { path: '/employeeCompetency', name: 'employeeCompetency', element:employeeCompetency},
     { path: '/email', name: 'Email', element:Email},

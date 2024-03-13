@@ -10,6 +10,7 @@ import {
   handleNext,
   calculatePaginationRange,
 } from "../PaginationUtils";
+import UserId from "../UserId";
 
 const DesignationMaster = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const DesignationMaster = () => {
 
   const DeleteDesignation = (dId) => {
     const data = {
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      userId: UserId,
       de_id: dId,
     };
     axios({
