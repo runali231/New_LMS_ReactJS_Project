@@ -9,6 +9,8 @@ import {
   ListUl,
   ThreeDotsVertical,
   CheckCircleFill,
+  ClipboardCheck,
+  BookFill // Import the BookFill icon
 } from "react-bootstrap-icons";
 import axios from "axios";
 import { NavLink, Navigate } from "react-router-dom";
@@ -80,6 +82,7 @@ const Home = () => {
               </h3>
             </div>
             <ul className="list-unstyled components">
+              {/* Filter and sort the sidebarData array */}
               <li className="active">
                 <div className="dashboard">
                   <NavLink to="/" className="dashboard">
@@ -89,49 +92,66 @@ const Home = () => {
                   </NavLink>
                 </div>
               </li>
-              <br />
-              {sidebarData.map(
-                (menuItem, index) =>
-                  menuItem.ParentId === "00000000-0000-0000-0000-000000000000" && (
-                    <li className="dropdown" key={index}>
-                      <NavLink
-                        to={menuItem.m_action}
-                        onClick={() => toggleDropdown(menuItem.m_id)}
-                        data-bs-toggle="collapse"
-                        aria-expanded={
-                          openDropdown === menuItem.m_id ? "true" : "false"
-                        }
-                        className="dropdown-toggle"
-                        data-bs-target={`#menu-${menuItem.m_id}`}
-                        role="button"
-                        aria-controls={`menu-${menuItem.m_id}`}
-                      >
+              <div className="small-screen navbar-display d-lg-none d-md-none d-xl-none d-none">
+                {/* Rest of your small screen navigation */}
+              </div>
+              {/* <br /> */}
+              {sidebarData
+                .filter(item => ["Master", "Transaction", "Reports", "Approval"].includes(item.m_menuname))
+                .sort((a, b) => {
+                  const menuOrder = ["Master", "Transaction", "Reports", "Approval"];
+                  return menuOrder.indexOf(a.m_menuname) - menuOrder.indexOf(b.m_menuname);
+                })
+                .map((menuItem, index) => (
+                  <li className="dropdown" key={index}>
+                    <NavLink
+                      to={menuItem.m_action}
+                      onClick={() => toggleDropdown(menuItem.m_id)}
+                      data-bs-toggle="collapse"
+                      aria-expanded={
+                        openDropdown === menuItem.m_id ? "true" : "false"
+                      }
+                      className="dropdown-toggle"
+                      data-bs-target={`#menu-${menuItem.m_id}`}
+                      role="button"
+                      aria-controls={`menu-${menuItem.m_id}`}
+                    >
+                      {menuItem.m_menuname === "Transaction" ? ( // Check if dropdown name is "Transaction"
+                        <BookFill style={{ fontSize: "22px" }} /> // Use BookFill icon
+                      ) 
+                      : menuItem.m_menuname === "Approval" ? (
+                        <CheckCircleFill style={{ fontSize: "22px" }} />
+                      )
+                      : menuItem.m_menuname === "Reports" ? (
+                        <ClipboardCheck style={{ fontSize: "22px" }} />
+                      )
+                      : (
                         <GearWideConnected style={{ fontSize: "22px" }} />
-                        <span className="ms-3">{menuItem.m_menuname}</span>
-                      </NavLink>
-                      {/* Submenu */}
-                      <ul
-                        className={`collapse list-unstyled menu ${
-                          openDropdown === menuItem.m_id ? "show" : ""
-                        }`}
-                        id={`menu-${menuItem.m_id}`}
-                      >
-                        {sidebarData
-                          .filter(
-                            (subMenuItem) =>
-                              subMenuItem.ParentId !== menuItem.ParentId
-                          )
-                          .map((subMenuItem, subIndex) => (
-                            <li key={subIndex}>
-                              <NavLink to={subMenuItem.m_action}>
-                                {subMenuItem.m_menuname}
-                              </NavLink>
-                            </li>
-                          ))}
-                      </ul>
-                    </li>
-                  )
-              )}
+                      )}
+                      <span className="ms-3">{menuItem.m_menuname}</span>
+                    </NavLink>
+                    {/* Submenu */}
+                    <ul
+                      className={`collapse list-unstyled menu ${
+                        openDropdown === menuItem.m_id ? "show" : ""
+                      }`}
+                      id={`menu-${menuItem.m_id}`}
+                    >
+                      {sidebarData
+                        .filter(
+                          (subMenuItem) =>
+                            subMenuItem.ParentId !== menuItem.ParentId
+                        )
+                        .map((subMenuItem, subIndex) => (
+                          <li key={subIndex}>
+                            <NavLink to={subMenuItem.m_action}>
+                              {subMenuItem.m_menuname}
+                            </NavLink>
+                          </li>
+                        ))}
+                    </ul>
+                  </li>
+                ))}
             </ul>
           </nav>
         )}

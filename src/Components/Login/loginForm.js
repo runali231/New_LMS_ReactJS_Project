@@ -20,6 +20,10 @@ const LoginForm = () => {
         UrlData +
           `Login/Get?username=${email}&password=${password}`
       ), // Include pageSize and pageNumber in the URL
+      headers: {
+        // "access-control-allow-origin" : "*",
+        "Content-type": "application/json; charset=UTF-8"
+      }
     })
       .then((response) => {
         console.log("response", response.data.data);

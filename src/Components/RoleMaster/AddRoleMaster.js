@@ -60,29 +60,57 @@ const AddRoleMaster = () => {
         console.log(error);
       });
   };
-
+  
   const handleCheckboxChange = (event, menuid) => {
     const { checked, id } = event.target;
     let newData = [...menuDataArray];
     let found = false;
-    newData = newData.map((menuData) => {
+  
+    // Check if the menuData object with the specified menuid exists
+    let updatedData = newData.map((menuData) => {
       if (menuData.a_menuid === menuid) {
         found = true;
-        return { ...menuData, [id]: checked ? "1" : "0" };
+        // Update the checkbox state
+        return { ...menuData, [id]: checked ? "1" : "" };
       }
       return menuData;
     });
-    if (!found) {
-      newData.push({
-        a_menuid: menuid,
-        [id]: checked ? "1" : "0",
-      });
+  
+    // If all five checkboxes are unchecked, remove the menuData object
+    if (!checked) {
+      const menuData = updatedData.find((data) => data.a_menuid === menuid);
+      if (
+        menuData &&
+        !menuData.a_addaccess &&
+        !menuData.a_editaccess &&
+        !menuData.a_viewaccess &&
+        !menuData.a_deleteaccess &&
+        !menuData.a_workflow
+      ) {
+        updatedData = updatedData.filter((data) => data.a_menuid !== menuid);
+      }
     }
-    setMenuDataArray(newData);
-    // setAllScreens(newData)
-    console.log(newData);
-    console.log(menuDataArray, "118");
+  
+    // If the menuData object doesn't exist, create a new one
+    if (!found && checked) {
+      const newMenuData = {
+        a_menuid: menuid,
+        [id]: "1",
+        a_addaccess: id === "a_addaccess" ? "1" : "",
+        a_editaccess: id === "a_editaccess" ? "1" : "",
+        a_viewaccess: id === "a_viewaccess" ? "1" : "",
+        a_deleteaccess: id === "a_deleteaccess" ? "1" : "",
+        a_workflow: id === "a_workflow" ? "1" : "",
+      };
+      updatedData.push(newMenuData);
+    }
+  
+    // Set the updated data array
+    setMenuDataArray(updatedData);
   };
+  
+  
+
   const handleCheckboxChange1 = (event, menuid) => {
     const { checked, id } = event.target;
     let newData = [...menuDataArray];
@@ -103,31 +131,49 @@ const AddRoleMaster = () => {
       }
       return menuData;
     });
-    if (!found) {
+
+    // If the checkbox is unchecked and there are no other checkboxes checked for this menuid,
+    // then remove the menuData object from newData
+    if (
+      !checked &&
+      !newData.some(
+        (data) =>
+          data.a_menuid === menuid &&
+          data.a_addaccess === "1" &&
+          data.a_editaccess === "1" &&
+          data.a_viewaccess === "1" &&
+          data.a_deleteaccess === "1" &&
+          data.a_workflow === "1"
+      )
+    ) {
+      newData = newData.filter((data) => data.a_menuid !== menuid);
+    }
+
+    setMenuDataArray(newData);
+    if (!found && checked) {
       newData.push({
         a_menuid: menuid,
-        [id]: checked ? "1" : "",
-        a_addaccess: checked ? "1" : "",
-        a_editaccess: checked ? "1" : "",
-        a_viewaccess: checked ? "1" : "",
-        a_deleteaccess: checked ? "1" : "",
-        a_workflow: checked ? "1" : "",
+        [id]: "1",
+        a_addaccess: "1",
+        a_editaccess: "1",
+        a_viewaccess: "1",
+        a_deleteaccess: "1",
+        a_workflow: "1",
       });
+      setMenuDataArray(newData);
     }
-    setMenuDataArray(newData);
   };
-  
+
   useEffect(() => {
-    console.log(menuDataArray);
+    // console.log(menuDataArray);
   }, [menuDataArray]);
 
   const addRoleMaster = () => {
-    console.log(menuDataArray, "menuDataArray");
+    // console.log(menuDataArray, "menuDataArray");
     let data;
     if (roleName === "" || module === "") {
       alert("Please fill all the details");
-    }
-    else {
+    } else {
       data = {
         userId: UserId,
         r_rolename: roleName,
@@ -137,7 +183,7 @@ const AddRoleMaster = () => {
         Privilage: menuDataArray,
       };
       console.log(data.privilage, "privilage");
-      if (id !== null && id !== undefined) {
+      if (id !== null && id !== "") {
         data.r_id = id;
       }
       axios({
@@ -150,10 +196,10 @@ const AddRoleMaster = () => {
           console.log(response, "add Role Master");
           if (id !== null && id !== undefined) {
             alert("Role updated successfully!");
-          }
-          else{
+          } else {
             alert("Role added successfully!");
-          }        
+          }
+          console.log(menuDataArray, "menu data array");
           navigate("/roleMaster");
         })
         .catch((error) => {
@@ -348,12 +394,10 @@ const AddRoleMaster = () => {
                                 data.a_addaccess === "1"
                             )}
                             id="a_addaccess"
-
                             onChange={(e) =>
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
-                           
                         </td>
 
                         <td className="pl-4 text-center">
@@ -371,7 +415,6 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
-                          
                         </td>
                         <td className="pl-4 text-center">
                           <input
@@ -388,7 +431,6 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
-                          
                         </td>
                         <td className="pl-4 text-center">
                           <input
@@ -405,7 +447,6 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
-                          
                         </td>
                         <td className="pl-4 text-center">
                           <input
@@ -422,7 +463,6 @@ const AddRoleMaster = () => {
                               handleCheckboxChange(e, item.a_menuid)
                             }
                           />
-                          
                         </td>
                       </tr>
                     ))}
