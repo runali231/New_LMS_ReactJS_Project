@@ -1,3 +1,3 @@
-const UserId = localStorage.getItem("UserID");
-
+const UserId = localStorage.getItem("UserId");
+console.log(UserId,"UserId")
 export default UserId;

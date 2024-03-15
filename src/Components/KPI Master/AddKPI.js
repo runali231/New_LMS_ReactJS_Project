@@ -108,11 +108,11 @@ const AddKPI = () => {
     ) {
       alert("Please fill all the details");
     }
-    // else if (!/^[a-zA-Z]+$/.test(empName) /* && !/^[a-zA-Z]+$/.test(kpiDescription) */) {
-    //   alert(
-    //     "Please enter a valid data (alphabetic characters only)"
-    //   );
-    // }
+    else if (!(/^[^\d]+$/.test(empName))) {
+      alert(
+        "Please enter a valid employee name (alphabetic characters only)"
+      );
+    } 
     else {
       data = {
         userId: UserId,
@@ -137,7 +137,12 @@ const AddKPI = () => {
       })
         .then((response) => {
           console.log(response);
-          alert("KPI added successfully!");
+          if (id !== null && id !== undefined && id !== ":id") {
+            alert("KPI updated successfully!");
+          }
+          else{
+            alert("KPI added successfully!");
+          }         
           navigate("/kpiMaster");
         })
         .catch((error) => {
@@ -255,7 +260,7 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         KPI Description:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label> {/* <span className="text-danger fw-bold">*</span> */}
                       <textarea
                         className="form-control"
                         id="description"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowBack } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
-import {useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import UserId from "../UserId";
@@ -20,7 +20,7 @@ const AddDepartment = () => {
     if (id) {
       axios({
         method: "get",
-        url: new URL(UrlData +`DepartmentMaster/Get?status=1&d_id=${id}`),
+        url: new URL(UrlData + `DepartmentMaster/Get?status=1&d_id=${id}`),
       })
         .then((response) => {
           setDeptName(response.data.data.d_department_name);
@@ -35,11 +35,11 @@ const AddDepartment = () => {
 
   const addDepartment = () => {
     let data;
-    if (deptName === "" || deptCode === "" || deptHead === "") {
+    if (deptName === "" || deptCode === "") {
       alert("Please fill all the details");
-    } else if (!/^[a-zA-Z]+$/.test(deptName)) {
+    } else if (!(/^[^\d]+$/.test(deptName))) {
       alert(
-        "Please enter a valid designation name (alphabetic characters only)"
+        "Please enter a valid department name (alphabetic characters only)"
       );
     } else {
       data = {
@@ -49,27 +49,34 @@ const AddDepartment = () => {
         d_head: deptHead,
         d_isactive: active === true ? "1" : "0",
       };
-    
-      if (id !== null && id !== undefined && id !== ":id" ) {
+
+      if (id !== null && id !== undefined && id !== ":id") {
         data.d_id = id;
-    }
-    axios({
-      method: "post",
-      url: new URL(UrlData +`DepartmentMaster`),
-      data: data, // Make sure to stringify the data object
-    })
-      .then((response) => {
-        console.log(response)
-        alert("Department added successfully!")
-        navigate("/departmentMaster");
+      }
+      axios({
+        method: "post",
+        url: new URL(UrlData + `DepartmentMaster`),
+        data: data, // Make sure to stringify the data object
       })
-      .catch((error) => {
-        console.log(error);
-        alert("Something went wrong")
-      })
+        .then((response) => {
+          console.log(response)
+
+          if (id !== null && id !== undefined && id !== ":id") {
+            alert("Department updated successfully!")
+          }
+          else {
+            alert("Department added successfully!")
+          }
+
+          navigate("/departmentMaster");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Something went wrong")
+        })
     }
   };
-  
+
   const handleDepartmentHead = (e) => {
     const selectedValue = e.target.value;
     setDeptHead(selectedValue);
@@ -80,7 +87,7 @@ const AddDepartment = () => {
   const GetAllDepartmentHead = () => {
     axios({
       method: "get",
-      url: new URL(UrlData +`EmployeeMaster/GetAll?status=1`),
+      url: new URL(UrlData + `EmployeeMaster/GetAll?status=1`),
     })
       .then((response) => {
         console.log("response", response.data.data);
@@ -156,7 +163,7 @@ const AddDepartment = () => {
                         placeholder="Enter Department Code"
                         value={deptCode}
                         onChange={(e) => setDeptCode(e.target.value)}
-                        
+
                       />
                     </div>
                   </div>
@@ -174,7 +181,7 @@ const AddDepartment = () => {
                         placeholder="Enter Department Name"
                         value={deptName}
                         onChange={(e) => setDeptName(e.target.value)}
-                        
+
                       />
                     </div>
                   </div>
@@ -184,8 +191,8 @@ const AddDepartment = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department Head:
-                      </label> 
-                             <select
+                      </label>
+                      <select
                         className="form-select"
                         aria-label="Default select example"
                         value={deptHead}
@@ -212,7 +219,7 @@ const AddDepartment = () => {
                           className="form-check-input"
                           type="checkbox"
                           checked={active}
-                          onChange={(e)=>setActive(e.target.checked)}
+                          onChange={(e) => setActive(e.target.checked)}
                           id="defaultCheck1"
                         />
                         <label
@@ -234,7 +241,7 @@ const AddDepartment = () => {
                       className="btn btn-md text-light"
                       type="button"
                       style={{ backgroundColor: "#1B5A90" }}
-                      onClick={()=>{
+                      onClick={() => {
                         addDepartment();
                       }}
                     >

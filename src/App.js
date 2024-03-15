@@ -34,7 +34,7 @@ const App = (props) => {
         <Routes>
           {/* <Route path="/" element={<SignUpForm/>}/>  */}
           {/* <Route path="/" element={<Home/>}/> */}
-          <Route path="/login" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm />} />
           <Route path="/*" element={<Home />} />
           <Route path="/sample" element={<Sample />} sessions={sessions} />
           {/* <Layout/> */}

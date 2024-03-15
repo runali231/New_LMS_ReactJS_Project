@@ -92,13 +92,13 @@ const AddRoleMaster = () => {
         found = true;
         return {
           ...menuData,
-          [id]: checked ? "1" : "0",
+          [id]: checked ? "1" : "",
           // Set other permissions to the same value as the clicked checkbox
-          a_addaccess: checked ? "1" : "0",
-          a_editaccess: checked ? "1" : "0",
-          a_viewaccess: checked ? "1" : "0",
-          a_deleteaccess: checked ? "1" : "0",
-          a_workflow: checked ? "1" : "0",
+          a_addaccess: checked ? "1" : "",
+          a_editaccess: checked ? "1" : "",
+          a_viewaccess: checked ? "1" : "",
+          a_deleteaccess: checked ? "1" : "",
+          a_workflow: checked ? "1" : "",
         };
       }
       return menuData;
@@ -106,12 +106,12 @@ const AddRoleMaster = () => {
     if (!found) {
       newData.push({
         a_menuid: menuid,
-        [id]: checked ? "1" : "0",
-        a_addaccess: checked ? "1" : "0",
-        a_editaccess: checked ? "1" : "0",
-        a_viewaccess: checked ? "1" : "0",
-        a_deleteaccess: checked ? "1" : "0",
-        a_workflow: checked ? "1" : "0",
+        [id]: checked ? "1" : "",
+        a_addaccess: checked ? "1" : "",
+        a_editaccess: checked ? "1" : "",
+        a_viewaccess: checked ? "1" : "",
+        a_deleteaccess: checked ? "1" : "",
+        a_workflow: checked ? "1" : "",
       });
     }
     setMenuDataArray(newData);
@@ -124,14 +124,9 @@ const AddRoleMaster = () => {
   const addRoleMaster = () => {
     console.log(menuDataArray, "menuDataArray");
     let data;
-    if (roleName === "" || roleDescription === "") {
+    if (roleName === "" || module === "") {
       alert("Please fill all the details");
     }
-    // else if (!/^[a-zA-Z\s~`!@#$%^&*()-_+=|{}[\]:;"'<>,.?/]+$/.test(dsgName)) {
-    //   alert(
-    //     "Please enter a valid designation name (alphabetic characters only)"
-    //   );
-    // }
     else {
       data = {
         userId: UserId,
@@ -153,7 +148,12 @@ const AddRoleMaster = () => {
       })
         .then((response) => {
           console.log(response, "add Role Master");
-          alert("Role added successfully");
+          if (id !== null && id !== undefined) {
+            alert("Role updated successfully!");
+          }
+          else{
+            alert("Role added successfully!");
+          }        
           navigate("/roleMaster");
         })
         .catch((error) => {
@@ -238,7 +238,7 @@ const AddRoleMaster = () => {
                       <label className="control-label fw-bold">
                         Description:
                       </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <textarea
                         className="form-control"
                         id="description"

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Alert } from "react-bootstrap";
+// import { Table, Alert } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { Add, ArrowBack, Edit, Delete } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -118,7 +119,7 @@ const AddTrainingForm = () => {
       .then((response) => {
         console.log("get all training nature", response.data.data);
         setAllTrainingNature(response.data.data)
-       
+
       })
       .catch((error) => {
         console.log(error);
@@ -130,7 +131,7 @@ const AddTrainingForm = () => {
       .then((response) => {
         console.log("get all training Type", response.data.data);
         setAllTrainingType(response.data.data)
-       
+
       })
       .catch((error) => {
         console.log(error);
@@ -148,52 +149,60 @@ const AddTrainingForm = () => {
       });
   };
 
-  // function getCurrentDate() {
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear();
-  //   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  //   const day = String(currentDate.getDate()).padStart(2, '0');
-  //   return `${year}-${month}-${day}`;
-  // }
   const currentDate = new Date();
-  const addTrainingNeedForm = () => {
-    console.log(allByDepartments, "101");
-    let data = {
-      userId: UserId,
-      tr_nature: trainingNature,
-      tr_type: trainingType,
-      tr_req_no: trainingReqNo,
-      tr_req_date: trainingReqDate,
-      tr_hours: trainingHours,
-      tr_days: trainingDay,
-      tr_action: action,
-      tr_createddate: currentDate,
-      tr_updateddate: currentDate,
-      tr_creadtedby: "",
-      tr_updatedby: "",
-      tr_isactive: "1",
-      training: allByDepartments,
-    };
-    if (id !== null && id !== undefined && id !== ":id") {
-      data.tr_id = id;
-    }
-    axios({
-      method: "post",
-      url: new URL(UrlData + `TrainingForm`),
-      data: data,
-    })
-      .then((response) => {
-        console.log(response, "add training need form");
-        console.log(response.data.data.OutcomeDetail);
-        // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
-        // getAllTraining();
-        navigate("/trainingForm");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
+  const addTrainingNeedForm = () => {
+    if (trainingNature === "" || trainingType === "" || trainingReqNo === "") {
+      alert("Please fill all the details");
+    } else {
+      let data = {
+        userId: UserId,
+        tr_nature: trainingNature,
+        tr_type: trainingType,
+        tr_req_no: trainingReqNo,
+        tr_req_date: trainingReqDate,
+        tr_hours: trainingHours,
+        tr_days: trainingDay,
+        tr_action: action,
+        tr_createddate: currentDate,
+        tr_updateddate: currentDate,
+        tr_creadtedby: "", // Should this be tr_createdby?
+        tr_updatedby: "", // Should this be tr_updatedby?
+        tr_isactive: "1",
+        training: allByDepartments,
+      };
+  
+      // If id is not null, undefined, or ":id", include it in the data object
+      if (id !== null && id !== undefined && id !== ":id") {
+        data.tr_id = id;
+      }
+  
+      axios({
+        method: "post",
+        url: new URL(UrlData + `TrainingForm`),
+        data: data,
+      })
+        .then((response) => {
+          console.log(response, "add training need form");
+          console.log(response.data.data.OutcomeDetail);
+  
+          // Display success message based on whether it's an update or addition
+          if (id !== null && id !== undefined && id !== ":id") {
+            alert("Training updated successfully!");
+          } else {
+            alert("Training added successfully!");
+          }
+  
+          // Navigate the user to /trainingForm
+          navigate("/trainingForm");
+        })
+        .catch((error) => {
+          console.log(error);
+          // Handle error cases appropriately, such as displaying an error message
+        });
+    }
+  };
+  
   const getAllTraining = () => {
     console.log(trId, "trID");
     axios
@@ -323,53 +332,46 @@ const AddTrainingForm = () => {
   };
 
   const addSingleTraining = () => {
-    console.log(trainingTopic, "300");
-    const data = trainingTopic.map((data1) => {
-      return {
-        value: data1.value,
-        label: data1.label,
-      };
-    });
-    console.log(
-      data
-        .map((item) => item.value)
-        .join(",")
-        .toString(),
-      "data value"
-    );
-    console.log(
-      data
-        .map((item) => item.label)
-        .join(",")
-        .toString(),
-      "data value"
-    );
-    console.log(departments.value, "272 emp code");
-    const newTraining = {
-      td_dept: departments.value,
-      td_des: designation.label,
-      td_emp_des: designation.value,
-      td_emp_code: selectedOption.value,
-      td_emp_name: selectedNameOption.value,
-      td_req_dept: trainingDept,
-      td_date_training: trainingDate,
-      td_topic_training: data
-        .map((item) => item.value)
-        .join(",")
-        .toString(),
-      td_topic_training_name: data
-        .map((item) => item.label)
-        .join(",")
-        .toString(),
-    };
+    // Logging the training topic
+    console.log(trainingTopic);
 
-    setAllByDepartments((prevAllByDepartments) => [
-      ...prevAllByDepartments,
-      newTraining,
-    ]);
-    console.log(allByDepartments, "269 single add training");
-    resetForm();
+    // Mapping training topic data
+    const data = trainingTopic.map((item) => ({
+      value: item.value,
+      label: item.label,
+    }));
+
+    // Check if any required field is empty
+    // if (departments === "" || selectedOption === "" || trainingDept === "" || trainingDate === "") {
+    //   alert("Please fill all the details");
+    // } else {
+      // Constructing new training object
+      const newTraining = {
+        td_dept: departments.value,
+        td_des: designation.label,
+        td_emp_des: designation.value,
+        td_emp_code: selectedOption.value,
+        td_emp_name: selectedNameOption.value,
+        td_req_dept: trainingDept,
+        td_date_training: trainingDate,
+        td_topic_training: data.map((item) => item.value).join(","),
+        td_topic_training_name: data.map((item) => item.label).join(","),
+      };
+
+      // Updating state with new training entry
+      setAllByDepartments((prevAllByDepartments) => [
+        ...prevAllByDepartments,
+        newTraining,
+      ]);
+
+      // Logging the updated allByDepartments state
+      console.log(allByDepartments);
+
+      // Resetting the form fields
+      resetForm();
+    // }
   };
+
 
   const [editIndex, setEditIndex] = useState(null);
   useEffect(() => {
@@ -503,18 +505,18 @@ const AddTrainingForm = () => {
           label: response.data.data.td_des,
         });
         // console.log(designation,"designation")
-        console.log(departments,"departments")
-       
+        console.log(departments, "departments")
+
         // setDesignation(response.data.data.td_des);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-useEffect(() => {
-  console.log(designation,"designation")
-  GetAllTopicsDes()
-}, [designation])
+  useEffect(() => {
+    console.log(designation, "designation")
+    GetAllTopicsDes()
+  }, [designation])
 
   const handleEmpNameChange = (selected) => {
     setSelectedNameOption(selected);
@@ -680,7 +682,7 @@ useEffect(() => {
                         value={trainingType}
                         onChange={(e) => setTrainingType(e.target.value)}
                       >
-                      <option value="" disabled>
+                        <option value="" disabled>
                           Select Training Type
                         </option>
                         {allTrainingType.map((data, index) => (
@@ -817,7 +819,7 @@ useEffect(() => {
                         </div>
                       </div>
                       <br />
-                      {show ? (
+                      {/* {show ? (
                         <Alert
                           variant="success"
                           onClose={() => setShow(false)}
@@ -825,7 +827,7 @@ useEffect(() => {
                         >
                           <Alert.Heading>Status Approved by HOD</Alert.Heading>
                         </Alert>
-                      ) : null}
+                      ) : null} */}
                       <Table
                         striped
                         hover
@@ -879,7 +881,7 @@ useEffect(() => {
                                 <td>{departmentItem.td_req_dept}</td>{" "}
                                 <td>{departmentItem.td_emp_code}</td>
                                 <td>{departmentItem.td_emp_name}</td>
-                                <td>{departmentItem.td_dept}</td>                           
+                                <td>{departmentItem.td_dept}</td>
                                 <td>{departmentItem.td_des}</td>
                                 <td>
                                   {formatDate(departmentItem.td_date_training)}
@@ -889,24 +891,24 @@ useEffect(() => {
                                   className="d-none"
                                 >
                                   {departmentItem.td_topic_training &&
-                                  typeof departmentItem.td_topic_training ===
+                                    typeof departmentItem.td_topic_training ===
                                     "string"
                                     ? departmentItem.td_topic_training
-                                        .split(",")
-                                        .map((value, index) => (
-                                          <div key={index}>{value.trim()}</div>
-                                        ))
+                                      .split(",")
+                                      .map((value, index) => (
+                                        <div key={index}>{value.trim()}</div>
+                                      ))
                                     : departmentItem.td_topic_training}
                                 </td>
                                 <td style={{ whiteSpace: "pre-line" }}>
                                   {departmentItem.td_topic_training_name &&
-                                  typeof departmentItem.td_topic_training_name ===
+                                    typeof departmentItem.td_topic_training_name ===
                                     "string"
                                     ? departmentItem.td_topic_training_name
-                                        .split(",")
-                                        .map((value, index) => (
-                                          <div key={index}>{value.trim()}</div>
-                                        ))
+                                      .split(",")
+                                      .map((value, index) => (
+                                        <div key={index}>{value.trim()}</div>
+                                      ))
                                     : departmentItem.td_topic_training_name}
                                 </td>
                                 <td>
@@ -958,9 +960,8 @@ useEffect(() => {
                                 },
                                 (_, index) => (
                                   <li
-                                    className={`page-item ${
-                                      currentPage === index + 1 ? "active" : ""
-                                    }`}
+                                    className={`page-item ${currentPage === index + 1 ? "active" : ""
+                                      }`}
                                     key={index}
                                   >
                                     <button
@@ -999,7 +1000,7 @@ useEffect(() => {
                 <div className="row mt-4 me-3">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Action:</label>
+                      <label className="control-label fw-bold">Action:</label> <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={action}
@@ -1026,9 +1027,10 @@ useEffect(() => {
                       className="btn text-light me-lg-2"
                       type="button"
                       style={{ backgroundColor: "#1B5A90" }}
-                      onClick={() => {
-                        addTrainingNeedForm();
-                      }}
+                      // onClick={() => {
+                      //   addTrainingNeedForm();
+                      // }}
+                      onClick={addTrainingNeedForm}
                     >
                       Save
                     </button>
@@ -1175,7 +1177,7 @@ useEffect(() => {
                 </div>
               </div>
               <div className="modal-footer">
-                {departments && !code && !name? (
+                {departments && !code && !name ? (
                   <button
                     onClick={() => {
                       GetAllByDepart();
@@ -1244,7 +1246,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <Alert
+        {/* <Alert
           header={"Header"}
           btnText={"Close"}
           text={alert.text}
@@ -1257,7 +1259,7 @@ useEffect(() => {
           headerStyles={{}}
           textStyles={{}}
           buttonStyles={{}}
-        />
+        /> */}
       </div>
     </>
   );

@@ -65,6 +65,10 @@ const AddTopic = () => {
   }, [tId]);
 
   const addTopic = () => {
+    if (trainingCode === "" || description === "" || department === "" || trainingType === "" || trainingDuration === "") {
+      alert("Please fill all the details");
+    }
+    else{
     let data = {
       userId: UserId,
       t_code: trainingCode,
@@ -77,11 +81,9 @@ const AddTopic = () => {
       t_isactive: "1",
       subject: subjects,
     };
-
     if (id !== null && id !== undefined && id !== ":id") {
       data.t_id = id;
     }
-
     axios({
       method: "post",
       url: new URL(UrlData + `TopicMaster`),
@@ -89,11 +91,18 @@ const AddTopic = () => {
     })
       .then((response) => {
         console.log(response);
+        if (id !== null && id !== undefined && id !== ":id") {
+          alert("Topic updated successfully!")
+        }
+        else{
+          alert("Topic added successfully!")
+        }
         navigate("/topicMaster");
       })
       .catch((error) => {
         console.log(error);
       });
+    }
   };
 
   const getAllSubject = () => {
@@ -129,6 +138,7 @@ const AddTopic = () => {
     };
     setSubjects([...subjects, newSubject]);
     console.log([...subjects], "subjects");
+    alert("Subject added successfully!")
   };
 
   const editSubject = (index) => {
@@ -148,6 +158,7 @@ const AddTopic = () => {
         s_subcontent: subContent,
       };
       setSubjects(updatedSubjects);
+      alert("Subject updated successfully!")
       resetForm();
     }
   };
@@ -163,6 +174,7 @@ const AddTopic = () => {
     const updatedSubjects = [...subjects];
     updatedSubjects.splice(index, 1);
     setSubjects(updatedSubjects);
+    alert("Subject deleted successfully!")
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -240,7 +252,7 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Description:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>  <span className="text-danger fw-bold">*</span> 
                       <textarea
                         className="form-control"
                         rows="1"

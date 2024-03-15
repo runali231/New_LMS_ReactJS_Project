@@ -54,6 +54,7 @@ const TrainingForm = () => {
       .post(new URL(UrlData +`TrainingForm/DeleteTrainingNeed`), data)
       .then((response) => {
         console.log("delete topics", response);
+        alert("Training deleted successfully!")
         getAllData();
       })
       .catch((error) => {

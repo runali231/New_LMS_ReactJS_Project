@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const AddDesignation = () => {
   const navigate = useNavigate();
@@ -36,12 +37,12 @@ const AddDesignation = () => {
     let data;
     if (dsgName === "" || dsgCode === "") {
       alert("Please fill all the details");
+    }
+    else if (!(/^[^\d]+$/.test(dsgName))) {
+      alert(
+        "Please enter a valid designation name (alphabetic characters only)"
+      );
     } 
-    // else if (!/^[a-zA-Z\s~`!@#$%^&*()-_+=|{}[\]:;"'<>,.?/]+$/.test(dsgName)) {
-    //   alert(
-    //     "Please enter a valid designation name (alphabetic characters only)"
-    //   );
-    // } 
     else {
       data = {
         userId: UserId,
@@ -61,12 +62,21 @@ const AddDesignation = () => {
       })
         .then((response) => {
           console.log(response, "add designation");
-          alert("Designation added successfully");
+          if (de_id !== null && de_id !== undefined && de_id !== ":d_id") {
+            alert("Designation updated successfully!");
+          }
+          else {
+            alert("Designation added successfully!");
+          }
+
           navigate("/designationMaster");
         })
         .catch((error) => {
-          console.log(error);
-          alert("Something went wrong")
+          let errors = ErrorHandler(error);
+          console.log(errors);
+          alert(errors)
+          // alert("Something went wrong")
+
         });
     }
   };
@@ -127,7 +137,7 @@ const AddDesignation = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation Code:
-                      </label> <span class="text-danger fw-bold">*</span>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="dsgCode"
@@ -145,7 +155,7 @@ const AddDesignation = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation Name:
-                      </label> <span class="text-danger fw-bold">*</span>
+                      </label> <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="dsgName"

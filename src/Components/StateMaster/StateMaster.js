@@ -81,11 +81,6 @@ const StateMaster = () => {
     if (stateName === "" || stateCode === "") {
       alert("Please fill all the details");
     }
-    // else if (!/^[a-zA-Z\s~`!@#$%^&*()-_+=|{}[\]:;"'<>,.?/]+$/.test(stateName)) {
-    //   alert(
-    //     "Please enter a valid designation name (alphabetic characters only)"
-    //   );
-    // }
     else {
       data = {
         userId: UserId,
@@ -96,11 +91,9 @@ const StateMaster = () => {
         s_isactive: "1"
       };
 
-      if (stateId) { // If stateId exists, include it in the data object
+      if (stateId) { 
         data.s_id = stateId;
-        console.log(data.s_id, "id");
       }
-
       axios({
         method: "post",
         url: new URL(UrlData + `StateMaster`),
@@ -108,7 +101,12 @@ const StateMaster = () => {
       })
         .then((response) => {
           console.log(response, "add state");
-          alert("State added successfully");
+          if (stateId) { 
+            alert("State updated successfully!");
+          }
+          else{
+            alert("State added successfully!");
+          }     
           getAllData();
           setStateCode("")
           setStateName("")
@@ -132,6 +130,7 @@ const StateMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("State deleted successfully!");
         getAllData();
       })
       .catch((error) => {

@@ -77,9 +77,12 @@ const CountryMaster = () => {
       })
         .then((response) => {
           console.log(response, "add Country");
-          alert("Country added successfully");
-          
-          // navigate("/countryMaster");
+          if (countryId) {
+            alert("Country updated successfully!");
+          }
+          else{
+            alert("Country added successfully!");
+          }
           getAllData();
           setCountryCode("")
           setCountryName("")
@@ -120,6 +123,7 @@ const CountryMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("Country deleted successfully!");
         getAllData();
       })
       .catch((error) => {
@@ -230,6 +234,7 @@ const CountryMaster = () => {
                               />
                               <Delete
                                 className="text-danger"
+                                type="button"
                                 style={{ marginLeft: "0.5rem" }}
                                 onClick={() => DeleteCity(data.co_id)}
                               />

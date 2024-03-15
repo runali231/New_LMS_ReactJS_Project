@@ -49,6 +49,7 @@ const TrainingSchedule = () => {
       .post(new URL(UrlData + `TrainingSchedule/DeleteTrainingSchedule`), data)
       .then((response) => {
         console.log("delete topics", response);
+        alert("Training Schedule deleted successfully!")
         getAllTrainingSchedule();
       })
       .catch((error) => {
@@ -206,10 +207,12 @@ const TrainingSchedule = () => {
                         <td>
                           <Edit
                             className="text-success mr-2"
+                            type="button"
                             onClick={() => GetTrainingSchedule(data.ts_id)}
                           />
                           <Delete
                             className="text-danger"
+                            type="button"
                             style={{ marginLeft: "0.5rem" }}
                             onClick={() => DeleteTrainingSchedule(data.ts_id)}
                           />

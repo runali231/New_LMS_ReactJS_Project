@@ -20,20 +20,35 @@ const AddCompetency = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllData();
+    GetAllDesignation();
     getAllTrainingTopic();
     if (id) {
       getCompetencyDetails(id);
     }
   }, [id]);
 
-  const getAllData = async () => {
-    const designationData = await GetAllDesignation();
-    setSelectedDesignation(designationData);
+  const GetAllDesignation = () => {
+    axios({
+      method: "get",
+      url: new URL(UrlData + `DesignationMaster/GetAll?status=1`),
+    })
+      .then((response) => {
+        console.log("response get all designation", response.data.data);
+        // setSelectedDesignation(response.data.data);
+        const designation = response.data.data.map((item, index) => ({
+          value: item.de_id,
+          label: item.de_designation_name,
+        }));
+        setSelectedDesignation(designation)
+        console.log(selectedDesignation, "all designation")
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const handleDesignation = (e) => {
-    const selectedValue = e.target.value;
+  const handleDesignation = (selectedValue) => {
+    // const selectedValue = e.target.value;
     setDesignation(selectedValue);
   };
 
@@ -45,7 +60,13 @@ const AddCompetency = () => {
       .then((response) => {
         console.log(response.data.data, "designation_name");
         const data = response.data.data;
-        setDesignation(data.cp_designation);
+        setDesignation(
+          {
+            value: data.cp_designation,
+            label: data.cp_description            ,
+          }
+        );
+
         setQualification(data.cp_qualification);
         setExperience(data.cp_experiance);
         setSkillRequirement(data.cp_skillreq);
@@ -54,7 +75,7 @@ const AddCompetency = () => {
         } else {
           setTraining([]);
         }
-     
+
       })
       .catch((error) => {
         console.log(error);
@@ -78,7 +99,7 @@ const AddCompetency = () => {
       url: new URL(UrlData + `CompentencyMaster`),
       data: {
         userId: UserId,
-        cp_designation: designation,
+        cp_designation: designation.value,
         cp_qualification: qualification,
         cp_experiance: experience,
         cp_skillreq: skillRequirement,
@@ -90,8 +111,13 @@ const AddCompetency = () => {
       .then((response) => {
         console.log(response, "add competency");
         getAllTrainingTopic();
-        alert("Competency added successfully!");
-        navigate("/competencyMaster");
+        if (id !== null && id !== undefined && id !== ":id" ? id : undefined) {
+          alert("Competency updated successfully!");
+        }
+        else {
+          alert("Competency added successfully!");
+        }
+        navigate("/CompentencyMaster");
       })
       .catch((error) => {
         console.log(error);
@@ -141,7 +167,7 @@ const AddCompetency = () => {
                       className="btn btn-add"
                       title="Add New"
                       onClick={() => {
-                        navigate("/competencyMaster");
+                        navigate("/CompentencyMaster");
                       }}
                     >
                       <button
@@ -178,16 +204,13 @@ const AddCompetency = () => {
                           </option>
                         ))}
                       </select> */}
+
                       <Select
-                        options={selectedDesignation.map((data, index) => (
-                          <option key={index} value={data.de_id}>
-                            {data.de_designation_name}
-                          </option>
-                        ))}
-                        className="mt-2"
-                        // value={options.filter(option => training.includes(option.value))}
+                        options={selectedDesignation}
                         value={designation}
+
                         onChange={handleDesignation}
+                        className="mt-2"
                       />
                       {/* <Select
                         options={selectedDesignation.map((data) => ({

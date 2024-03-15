@@ -70,6 +70,7 @@ const RoleMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("Role deleted successfully");
         getAllData();
       })
       .catch((error) => {

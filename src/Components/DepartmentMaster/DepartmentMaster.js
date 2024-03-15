@@ -69,6 +69,7 @@ const DepartmentMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("Department deleted successfully!")
         getAllData();
       })
       .catch((error) => {

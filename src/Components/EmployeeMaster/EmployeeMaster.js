@@ -51,6 +51,7 @@ const EmployeeMaster = () => {
       .post(new URL(UrlData + `EmployeeMaster/Delete`), data)
       .then((response) => {
         console.log("response", response);
+        alert("Employee deleted successfully!")
         getAllData();
       })
       .catch((error) => {
@@ -198,10 +199,12 @@ const EmployeeMaster = () => {
                           <td>
                             <Edit
                               className="text-success mr-2"
+                              type="button"
                               onClick={() => GetEmployee(data.emp_id)}
                             />
                             <Delete
                               className="text-danger"
+                              type="button"
                               style={{ marginLeft: "0.5rem" }}
                               onClick={() => DeleteEmployee(data.emp_id)}
                             />

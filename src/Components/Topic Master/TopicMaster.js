@@ -44,6 +44,7 @@ const TopicMaster = () => {
       .post(new URL(UrlData +`TopicMaster/DeleteTopics`), data)
       .then((response) => {
         console.log("delete topics", response);
+        alert("Topic deleted successfully!")
         getAllData();
       })
       .catch((error) => {
@@ -127,10 +128,12 @@ const TopicMaster = () => {
                         <td>
                           <Edit
                             className="text-success mr-2"
+                            type="button"
                             onClick={() => GetTopics(data.t_id)}
                           />
                           <Delete
                             className="text-danger"
+                            type="button"
                             style={{ marginLeft: "0.5rem" }}
                             onClick={() => DeleteTopics(data.t_id)}
                           />

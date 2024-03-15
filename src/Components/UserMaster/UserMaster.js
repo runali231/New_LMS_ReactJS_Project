@@ -107,9 +107,9 @@ const UserMaster = () => {
 
   const addCountry = () => {
     let data;
-    // if (countryName === "" || countryCode === "") {
-    //   alert("Please fill all the details");
-    // } else {
+    if (userName === "" || role === "" || employee === "") {
+      alert("Please fill all the details");
+    } else {
     data = {
       userId: UserId,
       um_user_name: userName,
@@ -130,9 +130,12 @@ const UserMaster = () => {
     })
       .then((response) => {
         console.log(response, "add User");
-        alert("User added successfully");
-
-        // navigate("/countryMaster");
+        if (umId) {
+          alert("User updated successfully!");
+        }
+        else{
+          alert("User added successfully!");
+        }
         getAllData();
         setEmployee("");
         setRole("");
@@ -142,7 +145,7 @@ const UserMaster = () => {
         console.log(error);
         alert("Something went wrong");
       });
-    // }
+    }
   };
 
   const GetRole = (umId) => {
@@ -181,6 +184,7 @@ const UserMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("User deleted successfully!");
         getAllData();
       })
       .catch((error) => {
@@ -261,7 +265,7 @@ const UserMaster = () => {
                     {allUsers &&
                       currentItems.map((data, index) => {
                         return (
-                          <tr key={data.co_id}>
+                          <tr key={index}>
                             <td>
                               {(currentPage - 1) * itemsPerPage + index + 1}
                             </td>
@@ -277,6 +281,7 @@ const UserMaster = () => {
                               />
                               <Delete
                                 className="text-danger"
+                                type="button"
                                 style={{ marginLeft: "0.5rem" }}
                                 onClick={() => DeleteRole(data.um_id)}
                               />
@@ -388,21 +393,7 @@ const UserMaster = () => {
                       Employee Name:
                     </label>{" "}
                     <span className="text-danger fw-bold">*</span>
-                    {/* <select
-                        className="form-select"
-                        aria-label="Default select example"
-                        value={employee}
-                        onChange={(e)=>setEmployee(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select Employee
-                        </option>
-                        {allEmployee.map((data, index) => (
-                          <option key={index} value={data.emp_id}>
-                            {data.emp_fname}
-                          </option>
-                        ))}
-                      </select> */}
+
                     <Select
                       options={allEmployee}
                       value={employee}

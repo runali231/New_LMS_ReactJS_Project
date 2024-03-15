@@ -26,7 +26,7 @@ const LoginForm = () => {
         // setAllDesignation(response.data.data);
         localStorage.setItem("loginId", response.data.data.RoleId);
         localStorage.setItem("UserId", response.data.data.UserId)
-        navigate("/")
+        navigate("/dashboard")
       })
       .catch((error) => {
         console.log(error);

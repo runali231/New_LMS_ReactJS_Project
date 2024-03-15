@@ -55,6 +55,7 @@ const CompetencyMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("Competency deleted successfully!")
         getAllData();
       })
       .catch((error) => {

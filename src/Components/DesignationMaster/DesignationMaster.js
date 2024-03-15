@@ -66,6 +66,7 @@ const DesignationMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("Designation deleted successfully!")
         getAllData();
       })
       .catch((error) => {

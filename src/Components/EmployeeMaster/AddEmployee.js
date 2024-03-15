@@ -104,18 +104,22 @@ const AddEmployee = () => {
       country === "" ||
       pinCode === "" ||
       mobileNo === "" ||
-      emailId === ""
+      emailId === "" ||
+      joiningDate === ""
     ) {
       alert("Please fill all the details");
     } else if (mobNo.test(mobileNo) === false) {
       alert("Please Enter Only Numbers");
     } else if (mobileNo.length !== 10) {
       alert("Please enter valid Mobile number");
-    } else if (mobNo.test(officeNo) === false) {
-      alert("Please Enter Only Numbers");
-    } else if (officeNo.length !== 10) {
-      alert("Please enter valid office number");
-    } else if (pinCode.length !== 6) {
+    }
+    //  else if (mobNo.test(officeNo) === false) {
+    //   alert("Please Enter Only Numbers");
+    // } 
+    // else if (officeNo.length !== 10) {
+    //   alert("Please enter valid office number");
+    // } 
+    else if (pinCode.length !== 6) {
       alert("Please enter valid pin code");
     } else if (!emailRegex.test(emailId)) {
       alert("Please enter valid email id");
@@ -158,7 +162,6 @@ const AddEmployee = () => {
           } else {
             alert("Employee added successfully!");
           }
-
           navigate("/employeeMaster");
         })
         .catch((error) => {
@@ -340,7 +343,7 @@ const AddEmployee = () => {
                       <label className="control-label fw-bold">
                         Middle Name:
                       </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <input
                         type="text"
                         id="mName"

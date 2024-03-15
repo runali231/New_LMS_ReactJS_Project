@@ -129,7 +129,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-            `TrainingSchedule/GetAllTraining?user_id=3fa85f64-5717-4562-b3fc-2c963f66afa6&ts_isactive=1&ts_id=${id}`
+          `TrainingSchedule/GetAllTraining?user_id=3fa85f64-5717-4562-b3fc-2c963f66afa6&ts_isactive=1&ts_id=${id}`
         )
       )
       .then((response) => {
@@ -172,52 +172,64 @@ const AddTrainingSchedule = () => {
     console.log(allSubTrainingSchedule, "trainingArray");
     console.log(trainingFrom, "training from");
     console.log(trainingTo, "training to");
-    let data = {
-      userId: UserId,
-      ts_training_no: trainingNo,
-      ts_trainer_name: trainerName,
-      ts_training_dept: trainingDept,
-      ts_req_by: trainingReqBy,
-      ts_topic: trainingTopics.value,
-      ts_no_que: noOfQues,
-      ts_training_agency: trainingAgency,
-      ts_training_type: trainingType,
-      ts_reoccurence: reoccurrence,
-      ts_dt_tm_fromtraining: (trainingFrom + ":00").replace(" ", "T"),
-      ts_dt_tm_totraining: (trainingTo + ":00").replace(" ", "T"),
-      ts_status: status,
-      ts_isactive: "1",
-      ts_action: action,
-      trainingsubschedule: allSubTrainingSchedule,
-    
-      // training: allByDepartments,
-    };
-    if (id !== null && id !== undefined && id !== ":id") {
-      data.ts_id = id;
+    if (trainingNo === null || trainerName === null || trainingDept === null || trainingTopics === null || noOfQues === null || trainingType === null || reoccurrence === null || trainingFrom === null || trainingTo === null || status === null || action === "") {
+      alert("Please fill all the details");
     }
-    axios({
-      method: "post",
-      url: new URL(UrlData + `TrainingSchedule`),
-      data: data,
-    })
-      .then((response) => {
-        console.log(response, "add training need Schedule");
-        console.log(response.data.data.OutcomeDetail);
-        console.log(data, "201")
-        // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
-        // getAllTraining();
-        navigate("/trainingSchedule");
+    else {
+
+      let data = {
+        userId: UserId,
+        ts_training_no: trainingNo,
+        ts_trainer_name: trainerName,
+        ts_training_dept: trainingDept,
+        ts_req_by: trainingReqBy,
+        ts_topic: trainingTopics.value,
+        ts_no_que: noOfQues,
+        ts_training_agency: trainingAgency,
+        ts_training_type: trainingType,
+        ts_reoccurence: reoccurrence,
+        ts_dt_tm_fromtraining: (trainingFrom + ":00").replace(" ", "T"),
+        ts_dt_tm_totraining: (trainingTo + ":00").replace(" ", "T"),
+        ts_status: status,
+        ts_isactive: "1",
+        ts_action: action,
+        trainingsubschedule: allSubTrainingSchedule,
+
+        // training: allByDepartments,
+      };
+      if (id !== null && id !== undefined && id !== ":id") {
+        data.ts_id = id;
+      }
+      axios({
+        method: "post",
+        url: new URL(UrlData + `TrainingSchedule`),
+        data: data,
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(response, "add training need Schedule");
+          console.log(response.data.data.OutcomeDetail);
+          console.log(data, "201")
+          // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
+          // getAllTraining();
+          if (id !== null && id !== undefined && id !== ":id") {
+            alert("Training Schedule updated successfully!");
+          }
+          else {
+            alert("Training Schedule added successfully!");
+          }
+          navigate("/trainingSchedule");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
   const getAllTrainingScheduleTypes = () => {
     axios
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=B019FBF2-7B14-4A0A-ADC0-F9F12FC4DB88&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=B019FBF2-7B14-4A0A-ADC0-F9F12FC4DB88&status=1`
         )
       )
       .then((response) => {
@@ -233,7 +245,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=107FAF5C-04BD-4D6F-A6FD-AF919556FD91&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=107FAF5C-04BD-4D6F-A6FD-AF919556FD91&status=1`
         )
       )
       .then((response) => {
@@ -249,7 +261,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=CFE554B4-18F8-4DBE-91B4-BFDD878C32B9&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=CFE554B4-18F8-4DBE-91B4-BFDD878C32B9&status=1`
         )
       )
       .then((response) => {
@@ -265,7 +277,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=4CB055B0-AD3C-4CD8-87E5-932FAB77E74C&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=4CB055B0-AD3C-4CD8-87E5-932FAB77E74C&status=1`
         )
       )
       .then((response) => {
@@ -318,26 +330,32 @@ const AddTrainingSchedule = () => {
   const addSingleHrTraining = () => {
     console.log(tss_id, 318)
     // Create a new array by mapping over the existing sub-training schedules
-    const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
-      (training) => {
-        // If the current sub-training schedule has the same tss_id as the one being edited
-        if (training.tss_id === tss_id) {
-          // Return a new object with updated values
-          return {
-            ...training,
-            tss_traning_attend: trainingAttended,
-            tss_sch_hour: scheduledHours,
-            tss_actual_attend: actualHoursAttended,
-          };
+    if(trainingAttended === null || scheduledHours === null || actualHoursAttended === null){
+      alert("Please fill all the details")
+    }
+    else{
+      const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
+        (training) => {
+          // If the current sub-training schedule has the same tss_id as the one being edited
+          if (training.tss_id === tss_id) {
+            // Return a new object with updated values
+            return {
+              ...training,
+              tss_traning_attend: trainingAttended,
+              tss_sch_hour: scheduledHours,
+              tss_actual_attend: actualHoursAttended,
+            };
+          }
+          // If the current sub-training schedule doesn't match the one being edited, return it unchanged
+          return training;
         }
-        // If the current sub-training schedule doesn't match the one being edited, return it unchanged
-        return training;
-      }
-    );
-    // Update the state with the updated array
-    setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
-    console.log(allSubTrainingSchedule, "all single sub training");
-    resetForm();
+      );
+      // Update the state with the updated array
+      setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
+      console.log(allSubTrainingSchedule, "all single sub training");
+      alert("Added successfully!")
+      resetForm();
+    }  
   };
 
   const updateSingleHrTraining = () => {
@@ -352,38 +370,45 @@ const AddTrainingSchedule = () => {
         // Update other properties as needed
       };
       setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
+      alert("Updated successfully!")
       resetForm(); // Reset the form fields
     }
   };
-  
+
   const addSingleHodTraining = () => {
     // Create a new array by mapping over the existing sub-training schedules
-    const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
-      (training) => {
-        // If the current sub-training schedule has the same tss_id as the one being edited
-        if (training.tss_id === tss_id) {
-          // Return a new object with updated values
-          return {
-            ...training,
-            tss_to_marks: totalMarks,
-            tss_marks_obt: marksObtained,
-            tss_com_status: completionStatus,
-            tss_traning_status: trainingStatus,
-            tss_re_traning_req: reTrainingRequired,
-            tss_traning_cert: trainingCertificate,
-            tss_status: status1,
-            tss_remark: remark,
-          };
+    if(totalMarks === null || marksObtained === null || completionStatus === null || trainingStatus === null || trainingCertificate === null || status1 === null){
+      alert("Please fill all the details")
+    }
+    else{
+      const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
+        (training) => {
+          // If the current sub-training schedule has the same tss_id as the one being edited
+          if (training.tss_id === tss_id) {
+            // Return a new object with updated values
+            return {
+              ...training,
+              tss_to_marks: totalMarks,
+              tss_marks_obt: marksObtained,
+              tss_com_status: completionStatus,
+              tss_traning_status: trainingStatus,
+              tss_re_traning_req: reTrainingRequired,
+              tss_traning_cert: trainingCertificate,
+              tss_status: status1,
+              tss_remark: remark,
+            };
+          }
+          // If the current sub-training schedule doesn't match the one being edited, return it unchanged
+          return training;
         }
-        // If the current sub-training schedule doesn't match the one being edited, return it unchanged
-        return training;
-      }
-    );
+      );
+      // Update the state with the updated array
+      setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
+      console.log(allSubTrainingSchedule, "all single sub training");
+      alert("Added successfully!")
+      resetForm();
+    }
 
-    // Update the state with the updated array
-    setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
-    console.log(allSubTrainingSchedule, "all single sub training");
-    resetForm();
   };
 
   const updateSingleHodTraining = () => {
@@ -403,6 +428,7 @@ const AddTrainingSchedule = () => {
         // Update other properties as needed
       };
       setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
+      alert("Updated successfully!")
       resetForm(); // Reset the form fields
     }
   };
@@ -415,6 +441,7 @@ const AddTrainingSchedule = () => {
 
     // Update the state with the filtered array
     setAllSubTrainingSchedule(updatedTraining);
+    alert("Deleted successfully")
   };
 
   const handleFileChange = (e) => {
@@ -862,7 +889,7 @@ const AddTrainingSchedule = () => {
                             <th
                               scope="col"
                               style={headerCellStyle}
-                              /* style={headerCellStyle} */
+                            /* style={headerCellStyle} */
                             >
                               Action
                             </th>
@@ -898,19 +925,19 @@ const AddTrainingSchedule = () => {
                                       {
                                         fileName === data.tss_traning_cert
                                           ? fileName
-                                          : 
+                                          :
                                           // `File uploaded`
-                                        // {fileName}
-                                        <EyeFill className="text-success" style={{fontSize:"23px"}}/>
-                                        
+                                          // {fileName}
+                                          <EyeFill className="text-success" style={{ fontSize: "23px" }} />
+
                                       }
                                     </span>
                                   )}
                                 {!data.tss_traning_cert && (
                                   <span
                                     type="button"
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#viewModal"
+                                  // data-bs-toggle="modal"
+                                  // data-bs-target="#viewModal"
                                   >
                                     File not uploaded
                                   </span>
@@ -937,10 +964,11 @@ const AddTrainingSchedule = () => {
                                   onClick={() =>
                                     getSingleHodTraining(index, data.tss_id)
                                   }
-                                  // onClick={() => GetTrainingNeed(data.tr_id)}
+                                // onClick={() => GetTrainingNeed(data.tr_id)}
                                 />
                                 <Delete
                                   className="text-danger"
+                                  type="button"
                                   style={{ marginLeft: "0.5rem" }}
                                   onClick={() =>
                                     deleteTrainingSchedule(data.tss_id)
@@ -981,9 +1009,8 @@ const AddTrainingSchedule = () => {
                                 },
                                 (_, index) => (
                                   <li
-                                    className={`page-item ${
-                                      currentPage === index + 1 ? "active" : ""
-                                    }`}
+                                    className={`page-item ${currentPage === index + 1 ? "active" : ""
+                                      }`}
                                     key={index}
                                   >
                                     <button
@@ -1005,7 +1032,7 @@ const AddTrainingSchedule = () => {
                                     currentPage ===
                                     Math.ceil(
                                       allSubTrainingSchedule.length /
-                                        itemsPerPage
+                                      itemsPerPage
                                     )
                                   }
                                   aria-label="Next"
@@ -1023,6 +1050,7 @@ const AddTrainingSchedule = () => {
                             <label className="control-label fw-bold">
                               Action:
                             </label>
+                            <span className="text-danger fw-bold">*</span>
                             <select
                               className="form-select"
                               value={action}
@@ -1317,7 +1345,7 @@ const AddTrainingSchedule = () => {
                         value={completionStatus}
                         onChange={(e) => setCompletionStatus(e.target.value)}
                       /> */}
-                       <select
+                      <select
                         className="form-select "
                         aria-label="Default select example"
                         value={completionStatus}
@@ -1356,7 +1384,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Re-training Required:
                       </label>{" "}
-                      
+
                       <select
                         className="form-select "
                         aria-label="Default select example"

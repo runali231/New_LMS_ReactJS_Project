@@ -83,11 +83,6 @@ const CityMaster = () => {
     if (cityName === "" || cityCode === "") {
       alert("Please fill all the details");
     } 
-    // else if (!/^[a-zA-Z\s~`!@#$%^&*()-_+=|{}[\]:;"'<>,.?/]+$/.test(cityName)) {
-    //   alert(
-    //     "Please enter a valid designation name (alphabetic characters only)"
-    //   );
-    // } 
     else {
       data = {
         userId: UserId,
@@ -109,7 +104,12 @@ const CityMaster = () => {
       })
         .then((response) => {
           console.log(response, "add city");
-          alert("City added successfully");
+          if (cityId) {
+            alert("City updated successfully!");
+          }
+          else{
+            alert("City added successfully!");
+          }
           getAllData();
           setCityCode("")
           setCityName("")
@@ -132,6 +132,7 @@ const CityMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
+        alert("City deleted successfully!");
         getAllData();
       })
       .catch((error) => {

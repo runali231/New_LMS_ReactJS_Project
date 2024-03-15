@@ -46,6 +46,7 @@ const KPIMaster = () => {
       .post(new URL(UrlData +`KPIMaster/Delete`), data)
       .then((response) => {
         console.log("response", response);
+        alert("KPI deleted successfully!")
         getAllData();
       })
       .catch((error) => {
