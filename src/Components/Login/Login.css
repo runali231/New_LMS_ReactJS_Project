@@ -1,73 +1,61 @@
-/* LoginForm.module.css */
 .main {
-    background: linear-gradient(0deg, #8663ad, rgba(207, 159, 255, 0.1)),
-      url("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    padding: 170px 0px;
-    /* height: 100vh;
-    justify-content: center;
-    align-items: center; */
-  }
-  
-  .form-box {
-    background-color: #4e0fa9;
-    backdrop-filter: blur(30px);
-    border-radius: 20px;
-  }
-  
-  .form-box input {
-    background-color: #4e0fa9;
-    color: white;
-    border-radius: 10px;
-  }
-  .form-box {
-    background-color: #4e0fa9;
-    backdrop-filter: blur(30px);
-    border-radius: 20px;
-  }
-  
-  .form-box input {
-    background-color: #4e0fa9;
-    color: white;
-    border-radius: 10px;
-  }
- .form-box ::placeholder {
-    color: white;
-    opacity: 1;
-  }
-  .form-box input[type="text"] {
-    color: white;
-  }
-  .register-btn {
-    border: none;
-    border-radius: 10px;
-    color: #4e0fa9;
-    font-weight: bold;
-  }
+  background: linear-gradient(0deg, #8663ad, rgba(207, 159, 255, 0.1)),
+    url("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 170px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure it fills the viewport height */
+}
+
+.form-box {
+  background-color: rgba(78, 15, 169, 0.8); /* Use rgba for transparency */
+  backdrop-filter: blur(30px);
+  border-radius: 20px;
+  padding: 20px; /* Add padding for better spacing */
+}
+
+.form-box input {
+  background-color: transparent; /* Make input background transparent */
+  color: white;
+  border-radius: 10px;
+  border: 1px solid white; /* Add border for better visibility */
+  margin-bottom: 10px; /* Add margin bottom for spacing */
+}
+
+.form-box input::placeholder {
+  color: white;
+  opacity: 1;
+}
+
+.register-btn {
+  background-color: #fff; /* Change button background color */
+  color: #4e0fa9;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 20px; /* Add padding for better button appearance */
+  cursor: pointer; /* Change cursor to pointer for better interaction */
+}
+
+.text h2 {
+  font-size: 55px;
+  color: white; /* Ensure text is white for better visibility */
+  text-align: center; /* Center align text */
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 992px) {
   .text h2 {
-    font-size: 55px;
+    font-size: 40px;
   }
-  @media screen and (max-width: 992px) {
-    .text{
-      margin-bottom: 40px;
-    }
-    .main{
-      padding: auto;
-    }
+}
+
+@media screen and (max-width: 767px) {
+  .text h2 {
+    font-size: 30px;
   }
-  @media screen and (max-width: 767px){
-.form-box{
-  padding-left: 10px !important;
-  padding-right: 10px !important;
 }
-.text h2{
-  font-size: 40px;
-}
-.main{
-  padding: auto;
-}
-  }
-    
-  

@@ -58,14 +58,13 @@ const LoginForm = () => {
             <div className="form-box px-5 py-4">
               <form>
                 <div className="px-3 py-4">
-                  <h2 className="text-light mb-4">Login</h2>
+                  <h2 className="text-light mb-4 text-center">Login</h2>
                   <input
                     type="text"
                     name=""
                     placeholder="Username"
                     className="form-control mb-4"
                     value={email}
-
                     onChange={(e) => setEmail(e.target.value)}
                   />
                    <div className="input-group mb-4">
@@ -82,6 +81,7 @@ const LoginForm = () => {
 
                   <div
                     className="register-btn form-control text-center"
+                    type="button"
                     onClick={getLogin}
                     // onClick={Login}
                   >
