@@ -40,7 +40,8 @@ import UserMaster from './Components/UserMaster/UserMaster';
 
 
 const routes1=[
-    { path: '/dashboard', exact: true, name: 'Home', element:HomePage },
+    { path: '/', exact: true, name: 'Home', element:HomePage },
+    { path: '/dashboard', name: 'Home', element:HomePage },
     { path: '/employeeMaster', name: 'EmployeeMaster', element:EmployeeMaster},
     { path: '/addEmployee/:id', name: 'AddEmployee', element:AddEmployee},
     { path: '/addEmployee', name: 'AddEmployee', element:AddEmployee},

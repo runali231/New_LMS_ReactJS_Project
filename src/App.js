@@ -9,6 +9,7 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 // import "../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 
 // import "../node_modules/bootstrap/dist/js/bootstrap.js";
+
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -22,24 +23,45 @@ import HomePage from "./Dashboard/HomePage";
 import Sample from "./Components/Scheduling/Sample.js";
 
 const App = (props) => {
-  const sessions = [
-    { date: "2024-02-16", time: "10:00", topic: "Topic 1" },
-    { date: "2024-02-17", time: "11:00", topic: "Topic 2" },
-    { date: "2024-02-18", time: "14:00", topic: "Topic 3" },
-  ];
+  const loginId = localStorage.getItem("loginId");
 
   return (
     <>
-      <Router>
+      {/* <Router>
         <Routes>
-          {/* <Route path="/" element={<SignUpForm/>}/>  */}
-          {/* <Route path="/" element={<Home/>}/> */}
-          <Route path="/" element={<LoginForm />} />
-          <Route path="/*" element={<Home />} />
-          <Route path="/sample" element={<Sample />} sessions={sessions} />
-          {/* <Layout/> */}
+        <Route path="/*" element={<Home />} />
+          {loginId !== null && <Route path="/" element={<Home />} />}
+          {loginId === null && <Route path="/" element={<LoginForm />} />}
         </Routes>
-      </Router>
+      </Router> */}
+       {/* <Router>
+        <Routes>
+          <Route path="/*" element={<Home />} />
+          {loginId !== null ? (
+          <Route path="/" element={<Home />} />
+        ) : (
+          <Route path="/" element={<LoginForm />} />
+        )}
+        </Routes>
+      </Router> */}
+      {/* <Router>
+      <Routes>
+        <Route path="/*" element={<Home />} />
+        <Route path="/" element={loginId ? <Home /> : <LoginForm />} />
+      </Routes>
+    </Router> */}
+    <Router>
+  <Routes>
+    {/* If the user is logged in, render the Home component */}
+    {loginId && <Route exact path="/" element={<Home />} />}
+
+    {/* If the user is not logged in, render the LoginForm component */}
+    {!loginId && <Route exact path="/" element={<LoginForm />} />}
+    
+    {/* Additional routes */}
+    <Route exact path="/*" element={<Home/>} />
+  </Routes>
+</Router>
     </>
   );
 };

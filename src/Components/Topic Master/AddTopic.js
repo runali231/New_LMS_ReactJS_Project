@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Form, Button } from "react-bootstrap";
 import { Add, ArrowBack, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -34,6 +34,7 @@ const AddTopic = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const handleClose = () => setModalOpen(false);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -65,43 +66,47 @@ const AddTopic = () => {
   }, [tId]);
 
   const addTopic = () => {
-    if (trainingCode === "" || description === "" || department === "" || trainingType === "" || trainingDuration === "") {
+    if (
+      trainingCode === "" ||
+      description === "" ||
+      department === "" ||
+      trainingType === "" ||
+      trainingDuration === ""
+    ) {
       alert("Please fill all the details");
-    }
-    else{
-    let data = {
-      userId: UserId,
-      t_code: trainingCode,
-      t_description: description,
-      t_department: department,
-      t_trainingtype: trainingType,
-      t_duration: trainingDuration,
-      t_creadtedby: "",
-      t_updatedby: "",
-      t_isactive: "1",
-      subject: subjects,
-    };
-    if (id !== null && id !== undefined && id !== ":id") {
-      data.t_id = id;
-    }
-    axios({
-      method: "post",
-      url: new URL(UrlData + `TopicMaster`),
-      data: data,
-    })
-      .then((response) => {
-        console.log(response);
-        if (id !== null && id !== undefined && id !== ":id") {
-          alert("Topic updated successfully!")
-        }
-        else{
-          alert("Topic added successfully!")
-        }
-        navigate("/topicMaster");
+    } else {
+      let data = {
+        userId: UserId,
+        t_code: trainingCode,
+        t_description: description,
+        t_department: department,
+        t_trainingtype: trainingType,
+        t_duration: trainingDuration,
+        t_creadtedby: "",
+        t_updatedby: "",
+        t_isactive: "1",
+        subject: subjects,
+      };
+      if (id !== null && id !== undefined && id !== ":id") {
+        data.t_id = id;
+      }
+      axios({
+        method: "post",
+        url: new URL(UrlData + `TopicMaster`),
+        data: data,
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(response);
+          if (id !== null && id !== undefined && id !== ":id") {
+            alert("Topic updated successfully!");
+          } else {
+            alert("Topic added successfully!");
+          }
+          navigate("/topicMaster");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -131,14 +136,19 @@ const AddTopic = () => {
   };
 
   const addSubject = () => {
-    const newSubject = {
-      s_subject: subject,
-      s_content: content,
-      s_subcontent: subContent,
-    };
-    setSubjects([...subjects, newSubject]);
-    console.log([...subjects], "subjects");
-    alert("Subject added successfully!")
+    if (subject === "" || content === "" || subContent === "") {
+      alert("Please fill the details");
+    } else {
+      const newSubject = {
+        s_subject: subject,
+        s_content: content,
+        s_subcontent: subContent,
+      };
+      setSubjects([...subjects, newSubject]);
+      console.log([...subjects], "subjects");
+      alert("Subject added successfully!");
+      setModalOpen(false);
+    }
   };
 
   const editSubject = (index) => {
@@ -158,8 +168,9 @@ const AddTopic = () => {
         s_subcontent: subContent,
       };
       setSubjects(updatedSubjects);
-      alert("Subject updated successfully!")
+      alert("Subject updated successfully!");
       resetForm();
+      setModalOpen(false)
     }
   };
 
@@ -174,7 +185,7 @@ const AddTopic = () => {
     const updatedSubjects = [...subjects];
     updatedSubjects.splice(index, 1);
     setSubjects(updatedSubjects);
-    alert("Subject deleted successfully!")
+    alert("Subject deleted successfully!");
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -234,7 +245,8 @@ const AddTopic = () => {
                 <div className="row">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Code:</label> <span className="text-danger fw-bold">*</span>
+                      <label className="control-label fw-bold">Code:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="tCode"
@@ -252,7 +264,8 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Description:
-                      </label>  <span className="text-danger fw-bold">*</span> 
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <textarea
                         className="form-control"
                         rows="1"
@@ -270,7 +283,8 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Department:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -292,7 +306,8 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Type
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         id="sel1"
@@ -314,7 +329,8 @@ const AddTopic = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Duration:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="time"
                         id="duration"
@@ -346,20 +362,14 @@ const AddTopic = () => {
                           />
                         </div>
                         <div className="col-auto d-flex flex-wrap">
-                          <div
-                            className="btn btn-add "
-                            title="Add New"
-                            onClick={() => {
-                              // navigate("/addTopic");
-                            }}
-                          >
+                          <div className="btn btn-add " title="Add New">
                             <button
                               className="btn btn-md text-light"
                               type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#exampleModal"
+                              // data-bs-toggle="modal"
+                              // data-bs-target="#exampleModal"
                               style={{ backgroundColor: "#1B5A90" }}
-                              value={modalOpen}
+                              onClick={() => setModalOpen(true)}
                             >
                               <Add />
                             </button>
@@ -444,10 +454,11 @@ const AddTopic = () => {
                                 <Edit
                                   className="text-success mr-2"
                                   // onClick={() => GetSubject(data.s_id)}
-                                  onClick={() => editSubject(index)}
+                                  onClick={() => {editSubject(index); setModalOpen(true)}}
                                   type="button"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
+                                  // data-bs-toggle="modal"
+                                  // data-bs-target="#exampleModal"
+                                  
                                 />
                                 <Delete
                                   className="text-danger"
@@ -558,122 +569,56 @@ const AddTopic = () => {
             </div>
           </div>
         </div>
-
-        <div
-          className="modal fade"
-          id="exampleModal"
-          tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title fw-bold" id="exampleModalLabel">
-                  Add Topic
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="row">
-                  <div className="form-group row">
-                    <label
-                      htmlFor="staticEmail"
-                      className="col-sm-3 col-form-label fw-bold mt-2"
-                    >
-                      Content
-                    </label> {/* <span className="text-danger fw-bold">*</span> */}
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="staticEmail"
-                        placeholder="Enter Content"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="form-group row">
-                    <label
-                      htmlFor="staticEmail"
-                      className="col-sm-3 col-form-label fw-bold mt-2"
-                    >
-                      Sub Content
-                    </label> {/* <span className="text-danger fw-bold">*</span> */}
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="staticEmail"
-                        placeholder="Enter Sub Content"
-                        value={subContent}
-                        onChange={(e) => setSubContent(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="form-group row">
-                    <label
-                      htmlFor="staticEmail"
-                      className="col-sm-3 col-form-label fw-bold mt-2"
-                    >
-                      Subject
-                    </label> {/* <span className="text-danger fw-bold">*</span> */}
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="staticEmail"
-                        placeholder="Enter Subject"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                {editIndex !== null ? (
-                  <button
-                    onClick={updateSubject}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Update Subject
-                  </button>
-                ) : (
-                  <button
-                    onClick={addSubject}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Add Subject
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Modal show={modalOpen} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title><h5 className="fw-bold">Add Topic</h5></Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="formContent">
+                <Form.Label className="fw-bold">Content</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formSubContent">
+                <Form.Label className="fw-bold">Sub Content</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Sub Content"
+                  value={subContent}
+                  onChange={(e) => setSubContent(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formSubject">
+                <Form.Label className="fw-bold">Subject</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            {editIndex !== null ? (
+              <Button style={{ backgroundColor: "#1B5A90" }} onClick={updateSubject}>
+                Update Subject
+              </Button>
+            ) : (
+              <Button  style={{ backgroundColor: "#1B5A90" }} onClick={addSubject}>
+                Add Subject
+              </Button>
+            )}
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );

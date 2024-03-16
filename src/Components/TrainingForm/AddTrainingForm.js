@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import { Table, Alert } from "react-bootstrap";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { Add, ArrowBack, Edit, Delete } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -12,7 +12,8 @@ import UserId from "../UserId";
 
 const AddTrainingForm = () => {
   const { id } = useParams();
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const [allTrainingNature, setAllTrainingNature] = useState([]);
   const [trainingNature, setTrainingNature] = useState("");
@@ -48,7 +49,8 @@ const AddTrainingForm = () => {
   const [selectedNameOption, setSelectedNameOption] = useState("");
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
   const [alert, setAlert] = React.useState({
     type: "error",
     text: "This is a alert message",
@@ -102,7 +104,7 @@ const AddTrainingForm = () => {
           setTrainingHours(response.data.data.tr_hours);
           setTrainingDay(response.data.data.tr_days);
           setTrId(response.data.data.tr_id);
-          setAction(response.data.data.tr_action)
+          setAction(response.data.data.tr_action);
           console.log(response.data.data.tr_id, "trId");
           getAllTrainingTopic();
           getAllTraining();
@@ -115,11 +117,15 @@ const AddTrainingForm = () => {
 
   const getAllTrainingNature = () => {
     axios
-      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`))
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
+        )
+      )
       .then((response) => {
         console.log("get all training nature", response.data.data);
-        setAllTrainingNature(response.data.data)
-
+        setAllTrainingNature(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -127,11 +133,15 @@ const AddTrainingForm = () => {
   };
   const getAllTrainingType = () => {
     axios
-      .get(new URL(UrlData + `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`))
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
+        )
+      )
       .then((response) => {
         console.log("get all training Type", response.data.data);
-        setAllTrainingType(response.data.data)
-
+        setAllTrainingType(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -171,12 +181,12 @@ const AddTrainingForm = () => {
         tr_isactive: "1",
         training: allByDepartments,
       };
-  
+
       // If id is not null, undefined, or ":id", include it in the data object
       if (id !== null && id !== undefined && id !== ":id") {
         data.tr_id = id;
       }
-  
+
       axios({
         method: "post",
         url: new URL(UrlData + `TrainingForm`),
@@ -185,14 +195,14 @@ const AddTrainingForm = () => {
         .then((response) => {
           console.log(response, "add training need form");
           console.log(response.data.data.OutcomeDetail);
-  
+
           // Display success message based on whether it's an update or addition
           if (id !== null && id !== undefined && id !== ":id") {
             alert("Training updated successfully!");
           } else {
             alert("Training added successfully!");
           }
-  
+
           // Navigate the user to /trainingForm
           navigate("/trainingForm");
         })
@@ -202,7 +212,7 @@ const AddTrainingForm = () => {
         });
     }
   };
-  
+
   const getAllTraining = () => {
     console.log(trId, "trID");
     axios
@@ -222,6 +232,10 @@ const AddTrainingForm = () => {
 
   const GetAllByDepart = () => {
     console.log(departments);
+    // if(departments === "" || selectedOption === "" || selectedNameOption === "" || trainingDept === "" || trainingDate === "" || trainingTopic === ""){
+    //   alert("Please fill all the details")
+    // }
+    // else{
     axios
       .get(
         new URL(
@@ -247,10 +261,12 @@ const AddTrainingForm = () => {
         console.log([...allByDepartments, ...modifiedData], "309");
         // addSingleTraining()
         resetForm();
+        handleClose()
       })
       .catch((error) => {
         console.log(error);
       });
+    // }
   };
 
   const handleDepartment = (selected) => {
@@ -297,8 +313,8 @@ const AddTrainingForm = () => {
           value: item.de_id,
           label: item.de_designation_name,
         }));
-        setSelectedDesignation(designation)
-        console.log(selectedDesignation, "all designation")
+        setSelectedDesignation(designation);
+        console.log(selectedDesignation, "all designation");
       })
       .catch((error) => {
         console.log(error);
@@ -345,33 +361,32 @@ const AddTrainingForm = () => {
     // if (departments === "" || selectedOption === "" || trainingDept === "" || trainingDate === "") {
     //   alert("Please fill all the details");
     // } else {
-      // Constructing new training object
-      const newTraining = {
-        td_dept: departments.value,
-        td_des: designation.label,
-        td_emp_des: designation.value,
-        td_emp_code: selectedOption.value,
-        td_emp_name: selectedNameOption.value,
-        td_req_dept: trainingDept,
-        td_date_training: trainingDate,
-        td_topic_training: data.map((item) => item.value).join(","),
-        td_topic_training_name: data.map((item) => item.label).join(","),
-      };
+    // Constructing new training object
+    const newTraining = {
+      td_dept: departments.value,
+      td_des: designation.label,
+      td_emp_des: designation.value,
+      td_emp_code: selectedOption.value,
+      td_emp_name: selectedNameOption.value,
+      td_req_dept: trainingDept,
+      td_date_training: trainingDate,
+      td_topic_training: data.map((item) => item.value).join(","),
+      td_topic_training_name: data.map((item) => item.label).join(","),
+    };
 
-      // Updating state with new training entry
-      setAllByDepartments((prevAllByDepartments) => [
-        ...prevAllByDepartments,
-        newTraining,
-      ]);
+    // Updating state with new training entry
+    setAllByDepartments((prevAllByDepartments) => [
+      ...prevAllByDepartments,
+      newTraining,
+    ]);
+    handleClose()
+    // Logging the updated allByDepartments state
+    console.log(allByDepartments);
 
-      // Logging the updated allByDepartments state
-      console.log(allByDepartments);
-
-      // Resetting the form fields
-      resetForm();
+    // Resetting the form fields
+    resetForm();
     // }
   };
-
 
   const [editIndex, setEditIndex] = useState(null);
   useEffect(() => {
@@ -459,6 +474,7 @@ const AddTrainingForm = () => {
       setAllByDepartments(updatedTrainings);
       console.log(updatedTrainings, "update training 1");
       console.log(allByDepartments, "update training 2");
+      handleClose()
       // Set the updated array back to state
       resetForm(); // Reset the form fields
     }
@@ -490,7 +506,7 @@ const AddTrainingForm = () => {
       ),
     })
       .then((response) => {
-        console.log(response, "by code")
+        console.log(response, "by code");
         setSelectedNameOption({
           value: response.data.data.td_emp_name,
           label: response.data.data.td_emp_name,
@@ -505,7 +521,7 @@ const AddTrainingForm = () => {
           label: response.data.data.td_des,
         });
         // console.log(designation,"designation")
-        console.log(departments, "departments")
+        console.log(departments, "departments");
 
         // setDesignation(response.data.data.td_des);
       })
@@ -514,9 +530,9 @@ const AddTrainingForm = () => {
       });
   };
   useEffect(() => {
-    console.log(designation, "designation")
-    GetAllTopicsDes()
-  }, [designation])
+    console.log(designation, "designation");
+    GetAllTopicsDes();
+  }, [designation]);
 
   const handleEmpNameChange = (selected) => {
     setSelectedNameOption(selected);
@@ -549,15 +565,15 @@ const AddTrainingForm = () => {
   };
 
   const GetAllTopicsDes = () => {
-
     axios({
       method: "get",
       url: new URL(
-        UrlData + `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
+        UrlData +
+          `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
       ),
     })
       .then((response) => {
-        console.log(response, "get all topics des")
+        console.log(response, "get all topics des");
         // setDesignation(response.data.data.td_des);
         const trainingTopics = response.data.data.map((item, index) => ({
           value: item.t_id,
@@ -652,7 +668,8 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Nature:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={trainingNature}
@@ -676,7 +693,8 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Type:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={trainingType}
@@ -700,7 +718,8 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Request No:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="custom-search"
@@ -716,7 +735,8 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Training Request Date:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="date"
                         id="custom-search"
@@ -734,7 +754,8 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         No of Hours:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="noHours"
@@ -749,7 +770,8 @@ const AddTrainingForm = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         No of Days:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="custom-search"
@@ -791,9 +813,10 @@ const AddTrainingForm = () => {
                             <button
                               className="btn btn-md text-light"
                               type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#addTrainingForm"
+                              // data-bs-toggle="modal"
+                              // data-bs-target="#addTrainingForm"
                               style={{ backgroundColor: "#1B5A90" }}
+                              onClick={handleShow}
                             >
                               <Add />
                             </button>
@@ -878,7 +901,7 @@ const AddTrainingForm = () => {
                             return (
                               <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>{departmentItem.td_req_dept}</td>{" "}
+                                <td>{departmentItem.td_req_dept}</td>
                                 <td>{departmentItem.td_emp_code}</td>
                                 <td>{departmentItem.td_emp_name}</td>
                                 <td>{departmentItem.td_dept}</td>
@@ -891,24 +914,24 @@ const AddTrainingForm = () => {
                                   className="d-none"
                                 >
                                   {departmentItem.td_topic_training &&
-                                    typeof departmentItem.td_topic_training ===
+                                  typeof departmentItem.td_topic_training ===
                                     "string"
                                     ? departmentItem.td_topic_training
-                                      .split(",")
-                                      .map((value, index) => (
-                                        <div key={index}>{value.trim()}</div>
-                                      ))
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
                                     : departmentItem.td_topic_training}
                                 </td>
                                 <td style={{ whiteSpace: "pre-line" }}>
                                   {departmentItem.td_topic_training_name &&
-                                    typeof departmentItem.td_topic_training_name ===
+                                  typeof departmentItem.td_topic_training_name ===
                                     "string"
                                     ? departmentItem.td_topic_training_name
-                                      .split(",")
-                                      .map((value, index) => (
-                                        <div key={index}>{value.trim()}</div>
-                                      ))
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
                                     : departmentItem.td_topic_training_name}
                                 </td>
                                 <td>
@@ -960,8 +983,9 @@ const AddTrainingForm = () => {
                                 },
                                 (_, index) => (
                                   <li
-                                    className={`page-item ${currentPage === index + 1 ? "active" : ""
-                                      }`}
+                                    className={`page-item ${
+                                      currentPage === index + 1 ? "active" : ""
+                                    }`}
                                     key={index}
                                   >
                                     <button
@@ -1000,7 +1024,8 @@ const AddTrainingForm = () => {
                 <div className="row mt-4 me-3">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Action:</label> <span className="text-danger fw-bold">*</span>
+                      <label className="control-label fw-bold">Action:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         value={action}
@@ -1047,7 +1072,7 @@ const AddTrainingForm = () => {
           </div>
         </div>
 
-        <div
+        {/* <div
           className="modal fade"
           id="addTrainingForm"
           tabIndex="-1"
@@ -1190,7 +1215,7 @@ const AddTrainingForm = () => {
                     Add Department Training
                   </button>
                 ) : editIndex !== null ? (
-                  // departments && code ?
+                 
                   <button
                     onClick={updateSingleTraining}
                     type="button"
@@ -1213,18 +1238,6 @@ const AddTrainingForm = () => {
                     Add Single Training
                   </button>
                 )}
-
-                {/* <button
-                    onClick={() => {
-                      addSingleTraining();
-                    }}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Add single Training
-                  </button>  */}
                 <button
                   onClick={updateSingleTraining}
                   type="button"
@@ -1244,8 +1257,146 @@ const AddTrainingForm = () => {
               </div>
             </div>
           </div>
-        </div>
-
+        </div> */}
+        <Modal
+          show={showModal}
+          onHide={handleClose}
+          size="lg"
+          id="addTrainingForm"
+          aria-labelledby="addTrainingFormLabel"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="addTrainingFormLabel">
+              <h5 className="fw-bold">Add Training Form</h5>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Row>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="department">
+                    <Form.Label className="fw-bold">Department</Form.Label> <span className="text-danger fw-bold">*</span>
+                    <Select
+                      options={selectedDepartment}
+                      value={departments}
+                      onChange={handleDepartment}
+                      className="mt-2"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="designation">
+                    <Form.Label className="fw-bold">Designation:</Form.Label>
+                    <Select
+                      options={selectedDesignation}
+                      value={designation}
+                      onChange={handleDesignation}
+                      className="mt-2"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="employeeCode">
+                    <Form.Label className="fw-bold">Employee Code:</Form.Label> <span className="text-danger fw-bold">*</span>
+                    <Select
+                      options={empCodeOptions}
+                      value={selectedOption}
+                      onChange={handleEmpCodeChange}
+                      isDisabled={isEmployeeNameDisabled}
+                      className="mt-2"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="employeeName">
+                    <Form.Label className="fw-bold">Employee Name:</Form.Label> <span className="text-danger fw-bold">*</span>
+                    <Select
+                      options={empNameOptions}
+                      value={selectedNameOption}
+                      onChange={handleEmpNameChange}
+                      isDisabled={isEmployeeNameDisabled}
+                      className="mt-2"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+              <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="trainingDept">
+                <Form.Label className="fw-bold">
+                  Training Required Dept:
+                </Form.Label> <span className="text-danger fw-bold">*</span>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Training Required Dept"
+                  value={trainingDept}
+                  onChange={(e) => setTrainingDept(e.target.value)}
+                />
+              </Form.Group>
+              </Col>
+              <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="trainingDate">
+                <Form.Label className="fw-bold">
+                  Date of Training Required:
+                </Form.Label> <span className="text-danger fw-bold">*</span>
+                <Form.Control
+                  type="date"
+                  value={trainingDate}
+                  onChange={(e) => setTrainingDate(e.target.value)}
+                />
+              </Form.Group>
+              </Col>
+              </Row>
+              <Row>
+              <Col xs={12} md={6}>
+              <Form.Group className="mb-3" controlId="trainingTopics">
+                <Form.Label className="fw-bold">
+                  Topics for Training Required:
+                </Form.Label> <span className="text-danger fw-bold">*</span>
+                <Select
+                  options={selectedTrainingTopic}
+                  isMulti
+                  value={trainingTopic}
+                  onChange={handleTopics}
+                  className="mt-2"
+                />
+              </Form.Group>
+              </Col>
+              </Row>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            {departments && !code && !name ? (
+              <Button
+                onClick={GetAllByDepart}
+                type="button"
+                className="btn text-white"
+                style={{ backgroundColor: "#1B5A90" }}
+              >
+                Add Department Training
+              </Button>
+            ) : editIndex !== null ? (
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={updateSingleTraining}
+              >
+                Update Training
+              </Button>
+            ) : (
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={addSingleTraining}
+              >
+                Add Single Training
+              </Button>
+            )}
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
         {/* <Alert
           header={"Header"}
           btnText={"Close"}

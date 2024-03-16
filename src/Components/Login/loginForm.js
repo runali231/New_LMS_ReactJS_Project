@@ -9,16 +9,19 @@ import axios from "axios";
 const LoginForm = () => {
 
   const navigate =  useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("")
 
   const getLogin = () => {
+    if(username === "" || password === ""){
+      alert("Please enter all fields!");
+    }else{
     axios({
       method: "get",
       url: new URL(
         UrlData +
-          `Login/Get?username=${email}&password=${password}`
+          `Login/Get?username=${username}&password=${password}`
       ), // Include pageSize and pageNumber in the URL
       headers: {
         // "access-control-allow-origin" : "*",
@@ -30,16 +33,19 @@ const LoginForm = () => {
         // setAllDesignation(response.data.data);
         localStorage.setItem("loginId", response.data.data.RoleId);
         localStorage.setItem("UserId", response.data.data.UserId)
+        localStorage.setItem("username", response.data.data.username)
+        alert("Login Successful!")
         navigate("/dashboard")
       })
       .catch((error) => {
         console.log(error);
       });
+    }
   };
-  const Login= ()=>{
-    localStorage.setItem("loginId", email);
-    navigate("/")
-  }
+  // const Login= ()=>{
+  //   localStorage.setItem("loginId", username);
+  //   navigate("/")
+  // }
   return (
     // JSX code for your login form...
     <>  
@@ -58,14 +64,14 @@ const LoginForm = () => {
             <div className="form-box px-5 py-4">
               <form>
                 <div className="px-3 py-4">
-                  <h2 className="text-light mb-4 text-center">Login</h2>
+                  <h2 className="text-light mb-4 text-center fw-bold">Login</h2>
                   <input
                     type="text"
                     name=""
                     placeholder="Username"
                     className="form-control mb-4"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                    <div className="input-group mb-4">
                     <input

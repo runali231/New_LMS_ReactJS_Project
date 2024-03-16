@@ -10,20 +10,29 @@ import {
   ThreeDotsVertical,
   CheckCircleFill,
   ClipboardCheck,
-  BookFill // Import the BookFill icon
+  BookFill, // Import the BookFill icon
 } from "react-bootstrap-icons";
 import axios from "axios";
-import { NavLink, Navigate } from "react-router-dom";
+import {
+  NavLink,
+  useNavigate,
+} from "react-router-dom";
 import TheContent from "../TheContent";
 import "../Components/Css/Profile.css";
 import UrlData from "../Components/UrlData";
+import LoginForm from "../Components/Login/loginForm";
 
 const Home = () => {
   const [sidebarData, setSidebarData] = useState([]);
   const [sidebar, setSidebar] = useState(true);
   const [content, setContent] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
-
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const toggleMenu = () => {
+    setIsSubMenuOpen(!isSubMenuOpen);
+  };
+  const userName = localStorage.getItem("username");
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 720) {
@@ -48,9 +57,7 @@ const Home = () => {
     const getLoginId = localStorage.getItem("loginId");
     axios({
       method: "get",
-      url: new URL(
-        UrlData + `GetWebMenu/GetAll?RoleId=${getLoginId}`
-      ),
+      url: new URL(UrlData + `GetWebMenu/GetAll?RoleId=${getLoginId}`),
     })
       .then((response) => {
         console.log("response get sidebar menu", response.data.data);
@@ -67,9 +74,16 @@ const Home = () => {
 
   const logout = () => {
     localStorage.removeItem("loginId");
-    Navigate("/login");
+    localStorage.removeItem("UserId");
+    localStorage.removeItem("username");
+    // Directly render the LoginForm component
+    // return <LoginForm />;
+    navigate("/");
+    window.location.reload();
   };
 
+
+  // Return null or any other component if needed
   return (
     <>
       <div className="wrapper">
@@ -97,10 +111,22 @@ const Home = () => {
               </div>
               {/* <br /> */}
               {sidebarData
-                .filter(item => ["Master", "Transaction", "Reports", "Approval"].includes(item.m_menuname))
+                .filter((item) =>
+                  ["Master", "Transaction", "Reports", "Approval"].includes(
+                    item.m_menuname
+                  )
+                )
                 .sort((a, b) => {
-                  const menuOrder = ["Master", "Transaction", "Reports", "Approval"];
-                  return menuOrder.indexOf(a.m_menuname) - menuOrder.indexOf(b.m_menuname);
+                  const menuOrder = [
+                    "Master",
+                    "Transaction",
+                    "Reports",
+                    "Approval",
+                  ];
+                  return (
+                    menuOrder.indexOf(a.m_menuname) -
+                    menuOrder.indexOf(b.m_menuname)
+                  );
                 })
                 .map((menuItem, index) => (
                   <li className="dropdown" key={index}>
@@ -118,14 +144,11 @@ const Home = () => {
                     >
                       {menuItem.m_menuname === "Transaction" ? ( // Check if dropdown name is "Transaction"
                         <BookFill style={{ fontSize: "22px" }} /> // Use BookFill icon
-                      ) 
-                      : menuItem.m_menuname === "Approval" ? (
+                      ) : menuItem.m_menuname === "Approval" ? (
                         <CheckCircleFill style={{ fontSize: "22px" }} />
-                      )
-                      : menuItem.m_menuname === "Reports" ? (
+                      ) : menuItem.m_menuname === "Reports" ? (
                         <ClipboardCheck style={{ fontSize: "22px" }} />
-                      )
-                      : (
+                      ) : (
                         <GearWideConnected style={{ fontSize: "22px" }} />
                       )}
                       <span className="ms-3">{menuItem.m_menuname}</span>
@@ -207,32 +230,38 @@ const Home = () => {
                         to="/"
                         data-toggle="dropdown"
                       >
-                        <BellFill
+                        {/* <BellFill
                           style={{ fontSize: "20px", color: "white" }}
-                        />
-                        <span className="notification text-white">4</span>
+                        /> */}
+                        {/* <span className="notification text-white">4</span> */}
                       </NavLink>
                     </li>
                     <li className="nav-item">
                       <NavLink className="nav-link" to="/">
-                        <Grid3x3GapFill
+                        {/* <Grid3x3GapFill
                           style={{ fontSize: "22px", color: "white" }}
-                        />
+                        /> */}
                       </NavLink>
-                    </li>
+                    </li>                  
                     <li className="nav-item ">
-                      <div
-                        className="nav-link"
-                        onClick={() => setSidebar(!sidebar)}
-                      >
+                      <div className="nav-link" onClick={toggleMenu}>
+                        {/* <span className="material-icons">person</span> */}
+
                         <PersonFill
                           style={{ fontSize: "24px", color: "white" }}
                         />
-                        <div className="sub-menu-wrap">
+
+                        <div
+                          className={`sub-menu-wrap ${
+                            isSubMenuOpen ? "open-menu" : ""
+                          }`}
+                          id="subMenu"
+                          style={{ backgroundColor: "rgb(27, 90, 144)" }}
+                        >
                           <div className="sub-menu">
                             <div className="user-info">
                               <img src="Images/user.png" alt="User" />
-                              <h4></h4>
+                              <h4>{userName}</h4>
                             </div>
                           </div>
                           <hr className="sub-menu-hr" />
