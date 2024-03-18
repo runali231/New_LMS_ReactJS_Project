@@ -163,7 +163,7 @@ const Home = () => {
                       {sidebarData
                         .filter(
                           (subMenuItem) =>
-                            subMenuItem.ParentId !== menuItem.ParentId
+                            subMenuItem.ParentId === menuItem.m_id.toUpperCase()
                         )
                         .map((subMenuItem, subIndex) => (
                           <li key={subIndex}>

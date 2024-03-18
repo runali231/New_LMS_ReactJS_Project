@@ -261,7 +261,7 @@ const AddTrainingForm = () => {
         console.log([...allByDepartments, ...modifiedData], "309");
         // addSingleTraining()
         resetForm();
-        handleClose()
+        handleClose();
       })
       .catch((error) => {
         console.log(error);
@@ -379,7 +379,7 @@ const AddTrainingForm = () => {
       ...prevAllByDepartments,
       newTraining,
     ]);
-    handleClose()
+    handleClose();
     // Logging the updated allByDepartments state
     console.log(allByDepartments);
 
@@ -415,7 +415,7 @@ const AddTrainingForm = () => {
 
     const var1 = trainingToEdit.td_date_training.split(" ")[0];
     const var2 = formatDate(var1);
-
+    console.log(trainingToEdit.td_dept, "418");
     setDepartments({
       value: trainingToEdit.td_dept,
       label: trainingToEdit.td_dept,
@@ -474,7 +474,7 @@ const AddTrainingForm = () => {
       setAllByDepartments(updatedTrainings);
       console.log(updatedTrainings, "update training 1");
       console.log(allByDepartments, "update training 2");
-      handleClose()
+      handleClose();
       // Set the updated array back to state
       resetForm(); // Reset the form fields
     }
@@ -938,9 +938,12 @@ const AddTrainingForm = () => {
                                   <Edit
                                     className="text-success mr-2"
                                     type="button"
-                                    onClick={() => getSingleTraining(index)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addTrainingForm"
+                                    onClick={() => {getSingleTraining(index);
+                                    handleShow()
+                                    }}
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#addTrainingForm"
+                                    
                                   />
                                   <Delete
                                     className="text-danger"
@@ -1275,7 +1278,8 @@ const AddTrainingForm = () => {
               <Row>
                 <Col xs={12} md={6}>
                   <Form.Group className="mb-3" controlId="department">
-                    <Form.Label className="fw-bold">Department</Form.Label> <span className="text-danger fw-bold">*</span>
+                    <Form.Label className="fw-bold">Department</Form.Label>{" "}
+                    <span className="text-danger fw-bold">*</span>
                     <Select
                       options={selectedDepartment}
                       value={departments}
@@ -1299,7 +1303,8 @@ const AddTrainingForm = () => {
               <Row>
                 <Col xs={12} md={6}>
                   <Form.Group className="mb-3" controlId="employeeCode">
-                    <Form.Label className="fw-bold">Employee Code:</Form.Label> <span className="text-danger fw-bold">*</span>
+                    <Form.Label className="fw-bold">Employee Code:</Form.Label>{" "}
+                    <span className="text-danger fw-bold">*</span>
                     <Select
                       options={empCodeOptions}
                       value={selectedOption}
@@ -1311,7 +1316,8 @@ const AddTrainingForm = () => {
                 </Col>
                 <Col xs={12} md={6}>
                   <Form.Group className="mb-3" controlId="employeeName">
-                    <Form.Label className="fw-bold">Employee Name:</Form.Label> <span className="text-danger fw-bold">*</span>
+                    <Form.Label className="fw-bold">Employee Name:</Form.Label>{" "}
+                    <span className="text-danger fw-bold">*</span>
                     <Select
                       options={empNameOptions}
                       value={selectedNameOption}
@@ -1323,47 +1329,50 @@ const AddTrainingForm = () => {
                 </Col>
               </Row>
               <Row>
-              <Col xs={12} md={6}>
-              <Form.Group className="mb-3" controlId="trainingDept">
-                <Form.Label className="fw-bold">
-                  Training Required Dept:
-                </Form.Label> <span className="text-danger fw-bold">*</span>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Training Required Dept"
-                  value={trainingDept}
-                  onChange={(e) => setTrainingDept(e.target.value)}
-                />
-              </Form.Group>
-              </Col>
-              <Col xs={12} md={6}>
-              <Form.Group className="mb-3" controlId="trainingDate">
-                <Form.Label className="fw-bold">
-                  Date of Training Required:
-                </Form.Label> <span className="text-danger fw-bold">*</span>
-                <Form.Control
-                  type="date"
-                  value={trainingDate}
-                  onChange={(e) => setTrainingDate(e.target.value)}
-                />
-              </Form.Group>
-              </Col>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="trainingDept">
+                    <Form.Label className="fw-bold">
+                      Training Required Dept:
+                    </Form.Label>{" "}
+                    <span className="text-danger fw-bold">*</span>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Training Required Dept"
+                      value={trainingDept}
+                      onChange={(e) => setTrainingDept(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="trainingDate">
+                    <Form.Label className="fw-bold">
+                      Date of Training Required:
+                    </Form.Label>{" "}
+                    <span className="text-danger fw-bold">*</span>
+                    <Form.Control
+                      type="date"
+                      value={trainingDate}
+                      onChange={(e) => setTrainingDate(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
               </Row>
               <Row>
-              <Col xs={12} md={6}>
-              <Form.Group className="mb-3" controlId="trainingTopics">
-                <Form.Label className="fw-bold">
-                  Topics for Training Required:
-                </Form.Label> <span className="text-danger fw-bold">*</span>
-                <Select
-                  options={selectedTrainingTopic}
-                  isMulti
-                  value={trainingTopic}
-                  onChange={handleTopics}
-                  className="mt-2"
-                />
-              </Form.Group>
-              </Col>
+                <Col xs={12} md={6}>
+                  <Form.Group className="mb-3" controlId="trainingTopics">
+                    <Form.Label className="fw-bold">
+                      Topics for Training Required:
+                    </Form.Label>{" "}
+                    <span className="text-danger fw-bold">*</span>
+                    <Select
+                      options={selectedTrainingTopic}
+                      isMulti
+                      value={trainingTopic}
+                      onChange={handleTopics}
+                      className="mt-2"
+                    />
+                  </Form.Group>
+                </Col>
               </Row>
             </Form>
           </Modal.Body>
