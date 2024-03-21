@@ -51,27 +51,27 @@ const AddTrainingForm = () => {
   const [name, setName] = useState("");
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-  const [alert, setAlert] = React.useState({
-    type: "error",
-    text: "This is a alert message",
-    show: false,
-  });
+  // const [alert, setAlert] = React.useState({
+  //   type: "error",
+  //   text: "This is a alert message",
+  //   show: false,
+  // });
 
-  function onCloseAlert() {
-    setAlert({
-      type: "",
-      text: "",
-      show: false,
-    });
-  }
+  // function onCloseAlert() {
+  //   setAlert({
+  //     type: "",
+  //     text: "",
+  //     show: false,
+  //   });
+  // }
 
-  function onShowAlert(type) {
-    setAlert({
-      type: type,
-      text: "Demo alert",
-      show: true,
-    });
-  }
+  // function onShowAlert(type) {
+  //   setAlert({
+  //     type: type,
+  //     text: "Demo alert",
+  //     show: true,
+  //   });
+  // }
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -906,9 +906,10 @@ const AddTrainingForm = () => {
                                 <td>{departmentItem.td_emp_name}</td>
                                 <td>{departmentItem.td_dept}</td>
                                 <td>{departmentItem.td_des}</td>
-                                <td>
+                                {/* <td>
                                   {formatDate(departmentItem.td_date_training)}
-                                </td>
+                                </td> */}
+                                <td>{departmentItem.td_date_training}</td>
                                 <td
                                   style={{ whiteSpace: "pre-line" }}
                                   className="d-none"
@@ -1401,6 +1402,12 @@ const AddTrainingForm = () => {
                 Add Single Training
               </Button>
             )}
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={updateSingleTraining}
+              >
+                Update Training
+              </Button>
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>

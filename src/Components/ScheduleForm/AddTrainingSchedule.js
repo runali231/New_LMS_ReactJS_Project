@@ -1318,7 +1318,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Marks Obtained:
                       </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <input
                         type="number"
                         id="marksObtained"

@@ -69,7 +69,7 @@ const LoginForm = () => {
                     type="text"
                     name=""
                     placeholder="Username"
-                    className="form-control mb-4"
+                    className="form-control loginField mb-4"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
@@ -78,7 +78,7 @@ const LoginForm = () => {
                       type="password"
                       name=""
                       placeholder="Password"
-                      className="form-control "
+                      className="form-control loginField"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />

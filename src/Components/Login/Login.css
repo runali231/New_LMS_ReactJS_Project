@@ -46,9 +46,9 @@
   color: white; /* Ensure text is white for better visibility */
   text-align: center; /* Center align text */
 }
-.form-control:focus{
+.loginField:focus{
   background-color: transparent;
-  /* color: white; */
+  color: white;
 }
 /* Media queries for responsiveness */
 @media screen and (max-width: 992px) {

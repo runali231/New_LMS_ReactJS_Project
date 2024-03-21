@@ -104,7 +104,8 @@ const AddEmployee = () => {
       country === "" ||
       pinCode === "" ||
       mobileNo === "" ||
-      emailId === "" ||
+      emailId === "" 
+      ||
       joiningDate === ""
     ) {
       alert("Please fill all the details");
