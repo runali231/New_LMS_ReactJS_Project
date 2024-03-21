@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { Add, Delete, Edit } from "@material-ui/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import {
@@ -18,8 +18,8 @@ const CountryMaster = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
+  const [showModal, setShowModal] = useState(false);
 
-  // const { id } = useParams();
   const [countryName, setCountryName] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [active, setActive] = useState(true);
@@ -56,10 +56,15 @@ const CountryMaster = () => {
     setCurrentPage(1);
   };
 
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
   const addCountry = () => {
     let data;
-    if (countryName === "" || countryCode === "") {
-      alert("Please fill all the details");
+    if (countryCode === "") {
+      alert(" Please enter country code!");
+    } else if (countryName === "") {
+      alert(" Please enter country name!");
     } else {
       data = {
         userId: UserId,
@@ -67,9 +72,9 @@ const CountryMaster = () => {
         co_country_code: countryCode,
         co_isactive: "1",
       };
-      if (countryId) {
-        data.co_id = countryId;
-      }
+      // if (countryId !== null && countryId !=="") {
+      //   data.co_id = countryId;
+      // }
       axios({
         method: "post",
         url: new URL(UrlData + `CountryMaster`),
@@ -77,15 +82,15 @@ const CountryMaster = () => {
       })
         .then((response) => {
           console.log(response, "add Country");
-          if (countryId) {
+          if (countryId !== null && countryId !=="") {
             alert("Country updated successfully!");
-          }
-          else{
+          } else {
             alert("Country added successfully!");
           }
           getAllData();
-          setCountryCode("")
-          setCountryName("")
+          setCountryCode("");
+          setCountryName("");
+          handleClose(); // Close modal after adding/updating
         })
         .catch((error) => {
           console.log(error);
@@ -94,8 +99,7 @@ const CountryMaster = () => {
     }
   };
 
-  const GetCity = (coId) => {
-    // navigate(`/addCountryMaster/${coId}`);
+  const GetCountry = (coId) => {
     axios({
       method: "get",
       url: new URL(UrlData + `CountryMaster/Get?status=1&co_id=${coId}`),
@@ -104,7 +108,8 @@ const CountryMaster = () => {
         console.log(response.data.data.co_country_name, "country  name");
         setCountryName(response.data.data.co_country_name);
         setCountryCode(response.data.data.co_country_code);
-        setCountryId(coId);
+        setCountryId(response.data.data.co_id);         
+        handleShow(); // Show modal for editing
       })
       .catch((error) => {
         console.log(error);
@@ -152,19 +157,20 @@ const CountryMaster = () => {
               <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold">Country Master</h4> 
+                    <h4 className="card-title fw-bold">Country Master</h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
                     <div className="btn btn-add" title="Add New">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#countryForm"
+                      <Button
+                        variant="primary"
+                        // onClick={handleShow}
+                        onClick={()=>{setCountryCode("");
+                        setCountryName("");
+                        handleShow()}}
                         style={{ backgroundColor: "#1B5A90" }}
                       >
                         <Add />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -214,7 +220,8 @@ const CountryMaster = () => {
                               {(currentPage - 1) * itemsPerPage + index + 1}
                             </td>
                             <td>{data.co_country_code}</td>
-                            <td type="button"
+                            <td
+                              type="button"
                               onClick={() =>
                                 handleCountryNameClick(
                                   data.co_id,
@@ -228,9 +235,14 @@ const CountryMaster = () => {
                               <Edit
                                 className="text-success mr-2"
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#countryForm"
-                                onClick={() => GetCity(data.co_id)}
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#countryForm"
+                                // onClick={handleShow}
+                               
+                                onClick={() => {
+                                  GetCountry(data.co_id);
+                                  handleShow();
+                                }}
                               />
                               <Delete
                                 className="text-danger"
@@ -318,120 +330,67 @@ const CountryMaster = () => {
           </div>
         </div>
       </div>
-      <div
-        className="modal fade"
-        id="countryForm"
-        tabIndex="-1"
-        aria-labelledby="countryFormLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title fw-bold" id="countryFormLabel">
-               Country Master
-              </h5> 
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">
-                      Country Code:
-                    </label> <span className="text-danger fw-bold">*</span>
-                    <input
-                      type="number"
-                      id="countryCode"
-                      name="countryCode"
-                      className="form-control "
-                      autoComplete="off"
-                      placeholder="Enter Country Code"
-                      value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">
-                      Country Name:
-                    </label> <span className="text-danger fw-bold">*</span>
-                    <input
-                      type="text"
-                      id="countryName"
-                      name="countryName"
-                      className="form-control "
-                      autoComplete="off"
-                      placeholder="Enter Country Name"
-                      value={countryName}
-                      onChange={(e) => setCountryName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">
-                      {/* Department Head: */}
-                    </label>
-                    <div className="form-group form-group-sm">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          checked={active}
-                          onChange={(e) => setActive(e.target.checked)}
-                          id="defaultCheck1"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="defaultCheck1"
-                        >
-                          Is Active
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <div className="row">
-                <div className="col-lg-12 text-end">
-                  <button
-                    className="btn text-light"
-                    type="button"
-                    data-bs-dismiss="modal"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    onClick={() => {
-                      addCountry();
-                      // editDesignation();
-                    }}
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary mx-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <Modal show={showModal} onHide={handleClose} size="lg" backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h5 className="fw-bold">Add Country</h5>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+                <Form.Group className="mb-3" controlId="countryCode">
+                  <Form.Label className="fw-bold">Country Code:</Form.Label>{" "}
+                  <span className="text-danger fw-bold">*</span>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter Country Code"
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+                <Form.Group className="mb-3" controlId="countryName">
+                  <Form.Label className="fw-bold">Country Name:</Form.Label>{" "}
+                  <span className="text-danger fw-bold">*</span>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Country Name"
+                    value={countryName}
+                    onChange={(e) => setCountryName(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group className="mb-3" controlId="isActive">
+              <Form.Check
+                type="checkbox"
+                label="Is Active"
+                checked={active}
+                onChange={(e) => setActive(e.target.checked)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+             style={{ backgroundColor: "#1B5A90" }}
+            onClick={() => {
+              addCountry();
+            }}
+          >
+            Save
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

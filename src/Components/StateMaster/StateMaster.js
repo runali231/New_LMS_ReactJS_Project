@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button, Form, Col, Row } from "react-bootstrap";
 import { Add, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -24,6 +24,9 @@ const StateMaster = () => {
   const [stateCode, setStateCode] = useState("");
   const [active, setActive] = useState(true);
   const [stateId, setStateId] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
   // State for dropdown value
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
@@ -78,8 +81,11 @@ const StateMaster = () => {
   const addState = () => {
     let data;
 
-    if (stateName === "" || stateCode === "") {
-      alert("Please fill all the details");
+    if (stateCode === "") {
+      alert("Please enter state code!");
+    } 
+    else if(stateName === ""){
+      alert("Please enter state name!");
     }
     else {
       data = {
@@ -88,10 +94,10 @@ const StateMaster = () => {
         s_country_id: countryId,
         s_state_name: stateName,
         s_state_code: stateCode,
-        s_isactive: "1"
+        s_isactive: "1",
       };
 
-      if (stateId) { 
+      if (stateId) {
         data.s_id = stateId;
       }
       axios({
@@ -101,22 +107,22 @@ const StateMaster = () => {
       })
         .then((response) => {
           console.log(response, "add state");
-          if (stateId) { 
+          if (stateId) {
             alert("State updated successfully!");
-          }
-          else{
+          } else {
             alert("State added successfully!");
-          }     
+          }
           getAllData();
-          setStateCode("")
-          setStateName("")
+          setStateCode("");
+          setStateName("");
+          handleClose();
         })
         .catch((error) => {
           console.log(error);
           alert("Something went wrong");
         });
     }
-};
+  };
 
   const DeleteState = (sId) => {
     const data = {
@@ -138,7 +144,7 @@ const StateMaster = () => {
       });
   };
 
-  const handleStateNameClick = (coId, countryName, sId, stateName, ) => {
+  const handleStateNameClick = (coId, countryName, sId, stateName) => {
     console.log("Clicked on state:", countryName);
     navigate(`/cityMaster/${coId}/${countryName}/${sId}/${stateName}`);
   };
@@ -174,8 +180,10 @@ const StateMaster = () => {
                         className="btn btn-md text-light"
                         type="button"
                         style={{ backgroundColor: "#1B5A90" }}
-                        data-bs-toggle="modal"
-                        data-bs-target="#stateForm"
+                        // data-bs-toggle="modal"
+                        // data-bs-target="#stateForm"
+                        onClick={()=>{handleShow();setStateCode("");
+                        setStateName("")}}
                         // onClick={() => {
 
                         //   navigate(`/addStateMaster/${id}/${countryName}`);
@@ -239,7 +247,7 @@ const StateMaster = () => {
                                   data.s_country_id,
                                   data.s_country_name,
                                   data.s_id,
-                                  data.s_state_name,
+                                  data.s_state_name
                                 )
                               }
                             >
@@ -249,9 +257,9 @@ const StateMaster = () => {
                               <Edit
                                 className="text-success mr-2"
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#stateForm"
-                                onClick={() => GetState(data.s_id)}
+                                // data-bs-toggle="modal"
+                                // data-bs-target="#stateForm"
+                                onClick={() => {GetState(data.s_id); handleShow()}}
                               />
                               <Delete
                                 className="text-danger"
@@ -339,116 +347,78 @@ const StateMaster = () => {
           </div>
         </div>
       </div>
-      <div
-        className="modal fade"
-        id="stateForm"
-        tabIndex="-1"
-        aria-labelledby="stateFormLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title fw-bold" id="stateFormLabel">
-                State Master
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">State Code:</label> <span className="text-danger fw-bold">*</span>
-                    <input
-                      type="number"
-                      id="stateCode"
-                      name="stateCode"
-                      className="form-control "
-                      autoComplete="off"
-                      placeholder="Enter State Code"
-                      value={stateCode}
-                      onChange={(e) => setStateCode(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">State Name:</label> <span className="text-danger fw-bold">*</span>
-                    <input
-                      type="text"
-                      id="stateName"
-                      name="stateName"
-                      className="form-control "
-                      autoComplete="off"
-                      placeholder="Enter State Name"
-                      value={stateName}
-                      onChange={(e) => setStateName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">
-                      {/* Department Head: */}
-                    </label>
-                    <div className="form-group form-group-sm">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          checked={active}
-                          onChange={(e) => setActive(e.target.checked)}
-                          id="defaultCheck1"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="defaultCheck1"
-                        >
-                          Is Active
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <div className="row">
-                <div className="col-lg-12 text-end">
-                  <button
-                    className="btn text-light"
-                    type="button"
-                    data-bs-dismiss="modal"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    onClick={() => {
-                      addState();
-                      // editDesignation();
-                    }}
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary mx-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Modal show={showModal} onHide={handleClose} size="lg" backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title><h5 className="fw-bold">Add State</h5></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+              <Form.Group className="form-group form-group-sm">
+                <Form.Label className="control-label fw-bold">
+                  State Code:
+                </Form.Label> <span className="text-danger fw-bold">*</span>
+                <Form.Control
+                  type="number"
+                  id="stateCode"
+                  name="stateCode"
+                  autoComplete="off"
+                  placeholder="Enter State Code"
+                  value={stateCode}
+                  onChange={(e) => setStateCode(e.target.value)}
+                  
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+              <Form.Group className="form-group form-group-sm">
+                <Form.Label className="control-label fw-bold">
+                  State Name:
+                </Form.Label> <span className="text-danger fw-bold">*</span>
+                <Form.Control
+                  type="text"
+                  id="stateName"
+                  name="stateName"
+                  autoComplete="off"
+                  placeholder="Enter State Name"
+                  value={stateName}
+                  onChange={(e) => setStateName(e.target.value)}
+                  
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mt-4">
+            <Col xs={12} sm={12} md={12} lg={6}>
+              <Form.Group className="form-group form-group-sm">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={active}
+                  onChange={(e) => setActive(e.target.checked)}
+                  id="defaultCheck1"
+                />
+                <label className="form-check-label mx-2" htmlFor="defaultCheck1">
+                  Is Active
+                </label>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            style={{ backgroundColor: "#1B5A90" }}
+            onClick={() => {
+              addState();
+            }}
+          >
+            Save
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

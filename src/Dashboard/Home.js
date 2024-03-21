@@ -99,7 +99,7 @@ const Home = () => {
               {/* Filter and sort the sidebarData array */}
               <li className="active">
                 <div className="dashboard">
-                  <NavLink to="/" className="dashboard">
+                  <NavLink to="/dashboard" className="dashboard">
                     <Speedometer2 style={{ fontSize: "22px" }} />
                     <span className="ms-3">dashboard</span>
                     <span className="badge bg-primary ms-5">New</span>
