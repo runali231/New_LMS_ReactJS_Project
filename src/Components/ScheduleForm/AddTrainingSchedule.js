@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { Add, ArrowBack, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -47,8 +47,6 @@ const AddTrainingSchedule = () => {
   const [pdfFile, setPdfFile] = useState();
   const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState("");
-  const [certificateUploaded, setCertificateUploaded] = useState(false);
-  const [imageSrc, setImageSrc] = useState("");
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [allTrainingScheduleTypes, setAllTrainingScheduleTypes] = useState([]);
   const [allTrainingStatus, setAllTrainingStatus] = useState([]);
@@ -57,7 +55,12 @@ const AddTrainingSchedule = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [editIndex, setEditIndex] = useState(null);
-
+  const [firstModal, setFirstModal] = useState(false);
+  const [secondModal, setSecondModal] = useState(false);
+  const FirstHandleShow = () => setFirstModal(true);
+  const FirstHandleClose = () => setFirstModal(false);
+  const SecondHandleShow = () => setSecondModal(true);
+  const SecondHandleClose = () => setSecondModal(false);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -117,10 +120,10 @@ const AddTrainingSchedule = () => {
   useEffect(() => {
     getAllSubTrainingSchedule();
     getAllTrainingScheduleTypes();
+    getAllTrainingTopic();
     getAllTrainingStatus();
     getAllTrainingRequestedBy();
     getAllTrainingReoccurrence();
-    getAllTrainingTopic();
   }, []);
 
   const getAllSubTrainingSchedule = () => {
@@ -129,7 +132,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-          `TrainingSchedule/GetAllTraining?user_id=3fa85f64-5717-4562-b3fc-2c963f66afa6&ts_isactive=1&ts_id=${id}`
+            `TrainingSchedule/GetAllTraining?user_id=3fa85f64-5717-4562-b3fc-2c963f66afa6&ts_isactive=1&ts_id=${id}`
         )
       )
       .then((response) => {
@@ -172,11 +175,29 @@ const AddTrainingSchedule = () => {
     console.log(allSubTrainingSchedule, "trainingArray");
     console.log(trainingFrom, "training from");
     console.log(trainingTo, "training to");
-    if (trainingNo === null || trainerName === null || trainingDept === null || trainingTopics === null || noOfQues === null || trainingType === null || reoccurrence === null || trainingFrom === null || trainingTo === null || status === null || action === "") {
-      alert("Please fill all the details");
-    }
-    else {
-
+    if (trainingNo === null) {
+      alert("Please enter training no.!");
+    } else if (trainerName === null) {
+      alert("Please enter trainer name!");
+    } else if (trainingDept === null) {
+      alert("Please enter training department!");
+    } else if (trainingTopics === null) {
+      alert("Please enter training topics!");
+    } else if (noOfQues === null) {
+      alert("Please enter no of questions!");
+    } else if (trainingType === null) {
+      alert("Please enter training type!");
+    } else if (reoccurrence === null) {
+      alert("Please enter reoccurrence!");
+    } else if (trainingFrom === null) {
+      alert("Please enter training from date!");
+    } else if (trainingTo === null) {
+      alert("Please enter training to date!");
+    } else if (status === null) {
+      alert("Please enter status!");
+    } else if (action === null) {
+      alert("Please enter action!");
+    } else {
       let data = {
         userId: UserId,
         ts_training_no: trainingNo,
@@ -208,13 +229,12 @@ const AddTrainingSchedule = () => {
         .then((response) => {
           console.log(response, "add training need Schedule");
           console.log(response.data.data.OutcomeDetail);
-          console.log(data, "201")
+          console.log(data, "201");
           // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
           // getAllTraining();
           if (id !== null && id !== undefined && id !== ":id") {
             alert("Training Schedule updated successfully!");
-          }
-          else {
+          } else {
             alert("Training Schedule added successfully!");
           }
           navigate("/trainingSchedule");
@@ -229,7 +249,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=B019FBF2-7B14-4A0A-ADC0-F9F12FC4DB88&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=B019FBF2-7B14-4A0A-ADC0-F9F12FC4DB88&status=1`
         )
       )
       .then((response) => {
@@ -245,7 +265,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=107FAF5C-04BD-4D6F-A6FD-AF919556FD91&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=107FAF5C-04BD-4D6F-A6FD-AF919556FD91&status=1`
         )
       )
       .then((response) => {
@@ -261,7 +281,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=CFE554B4-18F8-4DBE-91B4-BFDD878C32B9&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=CFE554B4-18F8-4DBE-91B4-BFDD878C32B9&status=1`
         )
       )
       .then((response) => {
@@ -277,7 +297,7 @@ const AddTrainingSchedule = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=4CB055B0-AD3C-4CD8-87E5-932FAB77E74C&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=4CB055B0-AD3C-4CD8-87E5-932FAB77E74C&status=1`
         )
       )
       .then((response) => {
@@ -290,7 +310,7 @@ const AddTrainingSchedule = () => {
   };
   // const getSingleHrTraining = (tss_id) => {
   //   console.log("Received index:", tss_id);
-  //   setTss_id(tss_id);  
+  //   setTss_id(tss_id);
   // };
   const getSingleHrTraining = (index, tsId) => {
     console.log("Received index:", index);
@@ -302,11 +322,15 @@ const AddTrainingSchedule = () => {
     setTss_id(tsId);
     console.log(allSubTrainingSchedule[index], "280");
     const scheduleToEdit = allSubTrainingSchedule[index];
-    setTrainingAttended(scheduleToEdit.tss_traning_attend)
-    setScheduledHours(scheduleToEdit.tss_sch_hour)
-    setActualHoursAttended(scheduleToEdit.tss_actual_attend)
+    setTrainingAttended(scheduleToEdit.tss_traning_attend);
+    setScheduledHours(scheduleToEdit.tss_sch_hour);
+    setActualHoursAttended(scheduleToEdit.tss_actual_attend);
   };
 
+  useEffect(() => {
+console.log(editIndex, "after index")
+  }, [editIndex])
+  
   const getSingleHodTraining = (index, tsId) => {
     setSelectedRowIndex(index);
     console.log("Received index:", index);
@@ -317,23 +341,28 @@ const AddTrainingSchedule = () => {
       return index;
     });
     const scheduleToEdit1 = allSubTrainingSchedule[index];
-    setTotalMarks(scheduleToEdit1.tss_to_marks)
-    setMarksObtained(scheduleToEdit1.tss_marks_obt)
-    setCompletionStatus(scheduleToEdit1.tss_com_status)
-    setTrainingStatus(scheduleToEdit1.tss_traning_status)
-    setReTrainingRequired(scheduleToEdit1.tss_re_traning_req)
-    setTrainingCertificate(scheduleToEdit1.tss_traning_cert)
-    setStatus1(scheduleToEdit1.tss_status)
-    setRemark(scheduleToEdit1.tss_remark)
+    setTotalMarks(scheduleToEdit1.tss_to_marks);
+    setMarksObtained(scheduleToEdit1.tss_marks_obt);
+    setCompletionStatus(scheduleToEdit1.tss_com_status);
+    setTrainingStatus(scheduleToEdit1.tss_traning_status);
+    setReTrainingRequired(scheduleToEdit1.tss_re_traning_req);
+    setTrainingCertificate(scheduleToEdit1.tss_traning_cert);
+    setStatus1(scheduleToEdit1.tss_status);
+    setRemark(scheduleToEdit1.tss_remark);
   };
-
+  useEffect(() => {
+    console.log(editIndex, "after index")
+      }, [editIndex])
   const addSingleHrTraining = () => {
-    console.log(tss_id, 318)
+    console.log(tss_id, 318);
     // Create a new array by mapping over the existing sub-training schedules
-    if(trainingAttended === null || scheduledHours === null || actualHoursAttended === null){
-      alert("Please fill all the details")
-    }
-    else{
+    if (
+      trainingAttended === null ||
+      scheduledHours === null ||
+      actualHoursAttended === null
+    ) {
+      alert("Please fill all the details");
+    } else {
       const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
         (training) => {
           // If the current sub-training schedule has the same tss_id as the one being edited
@@ -353,13 +382,17 @@ const AddTrainingSchedule = () => {
       // Update the state with the updated array
       setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
       console.log(allSubTrainingSchedule, "all single sub training");
-      alert("Added successfully!")
+      alert("Added successfully!");
       resetForm();
-    }  
+    }
   };
 
   const updateSingleHrTraining = () => {
-    if (editIndex !== null && editIndex >= 0 && editIndex < allSubTrainingSchedule.length) {
+    if (
+      editIndex !== null &&
+      editIndex >= 0 &&
+      editIndex < allSubTrainingSchedule.length
+    ) {
       const updatedTrainings = [...allSubTrainingSchedule]; // Create a copy of allSubTrainingSchedule
       // Update the specific training item at editIndex
       updatedTrainings[editIndex] = {
@@ -370,17 +403,23 @@ const AddTrainingSchedule = () => {
         // Update other properties as needed
       };
       setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
-      alert("Updated successfully!")
+      alert("Updated successfully!");
       resetForm(); // Reset the form fields
     }
   };
 
   const addSingleHodTraining = () => {
     // Create a new array by mapping over the existing sub-training schedules
-    if(totalMarks === null || marksObtained === null || completionStatus === null || trainingStatus === null || trainingCertificate === null || status1 === null){
-      alert("Please fill all the details")
-    }
-    else{
+    if (
+      totalMarks === null ||
+      marksObtained === null ||
+      completionStatus === null ||
+      trainingStatus === null ||
+      trainingCertificate === null ||
+      status1 === null
+    ) {
+      alert("Please fill all the details");
+    } else {
       const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
         (training) => {
           // If the current sub-training schedule has the same tss_id as the one being edited
@@ -405,14 +444,17 @@ const AddTrainingSchedule = () => {
       // Update the state with the updated array
       setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
       console.log(allSubTrainingSchedule, "all single sub training");
-      alert("Added successfully!")
+      alert("Added successfully!");
       resetForm();
     }
-
   };
 
   const updateSingleHodTraining = () => {
-    if (editIndex !== null && editIndex >= 0 && editIndex < allSubTrainingSchedule.length) {
+    if (
+      editIndex !== null &&
+      editIndex >= 0 &&
+      editIndex < allSubTrainingSchedule.length
+    ) {
       const updatedTrainings = [...allSubTrainingSchedule]; // Create a copy of allSubTrainingSchedule
       // Update the specific training item at editIndex
       updatedTrainings[editIndex] = {
@@ -428,7 +470,7 @@ const AddTrainingSchedule = () => {
         // Update other properties as needed
       };
       setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
-      alert("Updated successfully!")
+      alert("Updated successfully!");
       resetForm(); // Reset the form fields
     }
   };
@@ -441,7 +483,7 @@ const AddTrainingSchedule = () => {
 
     // Update the state with the filtered array
     setAllSubTrainingSchedule(updatedTraining);
-    alert("Deleted successfully")
+    alert("Deleted successfully");
   };
 
   const handleFileChange = (e) => {
@@ -889,7 +931,7 @@ const AddTrainingSchedule = () => {
                             <th
                               scope="col"
                               style={headerCellStyle}
-                            /* style={headerCellStyle} */
+                              /* style={headerCellStyle} */
                             >
                               Action
                             </th>
@@ -922,22 +964,23 @@ const AddTrainingSchedule = () => {
                                         ViewModal(data.tss_traning_cert)
                                       }
                                     >
-                                      {
-                                        fileName === data.tss_traning_cert
-                                          ? fileName
-                                          :
-                                          // `File uploaded`
-                                          // {fileName}
-                                          <EyeFill className="text-success" style={{ fontSize: "23px" }} />
-
-                                      }
+                                      {fileName === data.tss_traning_cert ? (
+                                        fileName
+                                      ) : (
+                                        // `File uploaded`
+                                        // {fileName}
+                                        <EyeFill
+                                          className="text-success"
+                                          style={{ fontSize: "23px" }}
+                                        />
+                                      )}
                                     </span>
                                   )}
                                 {!data.tss_traning_cert && (
                                   <span
                                     type="button"
-                                  // data-bs-toggle="modal"
-                                  // data-bs-target="#viewModal"
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#viewModal"
                                   >
                                     File not uploaded
                                   </span>
@@ -950,21 +993,21 @@ const AddTrainingSchedule = () => {
                                   className="text-success mr-2"
                                   // onClick={() => GetTrainingNeed(data.tr_id)}
                                   type="button"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#addTrainingSchedule1"
-                                  onClick={() =>
-                                    getSingleHrTraining(index, data.tss_id)
-                                  }
+                                  // data-bs-toggle="modal"
+                                  // data-bs-target="#addTrainingSchedule1"
+                                  onClick={() => {
+                                    getSingleHrTraining(index, data.tss_id);
+                                    FirstHandleShow();
+                                  }}
                                 />
                                 <Edit
                                   className="text-primary mr-2"
                                   type="button"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#addTrainingSchedule2"
-                                  onClick={() =>
-                                    getSingleHodTraining(index, data.tss_id)
-                                  }
-                                // onClick={() => GetTrainingNeed(data.tr_id)}
+                                  onClick={() => {
+                                    getSingleHodTraining(index, data.tss_id);
+                                    SecondHandleShow();
+                                  }}
+                                  // onClick={() => GetTrainingNeed(data.tr_id)}
                                 />
                                 <Delete
                                   className="text-danger"
@@ -1009,8 +1052,9 @@ const AddTrainingSchedule = () => {
                                 },
                                 (_, index) => (
                                   <li
-                                    className={`page-item ${currentPage === index + 1 ? "active" : ""
-                                      }`}
+                                    className={`page-item ${
+                                      currentPage === index + 1 ? "active" : ""
+                                    }`}
                                     key={index}
                                   >
                                     <button
@@ -1032,7 +1076,7 @@ const AddTrainingSchedule = () => {
                                     currentPage ===
                                     Math.ceil(
                                       allSubTrainingSchedule.length /
-                                      itemsPerPage
+                                        itemsPerPage
                                     )
                                   }
                                   aria-label="Next"
@@ -1155,7 +1199,7 @@ const AddTrainingSchedule = () => {
             </div>
           </div>
         </div>
-        <div
+        {/* <div
           className="modal fade"
           id="addTrainingSchedule1"
           tabIndex="-1"
@@ -1169,7 +1213,7 @@ const AddTrainingSchedule = () => {
                   className="modal-title fw-bold"
                   id="addTrainingSchedule1Label"
                 >
-                  Add Training Schedule {/* (hr login) */}
+                  Add Training Schedule
                 </h5>
                 <button
                   type="button"
@@ -1186,14 +1230,6 @@ const AddTrainingSchedule = () => {
                         Training Attended:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
-                      {/* <input
-                        type="text"
-                        id="trainingAttended"
-                        className="form-control"
-                        placeholder="Enter Training Attended"
-                        value={trainingAttended}
-                        onChange={(e) => setTrainingAttended(e.target.value)}
-                      /> */}
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -1271,8 +1307,94 @@ const AddTrainingSchedule = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div
+        </div> */}
+        <Modal
+          show={firstModal}
+          onHide={FirstHandleClose}
+          size="lg"
+          backdrop="static"
+          aria-labelledby="addTrainingSchedule1Label"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="addTrainingSchedule1Label">
+              <h5 className="fw-bold">Add Training Schedule</h5>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Row>
+                <Col sm={6}>
+                  <Form.Group className="mb-3" controlId="formTrainingAttended">
+                    <Form.Label className="control-label fw-bold">
+                      Training Attended:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <Form.Select
+                      value={trainingAttended}
+                      onChange={(e) => setTrainingAttended(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option>Select Training Attended</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group className="mb-3" controlId="formScheduledHours">
+                    <Form.Label className="control-label fw-bold">
+                      Scheduled Hours:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Scheduled Hours"
+                      value={scheduledHours}
+                      onChange={(e) => setScheduledHours(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={6}>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="formActualHoursAttended"
+                  >
+                    <Form.Label className="control-label fw-bold">
+                      Actual Hours Attended:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Actual Hours Attended"
+                      value={actualHoursAttended}
+                      onChange={(e) => setActualHoursAttended(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={() => addSingleHrTraining()}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={() => updateSingleHrTraining()}
+            >
+              Update
+            </Button>
+            <Button variant="secondary" onClick={FirstHandleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        {/* <div
           className="modal fade"
           id="addTrainingSchedule2"
           tabIndex="-1"
@@ -1286,7 +1408,7 @@ const AddTrainingSchedule = () => {
                   className="modal-title fw-bold"
                   id="addTrainingSchedule2Label"
                 >
-                  Add Training Schedule {/* (Hod login) */}
+                  Add Training Schedule 
                 </h5>
                 <button
                   type="button"
@@ -1318,7 +1440,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Marks Obtained:
                       </label>{" "}
-                      {/* <span className="text-danger fw-bold">*</span> */}
+                      
                       <input
                         type="number"
                         id="marksObtained"
@@ -1337,23 +1459,13 @@ const AddTrainingSchedule = () => {
                         Completion Status:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
-                      {/* <input
-                        type="text"
-                        id="completionStatus"
-                        className="form-control "
-                        placeholder="Enter completion status"
-                        value={completionStatus}
-                        onChange={(e) => setCompletionStatus(e.target.value)}
-                      /> */}
                       <select
                         className="form-select "
                         aria-label="Default select example"
                         value={completionStatus}
                         onChange={(e) => setCompletionStatus(e.target.value)}
                       >
-                        <option defaultValue>
-                          Select Completion Status
-                        </option>
+                        <option defaultValue>Select Completion Status</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                       </select>
@@ -1384,7 +1496,6 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Re-training Required:
                       </label>{" "}
-
                       <select
                         className="form-select "
                         aria-label="Default select example"
@@ -1476,7 +1587,165 @@ const AddTrainingSchedule = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        <Modal
+          show={secondModal} // Set this to true to make the modal visible, you can toggle this value based on your requirement
+          onHide={SecondHandleClose} // Implement onHide event handler if needed
+          size="lg"
+          backdrop="static"
+          aria-labelledby="addTrainingSchedule2Label"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title className="fw-bold" id="addTrainingSchedule2Label">
+              <h5 className="fw-bold">Add Training Schedule</h5>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Row>
+                <Col sm={6}>
+                  <Form.Group controlId="formTotalMarks">
+                    <Form.Label className="control-label fw-bold">
+                      Total Marks:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="Enter Total Marks"
+                      value={totalMarks}
+                      onChange={(e) => setTotalMarks(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group controlId="formMarksObtained">
+                    <Form.Label className="control-label fw-bold">
+                      Marks Obtained:
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="Enter Marks Obtained"
+                      value={marksObtained}
+                      onChange={(e) => setMarksObtained(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row className="mt-3">
+                <Col sm={6}>
+                  <Form.Group controlId="formCompletionStatus">
+                    <Form.Label className="control-label fw-bold">
+                      Completion Status:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <Form.Select
+                      value={completionStatus}
+                      onChange={(e) => setCompletionStatus(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option>Select Completion Status</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group controlId="formTrainingStatus">
+                    <Form.Label className="control-label fw-bold">
+                      Training Status:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <Form.Select
+                      value={trainingStatus}
+                      onChange={(e) => setTrainingStatus(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option>Select Training Status</option>
+                      <option value="Pass">Pass</option>
+                      <option value="Fail">Fail</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row className="mt-3">
+                <Col sm={6}>
+                  <Form.Group controlId="formReTrainingRequired">
+                    <Form.Label className="control-label fw-bold">
+                      Re-training Required:
+                    </Form.Label>
+                    <Form.Select
+                      value={reTrainingRequired}
+                      onChange={(e) => setReTrainingRequired(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option>Select Re-training Required</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group controlId="formTrainingCertificate">
+                    <Form.Label className="control-label fw-bold">
+                      Training Certificate:
+                      <span className="text-danger fw-bold">*</span>
+                    </Form.Label>
+                    <input
+                      type="file"
+                      className="form-control" // Apply any necessary class if required
+                      onChange={(e) => handleFileChange(e)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row className="mt-3">
+                <Col sm={6}>
+                  <Form.Group controlId="formStatus1">
+                    <Form.Label className="control-label fw-bold">
+                      Status:
+                    </Form.Label>
+                    <Form.Select
+                      value={status1}
+                      onChange={(e) => setStatus1(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option>select status</option>
+                      <option value="Open">Open</option>
+                      <option value="Close">Close</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group controlId="formRemark">
+                    <Form.Label className="control-label fw-bold">
+                      Remark:
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Remark"
+                      value={remark}
+                      onChange={(e) => setRemark(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button style={{ backgroundColor: "#1B5A90" }} onClick={() => addSingleHodTraining()}>
+              Save
+            </Button>
+            <Button style={{ backgroundColor: "#1B5A90" }} onClick={() => updateSingleHodTraining()}>
+              Update
+            </Button>
+            <Button variant="secondary" onClick={FirstHandleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );
