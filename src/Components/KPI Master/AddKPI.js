@@ -8,6 +8,7 @@ import {
   getAllDepartment,
 } from "../Api/DesignationAndDepartment";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const AddKPI = () => {
   const navigate = useNavigate();
@@ -97,23 +98,23 @@ const AddKPI = () => {
 
   const addKpi = () => {
     let data;
-    if (
-      empCode === "" ||
-      empName === "" ||
-      kpiCode === "" ||
-      department === "" ||
-      designation === "" ||
-      targetDate === "" ||
-      occurrence === ""
-    ) {
-      alert("Please fill all the details");
-    }
-    else if (!(/^[^\d]+$/.test(empName))) {
-      alert(
-        "Please enter a valid employee name (alphabetic characters only)"
-      );
-    } 
-    else {
+    if (empCode === "") {
+      alert("Please enter employee code!");
+    } else if (empName === "") {
+      alert("Please enter employee name!");
+    } else if (kpiCode === "") {
+      alert("Please enter kpi code!");
+    } else if (department === "") {
+      alert("Please enter department!");
+    } else if (designation === "") {
+      alert("Please enter designation!");
+    } else if (targetDate === "") {
+      alert("Please enter target date!");
+    } else if (occurrence === "") {
+      alert("Please enter occurrence!");
+    } else if (!/^[^\d]+$/.test(empName)) {
+      alert("Please enter a valid employee name (alphabetic characters only)");
+    } else {
       data = {
         userId: UserId,
         k_emp_code: empCode,
@@ -139,20 +140,21 @@ const AddKPI = () => {
           console.log(response);
           if (id !== null && id !== undefined && id !== ":id") {
             alert("KPI updated successfully!");
-          }
-          else{
+          } else {
             alert("KPI added successfully!");
-          }         
+          }
           navigate("/kpiMaster");
         })
         .catch((error) => {
           console.log(error);
-          alert("Something went wrong");
+          // alert("Something went wrong");
+          let errors= ErrorHandler(error)
+          alert(errors)
         });
     }
   };
 
-   const extractDate = (dateTimeString) => {
+  const extractDate = (dateTimeString) => {
     return dateTimeString.split("T")[0];
   };
 
@@ -205,7 +207,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Code:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="eCode"
@@ -224,7 +227,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Name:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="eName"
@@ -242,7 +246,8 @@ const AddKPI = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">KPI Code:</label> <span className="text-danger fw-bold">*</span>
+                      <label className="control-label fw-bold">KPI Code:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="number"
                         id="kpiCode"
@@ -260,7 +265,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         KPI Description:
-                      </label> {/* <span className="text-danger fw-bold">*</span> */}
+                      </label>{" "}
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <textarea
                         className="form-control"
                         id="description"
@@ -277,7 +283,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -299,7 +306,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Departments:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -340,7 +348,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Target Date:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="date"
                         id="targetDate"
@@ -357,7 +366,8 @@ const AddKPI = () => {
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Occurrence:
-                      </label> <span className="text-danger fw-bold">*</span>
+                      </label>{" "}
+                      <span className="text-danger fw-bold">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"

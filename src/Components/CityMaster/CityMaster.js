@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Col, Row, Button, Form } from "react-bootstrap";
-import { Add, Delete, Edit } from "@material-ui/icons";
+import { Add, ArrowBack, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
@@ -11,10 +11,12 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const CityMaster = () => {
   const navigate = useNavigate();
   // const {id, stateName, coId, coName} = useParams();
+  const [searchData, setSearchData] = useState("");
   const [allCity, setAllCity] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
@@ -24,6 +26,7 @@ const CityMaster = () => {
   const [cityName, setCityName] = useState("");
   const [cityCode, setCityCode] = useState("");
   const [active, setActive] = useState(true);
+  const [toggleActive, setToggleActive] = useState(true);
   const [cityId, setCityId] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
@@ -35,14 +38,14 @@ const CityMaster = () => {
 
   useEffect(() => {
     getAllData();
-  }, [currentPage, itemsPerPage]); // Fetch data when currentPage or itemsPerPage changes
+  }, [currentPage, itemsPerPage, toggleActive]); // Fetch data when currentPage or itemsPerPage changes
 
   const getAllData = () => {
     axios({
       method: "get",
       url: new URL(
         UrlData +
-          `CityMaster/GetCity?status=1&StateId=${stateId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6`
+          `CityMaster/GetCity?status=${toggleActive ? "1" : "0"}&StateId=${stateId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6`
         //   `CityMaster/GetCity?StateId=${id}?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ), // Include pageSize and pageNumber in the URL
     })
@@ -92,7 +95,7 @@ const CityMaster = () => {
         ci_state_id: stateId,
         ci_city_name: cityName,
         ci_city_code: cityCode,
-        ci_isactive: "1",
+        ci_isactive: active === true ? "1" : "0",
       };
       if (cityId) {
         data.ci_id = cityId;
@@ -115,13 +118,35 @@ const CityMaster = () => {
         })
         .catch((error) => {
           console.log(error);
-          alert("Something went wrong");
+          // alert("Something went wrong");
+          let errors = ErrorHandler(error);
+          alert(errors);
         });
     }
   };
+
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allCity.filter(
+        (city) =>
+          city.ci_city_name.toLowerCase().includes(searchDataValue) ||
+          city.ci_city_code.toLowerCase().includes(searchDataValue)
+      );
+      setAllCity(filteredData);
+    }
+  };
+
   const ResetForm = () => {
     setCityCode("");
     setCityName("");
+    setCityId("");
   };
   const DeleteCity = (ciId) => {
     const data = {
@@ -170,6 +195,15 @@ const CityMaster = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
+                  <div className="form-check form-switch mt-2 pt-1">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckDefault"
+                        checked={toggleActive} // Bind the checked state to the state variable
+                        onChange={()=>setToggleActive(!toggleActive)}
+                      />
+                    </div>
                     <div className="btn btn-add" title="Add New">
                       <button
                         className="btn btn-md text-light"
@@ -183,6 +217,21 @@ const CityMaster = () => {
                         }}
                       >
                         <Add />
+                      </button>
+                    </div>
+                    <div
+                      className="btn btn-add"
+                      title="Back"
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                    >
+                      <button
+                        className="btn btn-md text-light"
+                        type="button"
+                        style={{ backgroundColor: "#1B5A90" }}
+                      >
+                        <ArrowBack />
                       </button>
                     </div>
                   </div>
@@ -204,6 +253,15 @@ const CityMaster = () => {
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
+                  </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
                   </div>
                 </div>
                 <br />

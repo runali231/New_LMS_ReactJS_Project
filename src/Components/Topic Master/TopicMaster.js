@@ -11,6 +11,7 @@ const TopicMaster = () => {
   const [allTopics, setAllTopics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("")
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with your desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -52,6 +53,24 @@ const TopicMaster = () => {
       });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allTopics.filter(
+        (topics) =>
+        topics.t_code.toLowerCase().includes(searchDataValue) ||
+        topics.t_description.toLowerCase().includes(searchDataValue)
+      );
+      setAllTopics(filteredData);
+    }
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allTopics.slice(indexOfFirstItem, indexOfLastItem);
@@ -90,7 +109,33 @@ const TopicMaster = () => {
                 </div>
               </div>
               <div className="card-body pt-3">
-                <Table striped hover responsive className="border text-left">
+              <div className="row">
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
+                    <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
+                    <select
+                      className="form-select w-auto"
+                      aria-label="Default select example"
+                      // value={selectedItemsPerPage} 
+                      // onChange={handleChange} 
+                    >
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    <h6 className="mt-3">entries</h6>
+                  </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
+                </div>
+                <Table striped hover responsive className="border text-left mt-4">
                   <thead>
                     <tr>
                       <th scope="col" style={headerCellStyle}>

@@ -171,15 +171,19 @@ const AddRoleMaster = () => {
   const addRoleMaster = () => {
     // console.log(menuDataArray, "menuDataArray");
     let data;
-    if (roleName === "" || module === "") {
-      alert("Please fill all the details");
-    } else {
+    if (roleName === "") {
+      alert("Please enter role name!");
+    }
+    else if (module === ""){
+      alert("Please enter module!");
+    }
+    else {
       data = {
         userId: UserId,
         r_rolename: roleName,
         r_description: roleDescription,
         r_module: module,
-        r_isactive: "1",
+        r_isactive: active === true ? "1" : "0",
         Privilage: menuDataArray,
       };
       console.log(data.privilage, "privilage");

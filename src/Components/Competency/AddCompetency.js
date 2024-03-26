@@ -6,6 +6,7 @@ import UrlData from "../UrlData";
 import Select from "react-select";
 import { GetAllDesignation } from "../Api/DesignationAndDepartment";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const AddCompetency = () => {
   const [designation, setDesignation] = useState("");
@@ -39,8 +40,8 @@ const AddCompetency = () => {
           value: item.de_id,
           label: item.de_designation_name,
         }));
-        setSelectedDesignation(designation)
-        console.log(selectedDesignation, "all designation")
+        setSelectedDesignation(designation);
+        console.log(selectedDesignation, "all designation");
       })
       .catch((error) => {
         console.log(error);
@@ -60,12 +61,10 @@ const AddCompetency = () => {
       .then((response) => {
         console.log(response.data.data, "designation_name");
         const data = response.data.data;
-        setDesignation(
-          {
-            value: data.cp_designation,
-            label: data.cp_description            ,
-          }
-        );
+        setDesignation({
+          value: data.cp_designation,
+          label: data.cp_description,
+        });
 
         setQualification(data.cp_qualification);
         setExperience(data.cp_experiance);
@@ -75,7 +74,6 @@ const AddCompetency = () => {
         } else {
           setTraining([]);
         }
-
       })
       .catch((error) => {
         console.log(error);
@@ -83,17 +81,19 @@ const AddCompetency = () => {
   };
 
   const addCompetency = () => {
-    if (
-      designation === "" ||
-      qualification === "" ||
-      experience === "" ||
-      skillRequirement === "" ||
-      training.length === 0
-    ) {
-      alert("Please fill all the details");
-      return;
+    if (designation === "") {
+      alert("Please enter designation");
+      // return;
+    } else if (qualification === "") {
+      alert("Please enter qualification!");
+    } else if (experience === "") {
+      alert("Please enter experience!");
+    } else if (skillRequirement === "") {
+      alert("Please enter skill requirement!");
+    } else if (training.length === 0) {
+      alert("Please enter training!");
     }
-
+    else{
     axios({
       method: "post",
       url: new URL(UrlData + `CompentencyMaster`),
@@ -113,16 +113,18 @@ const AddCompetency = () => {
         getAllTrainingTopic();
         if (id !== null && id !== undefined && id !== ":id" ? id : undefined) {
           alert("Competency updated successfully!");
-        }
-        else {
+        } else {
           alert("Competency added successfully!");
         }
         navigate("/CompentencyMaster");
       })
       .catch((error) => {
         console.log(error);
-        alert("Something went wrong");
+        // alert("Something went wrong");
+        let errors = ErrorHandler(error)
+        alert(errors)
       });
+    }
   };
 
   const handleTopics = (selectedOptions) => {
@@ -204,11 +206,9 @@ const AddCompetency = () => {
                           </option>
                         ))}
                       </select> */}
-
                       <Select
                         options={selectedDesignation}
                         value={designation}
-
                         onChange={handleDesignation}
                         className="mt-2"
                       />

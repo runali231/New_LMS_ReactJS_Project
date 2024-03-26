@@ -17,6 +17,7 @@ const CompetencyMaster = () => {
   const [allCompetency, setAllCompetency] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -55,12 +56,30 @@ const CompetencyMaster = () => {
     })
       .then((response) => {
         console.log("response", response);
-        alert("Competency deleted successfully!")
+        alert("Competency deleted successfully!");
         getAllData();
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allCompetency.filter(
+        (Competency) =>
+          Competency.cp_designation.toLowerCase().includes(searchDataValue) ||
+          Competency.cp_qualification.toLowerCase().includes(searchDataValue)
+      );
+      setAllCompetency(filteredData);
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -89,7 +108,7 @@ const CompetencyMaster = () => {
                       placeholder="Search"
                     />
                   </div>
-                  <div className="col-auto d-flex flex-wrap">
+                  <div className="col-auto d-flex flex-wrap">                   
                     <div
                       className="btn btn-add"
                       title="Add New"
@@ -124,6 +143,15 @@ const CompetencyMaster = () => {
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
+                  </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
                   </div>
                 </div>
                 <br />
@@ -186,6 +214,13 @@ const CompetencyMaster = () => {
                         className="fw-bold"
                         style={headerCellStyle}
                       >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="fw-bold"
+                        style={headerCellStyle}
+                      >
                         Action
                       </th>
                     </tr>
@@ -226,6 +261,7 @@ const CompetencyMaster = () => {
                                   : "" // or any other fallback value you want to display when cp_training is null
                               }
                             </td>
+                            <td>{data.cp_isactive}</td>
                             <td>
                               <Edit
                                 className="text-success mr-2"

@@ -92,24 +92,49 @@ const AddEmployee = () => {
     var mobNo = /^[0-9\b]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (
-      empCode === "" ||
-      firstName === "" ||
-      lastName === "" ||
-      jobTitle === "" ||
-      designation === "" ||
-      departments === "" ||
-      address1 === "" ||
-      city === "" ||
-      state === "" ||
-      country === "" ||
-      pinCode === "" ||
-      mobileNo === "" ||
-      emailId === "" 
-      ||
-      joiningDate === ""
-    ) {
-      alert("Please fill all the details");
-    } else if (mobNo.test(mobileNo) === false) {
+      empCode === "" ) {
+      alert("Please enter employee code!");
+    } 
+    else if(firstName === ""){
+      alert("Please enter first name!")
+    }
+    else if(lastName === ""){
+      alert("Please enter last name!")
+    }
+    else if(jobTitle === ""){
+      alert("Please enter job title!")
+    }
+    else if(designation === ""){
+      alert("Please enter designation!")
+    }
+    else if(departments === ""){
+      alert("Please enter departments!")
+    }
+    else if(address1 === ""){
+      alert("Please enter address!")
+    }
+    else if(city === ""){
+      alert("Please enter city!")
+    }
+    else if(state === ""){
+      alert("Please enter state!")
+    }
+    else if(country === ""){
+      alert("Please enter country!")
+    }
+    else if(pinCode === ""){
+      alert("Please enter pin code!")
+    }
+    else if(mobileNo === ""){
+      alert("Please enter mobile number!")
+    }
+    else if(emailId === ""){
+      alert("Please enter email id!")
+    }
+    else if(joiningDate === ""){
+      alert("Please enter joining date!")
+    }
+    else if (mobNo.test(mobileNo) === false) {
       alert("Please Enter Only Numbers");
     } else if (mobileNo.length !== 10) {
       alert("Please enter valid Mobile number");

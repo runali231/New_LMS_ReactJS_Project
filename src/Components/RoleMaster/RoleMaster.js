@@ -18,8 +18,8 @@ const RoleMaster = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
-  const [addAccess, setAddAccess] = useState("")
-  // State for dropdown value
+  const [searchData, setSearchData] = useState("")
+  const [active, setActive] = useState(false)
 
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
@@ -28,7 +28,7 @@ const RoleMaster = () => {
 
   useEffect(() => {
     getAllData();
-  }, [currentPage, itemsPerPage]); // Fetch data when currentPage or itemsPerPage changes
+  }, [currentPage, itemsPerPage, active]); // Fetch data when currentPage or itemsPerPage changes
 
   const getAllData = () => {
     axios({
@@ -36,7 +36,7 @@ const RoleMaster = () => {
       url: new URL(
         UrlData +
           // `RoleMaster/GetAll?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
-          `RoleMaster/GetAll?status=1`
+          `RoleMaster/GetAll?status=${active ? "1" : "0"}`
       ), // Include pageSize and pageNumber in the URL
     })
       .then((response) => {
@@ -78,6 +78,24 @@ const RoleMaster = () => {
       });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allRoleMaster.filter(
+        (role) =>
+        role.r_rolename.toLowerCase().includes(searchDataValue) ||
+        role.r_description.toLowerCase().includes(searchDataValue)
+      );
+      setAllRoleMaster(filteredData);
+    }
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allRoleMaster.slice(indexOfFirstItem, indexOfLastItem);
@@ -105,6 +123,15 @@ const RoleMaster = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
+                  <div className="form-check form-switch mt-2 pt-1">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckDefault"
+                        checked={active} // Bind the checked state to the state variable
+                        onChange={()=>setActive(!active)}
+                      />
+                    </div>
                     <div className="btn btn-add" title="Add New">
                       <button
                         className="btn btn-md text-light"
@@ -137,6 +164,15 @@ const RoleMaster = () => {
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
+                  </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
                   </div>
                 </div>
                 <br />

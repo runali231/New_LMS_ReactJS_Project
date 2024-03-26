@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Form, Row, Col, Button } from "react-bootstrap";
 import { Add, Delete, Edit } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,13 +11,27 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const DesignationMaster = () => {
   const navigate = useNavigate();
+  const [searchData, setSearchData] = useState("")
+  const [dsgId, setDsgId] = useState("")
+  const [dsgName, setDsgName] = useState("");
+  const [dsgCode, setDsgCode] = useState("");
+  const [active, setActive] = useState(true);
+  const [toggleActive, setToggleActive] = useState(true);
   const [allDesignation, setAllDesignation] = useState([]);
+  const [showModal, setShowModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); // State for dropdown value
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => {
+    setShowModal(true); 
+    ResetForm()
+    // Add any additional logic here if needed // This line might cause recursion, make sure it's intended
+  };
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
     color: "#fff",
@@ -25,14 +39,14 @@ const DesignationMaster = () => {
 
   useEffect(() => {
     getAllData();
-  }, [currentPage, itemsPerPage]); // Fetch data when currentPage or itemsPerPage changes
+  }, [currentPage, itemsPerPage, toggleActive]); // Fetch data when currentPage or itemsPerPage changes
 
   const getAllData = () => {
     axios({
       method: "get",
       url: new URL(
         UrlData +
-          `DesignationMaster/GetAll?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          `DesignationMaster/GetAll?status=${toggleActive ? "1": "0"}&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ), // Include pageSize and pageNumber in the URL
     })
       .then((response) => {
@@ -50,8 +64,78 @@ const DesignationMaster = () => {
     setCurrentPage(1); // Reset currentPage to 1 when changing items per page
   };
 
-  const GetDesignation = (dId) => {
-        navigate(`/addDesignation/${dId}`);
+  const GetDesignation = (de_id) => {
+        // navigate(`/addDesignation/${dId}`);
+        handleShow();
+        axios({
+          method: "get",
+          url: new URL(UrlData + `DesignationMaster/Get?status=1&de_id=${de_id}`),
+        })
+          .then((response) => {
+            console.log(
+              response.data.data.de_designation_name,
+              "designation_name"
+            );
+            setDsgName(response.data.data.de_designation_name);
+            setDsgCode(response.data.data.de_designation_code);
+            setDsgId(response.data.data.de_id)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+  };
+
+  const addDesignation = () => {
+    let data;
+    if (dsgCode === "") {
+      alert("Please enter designation code!");
+    }
+    else if(dsgName === "" ){
+      alert("Please enter designation name!")
+    }
+    else if (!(/^[^\d]+$/.test(dsgName))) {
+      alert(
+        "Please enter a valid designation name (alphabetic characters only)"
+      );
+    } 
+    else {
+      data = {
+        userId: UserId,
+        de_designation_name: dsgName,
+        de_designation_code: dsgCode,
+        de_isactive: active === true ? "1" : "0",
+        de_createddate: "2024-02-22T10:49:48.190Z",
+        de_updateddate: "2024-02-22T10:49:48.190Z",
+      };
+      if (dsgId) {
+        data.de_id = dsgId;
+      }
+      axios({
+        method: "post",
+        url: new URL(UrlData + `DesignationMaster`),
+        data: data, // Make sure to stringify the data object
+      })
+        .then((response) => {
+          console.log(response, "add designation");
+          if (dsgId) {
+            alert("Designation updated successfully!");
+          }
+          else {
+            alert("Designation added successfully!");
+          }
+
+          handleClose();
+          ResetForm();
+          getAllData();
+        })
+        .catch((error) => {
+          let errors = ErrorHandler(error);
+          console.log(errors);
+          alert(errors)
+          // alert("Something went wrong")
+
+        });
+    }
   };
 
   const DeleteDesignation = (dId) => {
@@ -74,6 +158,29 @@ const DesignationMaster = () => {
       });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allDesignation.filter(
+        (designation) =>
+        designation.de_designation_name.toLowerCase().includes(searchDataValue) ||
+        designation.de_designation_code.toLowerCase().includes(searchDataValue)
+      );
+      setAllDesignation(filteredData);
+    }
+  };
+
+  const ResetForm=()=>{
+    setDsgCode("");
+    setDsgName("");
+    setDsgId("")
+  }
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allDesignation.slice(indexOfFirstItem, indexOfLastItem);
@@ -101,6 +208,15 @@ const DesignationMaster = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
+                  <div className="form-check form-switch mt-2 pt-1">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckDefault"
+                        checked={toggleActive} // Bind the checked state to the state variable
+                        onChange={()=>setToggleActive(!toggleActive)}
+                      />
+                    </div>
                     <div className="btn btn-add" title="Add New">
                       <button
                         className="btn btn-md text-light"
@@ -108,7 +224,7 @@ const DesignationMaster = () => {
                         style={{ backgroundColor: "#1B5A90" }}
                         onClick={() => {
                           // navigate("/addDesignation/:d_id");
-                          navigate("/addDesignation");
+                         handleShow();
                         }}
                       >
                         <Add />
@@ -134,6 +250,15 @@ const DesignationMaster = () => {
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
                 <Table striped hover responsive className="border text-left">
@@ -147,6 +272,9 @@ const DesignationMaster = () => {
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         Designation Name
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
+                        Status
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         Action
@@ -163,6 +291,7 @@ const DesignationMaster = () => {
                             </td>
                             <td>{data.de_designation_code}</td>
                             <td>{data.de_designation_name}</td>
+                            <td>{data.de_isactive}</td>
                             <td>
                               <Edit
                                 className="text-success mr-2"
@@ -255,6 +384,67 @@ const DesignationMaster = () => {
           </div>
         </div>
       </div>
+
+      <Modal show={showModal} onHide={handleClose} size="lg" backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h5 className="fw-bold">Add Designation</h5>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+                <Form.Group className="mb-3" controlId="designationCode">
+                  <Form.Label className="fw-bold">Designation Code:</Form.Label>{" "}
+                  <span className="text-danger fw-bold">*</span>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter Designation Code"
+                    value={dsgCode}
+                    onChange={(e) => setDsgCode(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+                <Form.Group className="mb-3" controlId="designationName">
+                  <Form.Label className="fw-bold">Designation Name:</Form.Label>{" "}
+                  <span className="text-danger fw-bold">*</span>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Designation Name"
+                    value={dsgName}
+                    onChange={(e) => setDsgName(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group className="mb-3" controlId="isActive">
+              <Form.Check
+                type="checkbox"
+                label="Is Active"
+                checked={active}
+                onChange={(e) => setActive(e.target.checked)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+             style={{ backgroundColor: "#1B5A90" }}
+            onClick={() => {
+              addDesignation();
+            }}
+          >
+            Save
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

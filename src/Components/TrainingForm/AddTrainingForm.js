@@ -7,6 +7,7 @@ import axios from "axios";
 import UrlData from "../UrlData";
 import Select from "react-select";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 // import Alert from 'react-popup-alert';
 
@@ -49,29 +50,11 @@ const AddTrainingForm = () => {
   const [selectedNameOption, setSelectedNameOption] = useState("");
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const handleShow = () => setShowModal(true);
+  const handleShow = () => {
+    setShowModal(true);
+  };
   const handleClose = () => setShowModal(false);
-  // const [alert, setAlert] = React.useState({
-  //   type: "error",
-  //   text: "This is a alert message",
-  //   show: false,
-  // });
 
-  // function onCloseAlert() {
-  //   setAlert({
-  //     type: "",
-  //     text: "",
-  //     show: false,
-  //   });
-  // }
-
-  // function onShowAlert(type) {
-  //   setAlert({
-  //     type: type,
-  //     text: "Demo alert",
-  //     show: true,
-  //   });
-  // }
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -162,8 +145,20 @@ const AddTrainingForm = () => {
   const currentDate = new Date();
 
   const addTrainingNeedForm = () => {
-    if (trainingNature === "" || trainingType === "" || trainingReqNo === "") {
-      alert("Please fill all the details");
+    if (trainingNature === "") {
+      alert("Please select training nature!");
+    } else if (trainingType === "") {
+      alert("Please select training type!");
+    } else if (trainingReqNo === "") {
+      alert("Please enter training request no.!");
+    } else if (trainingDate === null) {
+      alert("Please enter training date!");
+    } else if (trainingHours === "") {
+      alert("Please enter no of hours!");
+    } else if (trainingDay === "") {
+      alert("Please enter no of days!");
+    } else if (action === "") {
+      alert("Please select action!");
     } else {
       let data = {
         userId: UserId,
@@ -208,6 +203,8 @@ const AddTrainingForm = () => {
         })
         .catch((error) => {
           console.log(error);
+          let errors = ErrorHandler(error);
+          alert(errors);
           // Handle error cases appropriately, such as displaying an error message
         });
     }
@@ -232,41 +229,47 @@ const AddTrainingForm = () => {
 
   const GetAllByDepart = () => {
     console.log(departments);
-    // if(departments === "" || selectedOption === "" || selectedNameOption === "" || trainingDept === "" || trainingDate === "" || trainingTopic === ""){
-    //   alert("Please fill all the details")
-    // }
-    // else{
-    axios
-      .get(
-        new URL(
-          UrlData + `TrainingForm/GetAllByDepart?td_dept=${departments.value}`
+    if (departments === "") {
+      alert("Please enter departments!");
+    } else if (trainingDate === "") {
+      alert("Please enter training date!");
+    } else if (trainingTopic === "") {
+      alert("Please enter training topic!");
+    } else {
+      axios
+        .get(
+          new URL(
+            UrlData + `TrainingForm/GetAllByDepart?td_dept=${departments.value}`
+          )
         )
-      )
-      .then((response) => {
-        console.log("response", response.data.data);
-        const modifiedData = response.data.data.map((item) => ({
-          ...item,
-          td_req_dept: trainingDept,
-          td_date_training: trainingDate,
-          td_topic_training: trainingTopic
-            .map((item) => item.value)
-            .join(",")
-            .toString(),
-          td_topic_training_name: trainingTopic
-            .map((item) => item.label)
-            .join(",")
-            .toString(),
-        }));
-        setAllByDepartments([...allByDepartments, ...modifiedData]);
-        console.log([...allByDepartments, ...modifiedData], "309");
-        // addSingleTraining()
-        resetForm();
-        handleClose();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // }
+        .then((response) => {
+          console.log("response", response.data.data);
+          const modifiedData = response.data.data.map((item) => ({
+            ...item,
+            td_req_dept: trainingDept,
+            td_date_training: trainingDate,
+            td_topic_training: trainingTopic
+              .map((item) => item.value)
+              .join(",")
+              .toString(),
+            td_topic_training_name: trainingTopic
+              .map((item) => item.label)
+              .join(",")
+              .toString(),
+          }));
+          setAllByDepartments([...allByDepartments, ...modifiedData]);
+          console.log([...allByDepartments, ...modifiedData], "309");
+          alert("Training added  successfully!");
+          // addSingleTraining()
+          resetForm();
+          handleClose();
+        })
+        .catch((error) => {
+          console.log(error);
+          let errors = ErrorHandler(error);
+          alert(errors);
+        });
+    }
   };
 
   const handleDepartment = (selected) => {
@@ -349,43 +352,61 @@ const AddTrainingForm = () => {
 
   const addSingleTraining = () => {
     // Logging the training topic
-    console.log(trainingTopic);
+    // console.log(trainingTopic);
 
     // Mapping training topic data
-    const data = trainingTopic.map((item) => ({
-      value: item.value,
-      label: item.label,
-    }));
-
+    // const data = trainingTopic.map((item) => ({
+    //   value: item.value,
+    //   label: item.label,
+    // }));
+    let data = [];
+    if (Array.isArray(trainingTopic)) {
+        data = trainingTopic.map(item => ({
+            value: item.value,
+            label: item.label
+        }));
+    } else {
+        console.error("trainingTopic is not an array.");
+        // Handle the case when trainingTopic is not an array
+        // You might want to provide a default value or handle it differently based on your requirements.
+    }
     // Check if any required field is empty
-    // if (departments === "" || selectedOption === "" || trainingDept === "" || trainingDate === "") {
-    //   alert("Please fill all the details");
-    // } else {
-    // Constructing new training object
-    const newTraining = {
-      td_dept: departments.value,
-      td_des: designation.label,
-      td_emp_des: designation.value,
-      td_emp_code: selectedOption.value,
-      td_emp_name: selectedNameOption.value,
-      td_req_dept: trainingDept,
-      td_date_training: trainingDate,
-      td_topic_training: data.map((item) => item.value).join(","),
-      td_topic_training_name: data.map((item) => item.label).join(","),
-    };
+    if (departments === "") {
+      alert("Please select departments!");
+    } else if (selectedOption === "") {
+      alert("Please select employee code!");
+    } else if (trainingDate === "") {
+      alert("Please select training date!");
+    }
+     else if (data.length <=0) {
+      alert("Please select topics for training required!");
+    }
+     else {
+      const newTraining = {
+        td_dept: departments.value,
+        td_des: designation.label,
+        td_emp_des: designation.value,
+        td_emp_code: selectedOption.value,
+        td_emp_name: selectedNameOption.value,
+        td_req_dept: trainingDept,
+        td_date_training: trainingDate,
+        td_topic_training: data.map((item) => item.value).join(","),
+        td_topic_training_name: data.map((item) => item.label).join(","),
+      };
 
-    // Updating state with new training entry
-    setAllByDepartments((prevAllByDepartments) => [
-      ...prevAllByDepartments,
-      newTraining,
-    ]);
-    handleClose();
-    // Logging the updated allByDepartments state
-    console.log(allByDepartments);
+      // Updating state with new training entry
+      setAllByDepartments((prevAllByDepartments) => [
+        ...prevAllByDepartments,
+        newTraining,
+      ]);
+      handleClose();
+      alert("Training added successfully!");
+      // Logging the updated allByDepartments state
+      console.log(allByDepartments);
 
-    // Resetting the form fields
-    resetForm();
-    // }
+      // Resetting the form fields
+      resetForm();
+    }
   };
 
   const [editIndex, setEditIndex] = useState(null);
@@ -397,11 +418,13 @@ const AddTrainingForm = () => {
     console.log("Received index:", index);
 
     // Update editIndex state synchronously with the provided index
-    setEditIndex(() => {
-      console.log("current update editIndex1:", index);
-      console.log("current update editIndex3:", editIndex);
-      return index;
-    }); // Update editIndex state
+    // setEditIndex(() => {
+    //   console.log("current update editIndex1:", index);
+    //   console.log("current update editIndex3:", editIndex);
+    //   return index;
+    // });
+    setEditIndex(index);
+    // Update editIndex state
     // console.log("current update editIndex3:", editIndex);
     const formatDate = (dateString) => {
       const date = new Date(dateString);
@@ -445,6 +468,11 @@ const AddTrainingForm = () => {
 
     setTrainingTopic(selectedTrainingTopic1);
   };
+  useEffect(() => {
+    console.log("before useEffect:", editIndex);
+    setEditIndex(editIndex);
+    console.log("after useEffect:", editIndex);
+  }, [editIndex]);
 
   const updateSingleTraining = () => {
     if (
@@ -474,6 +502,7 @@ const AddTrainingForm = () => {
       setAllByDepartments(updatedTrainings);
       console.log(updatedTrainings, "update training 1");
       console.log(allByDepartments, "update training 2");
+      alert("Training updated successfully!");
       handleClose();
       // Set the updated array back to state
       resetForm(); // Reset the form fields
@@ -484,6 +513,7 @@ const AddTrainingForm = () => {
     const updatedTraining = [...allByDepartments];
     updatedTraining.splice(index, 1);
     setAllByDepartments(updatedTraining);
+    alert("Training deleted successfully!");
   };
 
   const resetForm = () => {
@@ -495,6 +525,7 @@ const AddTrainingForm = () => {
     setTrainingDate("");
     setTrainingTopic("");
     setIsEmployeeNameDisabled(false);
+    setEditIndex(null);
   };
   const handleEmpCodeChange = (selected) => {
     setSelectedOption(selected);
@@ -816,7 +847,10 @@ const AddTrainingForm = () => {
                               // data-bs-toggle="modal"
                               // data-bs-target="#addTrainingForm"
                               style={{ backgroundColor: "#1B5A90" }}
-                              onClick={handleShow}
+                              onClick={() => {
+                                handleShow();
+                                resetForm();
+                              }}
                             >
                               <Add />
                             </button>
@@ -939,12 +973,12 @@ const AddTrainingForm = () => {
                                   <Edit
                                     className="text-success mr-2"
                                     type="button"
-                                    onClick={() => {getSingleTraining(index);
-                                    handleShow()
+                                    onClick={() => {
+                                      getSingleTraining(index);
+                                      handleShow();
                                     }}
                                     // data-bs-toggle="modal"
                                     // data-bs-target="#addTrainingForm"
-                                    
                                   />
                                   <Delete
                                     className="text-danger"
@@ -1075,199 +1109,13 @@ const AddTrainingForm = () => {
             </div>
           </div>
         </div>
-
-        {/* <div
-          className="modal fade"
-          id="addTrainingForm"
-          tabIndex="-1"
-          aria-labelledby="addTrainingFormLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title fw-bold" id="addTrainingFormLabel">
-                  Add Training Form
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="row">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Department
-                      </label> <span className="text-danger fw-bold">*</span>
-                      <Select
-                        options={selectedDepartment}
-                        value={departments}
-                        onChange={handleDepartment}
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Designation:
-                      </label>
-                      <Select
-                        options={selectedDesignation}
-                        value={designation}
-                        onChange={handleDesignation}
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Employee Code:
-                      </label> <span className="text-danger fw-bold">*</span>
-                      <Select
-                        options={empCodeOptions}
-                        value={selectedOption}
-                        onChange={handleEmpCodeChange}
-                        isDisabled={isEmployeeNameDisabled}
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Employee Name:
-                      </label>
-                      <Select
-                        options={empNameOptions}
-                        value={selectedNameOption}
-                        onChange={handleEmpNameChange}
-                        isDisabled={isEmployeeNameDisabled}
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Training Required Dept:
-                      </label> <span className="text-danger fw-bold">*</span>
-                      <input
-                        type="text"
-                        id="trainingDept"
-                        className="form-control "
-                        placeholder="Enter Training Required Dept"
-                        value={trainingDept}
-                        onChange={(e) => setTrainingDept(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Date of Training Required:
-                      </label> <span className="text-danger fw-bold">*</span>
-                      <input
-                        type="date"
-                        id="trainingDate"
-                        className="form-control "
-                        placeholder="Search"
-                        value={trainingDate}
-                        // value="2024-12-22"
-                        onChange={(e) => setTrainingDate(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        Topics for Training Required:
-                      </label> <span className="text-danger fw-bold">*</span>
-                      <Select
-                        options={selectedTrainingTopic}
-                        isMulti
-                        value={trainingTopic}
-                        onChange={handleTopics}
-                        className="mt-2"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                {departments && !code && !name ? (
-                  <button
-                    onClick={() => {
-                      GetAllByDepart();
-                    }}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Add Department Training
-                  </button>
-                ) : editIndex !== null ? (
-                 
-                  <button
-                    onClick={updateSingleTraining}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Update Training
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      addSingleTraining();
-                    }}
-                    type="button"
-                    className="btn text-white"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    data-bs-dismiss="modal"
-                  >
-                    Add Single Training
-                  </button>
-                )}
-                <button
-                  onClick={updateSingleTraining}
-                  type="button"
-                  className="btn text-white"
-                  style={{ backgroundColor: "#1B5A90" }}
-                  data-bs-dismiss="modal"
-                >
-                  Update Training
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div> */}
         <Modal
           show={showModal}
           onHide={handleClose}
           size="lg"
           id="addTrainingForm"
           aria-labelledby="addTrainingFormLabel"
+          backdrop="static"
         >
           <Modal.Header closeButton>
             <Modal.Title id="addTrainingFormLabel">
@@ -1335,7 +1183,7 @@ const AddTrainingForm = () => {
                     <Form.Label className="fw-bold">
                       Training Required Dept:
                     </Form.Label>{" "}
-                    <span className="text-danger fw-bold">*</span>
+                    {/* <span className="text-danger fw-bold">*</span> */}
                     <Form.Control
                       type="text"
                       placeholder="Enter Training Required Dept"
@@ -1378,7 +1226,8 @@ const AddTrainingForm = () => {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            {departments && !code && !name ? (
+            {/* {
+            departments && !code && !name ? (
               <Button
                 onClick={GetAllByDepart}
                 type="button"
@@ -1387,12 +1236,39 @@ const AddTrainingForm = () => {
               >
                 Add Department Training
               </Button>
-            ) : editIndex !== null ? (
+            ) : 
+            editIndex !== null || departments || code || name ? (
               <Button
                 style={{ backgroundColor: "#1B5A90" }}
                 onClick={updateSingleTraining}
               >
                 Update Training
+              </Button>
+            ) 
+            : (
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={addSingleTraining}
+              >
+                Add Single Training
+              </Button>
+            )
+            } */}
+            {editIndex !== null ? (
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={updateSingleTraining}
+              >
+                Update Training
+              </Button>
+            ) : departments && !code && !name ? (
+              <Button
+                onClick={GetAllByDepart}
+                type="button"
+                className="btn text-white"
+                style={{ backgroundColor: "#1B5A90" }}
+              >
+                Add Department Training
               </Button>
             ) : (
               <Button
@@ -1402,12 +1278,13 @@ const AddTrainingForm = () => {
                 Add Single Training
               </Button>
             )}
-              <Button
-                style={{ backgroundColor: "#1B5A90" }}
-                onClick={updateSingleTraining}
-              >
-                Update Training
-              </Button>
+
+            {/* <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={updateSingleTraining}
+            >
+              Update Training
+            </Button> */}
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>

@@ -17,6 +17,7 @@ const EmployeeMaster = () => {
   const [allEmployee, setAllEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("")
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with your desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -57,6 +58,25 @@ const EmployeeMaster = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allEmployee.filter(
+        (employee) =>
+        employee.emp_code.toLowerCase().includes(searchDataValue) ||
+        employee.emp_fname.toLowerCase().includes(searchDataValue)
+      );
+      setAllEmployee(filteredData);
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -125,6 +145,15 @@ const EmployeeMaster = () => {
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
 
@@ -165,6 +194,9 @@ const EmployeeMaster = () => {
                         Joining Date
                       </th>
                       <th scope="col" style={headerCellStyle}>
+                        Status
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
                     </tr>
@@ -196,6 +228,7 @@ const EmployeeMaster = () => {
                               ? data.emp_joiningDate.split("T")[0]
                               : null}
                           </td>
+                          <td>{data.emp_isactive}</td>
                           <td>
                             <Edit
                               className="text-success mr-2"

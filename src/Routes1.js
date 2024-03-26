@@ -25,8 +25,6 @@ import Sample from './Components/Scheduling/Sample';
 import CompetencyMaster from './Components/Competency/CompetencyMaster';
 import AddCompetency from './Components/Competency/AddCompetency';
 import AddEmployeeCompetency from './Components/Reports/AddEmployeeCompetency';
-import AddDesignation from './Components/DesignationMaster/AddDesignation';
-import AddDepartment from './Components/DepartmentMaster/AddDepartment';
 import AddTrainingApprovalForm from './Components/Approval/AddTrainingApprovalForm';
 import TrainingApprovalForm from './Components/Approval/TrainingApprovalForm';
 import TrainingScheduleApproval from './Components/Approval/TrainingScheduleApproval';
@@ -70,14 +68,10 @@ const routes1=[
     { path: '/employeeCompetency', name: 'employeeCompetency', element:employeeCompetency},
     { path: '/email', name: 'Email', element:Email},
     { path: '/approvalEmail', name: 'approvalEmail', element:ApprovalEmail},
-    { path: '/addDesignation', name: 'AddDesignation', element:AddDesignation},
-    { path: '/addDesignation/:de_id', name: 'AddDesignation', element:AddDesignation},
     { path: '/designationMaster', name: 'DesignationMaster', element:DesignationMaster},
     { path: '/roleMaster', name: 'RoleMaster', element:RoleMaster},
     { path: '/addRoleMaster', name: 'AddRoleMaster', element:AddRoleMaster},
     { path: '/addRoleMaster/:id', name: 'AddRoleMaster', element:AddRoleMaster},
-    { path: '/addDepartment/:id', name: 'AddDepartment', element:AddDepartment},
-    { path: '/addDepartment', name: 'AddDepartment', element:AddDepartment},
     { path: '/departmentMaster', name: 'DepartmentMaster', element:DepartmentMaster},
     { path: '/addTrainingApprovalForm/:id', name: 'AddTrainingApprovalForm', element:AddTrainingApprovalForm},
     { path: '/trainingApprovalForm', name: 'TrainingApprovalForm', element:TrainingApprovalForm},

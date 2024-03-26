@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Button, Form, Row, Col } from "react-bootstrap";
-import { Add, Delete, Edit } from "@material-ui/icons";
+import { Add, Delete, Edit, Height } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
@@ -11,10 +11,12 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const CountryMaster = () => {
   const navigate = useNavigate();
   const [allCountry, setAllCountry] = useState([]);
+  const [searchData, setSearchData] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
@@ -23,6 +25,7 @@ const CountryMaster = () => {
   const [countryName, setCountryName] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [active, setActive] = useState(true);
+  const [toggleActive, setToggleActive] = useState(true);
   const [countryId, setCountryId] = useState("");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
@@ -31,14 +34,14 @@ const CountryMaster = () => {
 
   useEffect(() => {
     getAllData();
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, toggleActive]);
 
   const getAllData = () => {
     axios({
       method: "get",
       url: new URL(
         UrlData +
-          `CountryMaster/GetAll?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          `CountryMaster/GetAll?status=${toggleActive ? "1" : "0"}&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ),
     })
       .then((response) => {
@@ -70,11 +73,11 @@ const CountryMaster = () => {
         userId: UserId,
         co_country_name: countryName,
         co_country_code: countryCode,
-        co_isactive: "1",
+        co_isactive: active === true ? "1" : "0",
       };
-      // if (countryId !== null && countryId !=="") {
-      //   data.co_id = countryId;
-      // }
+      if (countryId !== null && countryId !== "") {
+        data.co_id = countryId;
+      }
       axios({
         method: "post",
         url: new URL(UrlData + `CountryMaster`),
@@ -82,7 +85,7 @@ const CountryMaster = () => {
       })
         .then((response) => {
           console.log(response, "add Country");
-          if (countryId !== null && countryId !=="") {
+          if (countryId !== null && countryId !== "") {
             alert("Country updated successfully!");
           } else {
             alert("Country added successfully!");
@@ -94,7 +97,9 @@ const CountryMaster = () => {
         })
         .catch((error) => {
           console.log(error);
-          alert("Something went wrong");
+          // alert("Something went wrong");
+          let errors = ErrorHandler(error);
+          alert(errors);
         });
     }
   };
@@ -105,10 +110,10 @@ const CountryMaster = () => {
       url: new URL(UrlData + `CountryMaster/Get?status=1&co_id=${coId}`),
     })
       .then((response) => {
-        console.log(response.data.data.co_country_name, "country  name");
+        console.log(response.data.data, "get country");
         setCountryName(response.data.data.co_country_name);
         setCountryCode(response.data.data.co_country_code);
-        setCountryId(response.data.data.co_id);         
+        setCountryId(response.data.data.co_id);
         handleShow(); // Show modal for editing
       })
       .catch((error) => {
@@ -136,6 +141,24 @@ const CountryMaster = () => {
       });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allCountry.filter(
+        (country) =>
+          country.co_country_name.toLowerCase().includes(searchDataValue) ||
+          country.co_country_code.toLowerCase().includes(searchDataValue)
+      );
+      setAllCountry(filteredData);
+    }
+  };
+
   const handleCountryNameClick = (coId, countryName) => {
     console.log("Clicked on country:", countryName);
     navigate(`/stateMaster/${coId}/${encodeURIComponent(countryName)}`);
@@ -160,13 +183,24 @@ const CountryMaster = () => {
                     <h4 className="card-title fw-bold">Country Master</h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
+                    <div className="form-check form-switch mt-2 pt-1">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckDefault"
+                        checked={toggleActive} // Bind the checked state to the state variable
+                        onChange={()=>setToggleActive(!toggleActive)}
+                      />
+                    </div>
                     <div className="btn btn-add" title="Add New">
                       <Button
-                        variant="primary"
                         // onClick={handleShow}
-                        onClick={()=>{setCountryCode("");
-                        setCountryName("");
-                        handleShow()}}
+                        onClick={() => {
+                          setCountryCode("");
+                          setCountryName("");
+                          setCountryId("");
+                          handleShow();
+                        }}
                         style={{ backgroundColor: "#1B5A90" }}
                       >
                         <Add />
@@ -180,6 +214,7 @@ const CountryMaster = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                       value={selectedItemsPerPage}
@@ -191,6 +226,15 @@ const CountryMaster = () => {
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
+                  </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
                   </div>
                 </div>
                 <br />
@@ -205,6 +249,9 @@ const CountryMaster = () => {
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         Country Name
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
+                        Status
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         Action
@@ -231,6 +278,7 @@ const CountryMaster = () => {
                             >
                               {data.co_country_name}
                             </td>
+                            <td>{data.co_isactive}</td>
                             <td>
                               <Edit
                                 className="text-success mr-2"
@@ -238,12 +286,12 @@ const CountryMaster = () => {
                                 // data-bs-toggle="modal"
                                 // data-bs-target="#countryForm"
                                 // onClick={handleShow}
-                               
+
                                 onClick={() => {
                                   GetCountry(data.co_id);
-                                  handleShow();
                                 }}
                               />
+
                               <Delete
                                 className="text-danger"
                                 type="button"
@@ -379,7 +427,7 @@ const CountryMaster = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-             style={{ backgroundColor: "#1B5A90" }}
+            style={{ backgroundColor: "#1B5A90" }}
             onClick={() => {
               addCountry();
             }}

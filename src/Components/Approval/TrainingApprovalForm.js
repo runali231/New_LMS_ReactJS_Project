@@ -195,6 +195,7 @@ const TrainingApprovalForm = () => {
                         <td>
                           <Edit
                             className="text-success mr-2"
+                            type="button"
                             onClick={() => GetTrainingNeed(data.tr_id)}
                           />
                           {/* <Delete

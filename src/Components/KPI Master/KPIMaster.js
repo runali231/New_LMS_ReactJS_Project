@@ -4,7 +4,12 @@ import { Add, Delete, Edit } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
-import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
 import UserId from "../UserId";
 
 const KPIMaster = () => {
@@ -12,6 +17,7 @@ const KPIMaster = () => {
   const [allKpi, setAllKpi] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
     color: "#fff",
@@ -23,7 +29,7 @@ const KPIMaster = () => {
 
   const getAllData = () => {
     axios
-      .get(new URL(UrlData +`KPIMaster/GetAll?status=1`))
+      .get(new URL(UrlData + `KPIMaster/GetAll?status=1`))
       .then((response) => {
         console.log("response", response.data.data);
         setAllKpi(response.data.data);
@@ -43,15 +49,33 @@ const KPIMaster = () => {
       k_id: kId,
     };
     axios
-      .post(new URL(UrlData +`KPIMaster/Delete`), data)
+      .post(new URL(UrlData + `KPIMaster/Delete`), data)
       .then((response) => {
         console.log("response", response);
-        alert("KPI deleted successfully!")
+        alert("KPI deleted successfully!");
         getAllData();
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allKpi.filter(
+        (kpi) =>
+          kpi.k_emp_code.toLowerCase().includes(searchDataValue) ||
+          kpi.k_emp_name.toLowerCase().includes(searchDataValue)
+      );
+      setAllKpi(filteredData);
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -60,10 +84,10 @@ const KPIMaster = () => {
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
-  
+
     return `${day}-${month}-${year}`;
   }
 
@@ -115,6 +139,15 @@ const KPIMaster = () => {
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
                 <Table striped hover responsive className="border text-left">
@@ -151,37 +184,46 @@ const KPIMaster = () => {
                         Occurrence
                       </th>
                       <th scope="col" style={headerCellStyle}>
+                        Status
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {allKpi && currentItems.map((data, index) => (
-                      <tr key={data.k_id}>
-                        <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                        <td>{data.k_emp_code}</td>
-                        <td>{data.k_emp_name}</td>
-                        <td>{data.k_designation}</td>
-                        <td>{data.k_department}</td>
-                        <td>{data.k_kpi_code}</td>
-                        <td>{data.k_kpi_des}</td>
-                        <td>{data.k_uom}</td>
-                        {/* <td>{new Date(data.k_targetdate).toLocaleDateString('en-GB')} </td> */}
-                        <td>{formatDate(data.k_targetdate)}</td>
-                        <td>{data.k_occurance}</td>
-                        <td>
-                          <Edit
-                            className="text-success mr-2"
-                            onClick={() => GetKpi(data.k_id)}
-                          />
-                          <Delete
-                            className="text-danger"
-                            style={{ marginLeft: "0.5rem" }}
-                            onClick={() => DeleteKpi(data.k_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                    {allKpi &&
+                      currentItems.map((data, index) => (
+                        <tr key={data.k_id}>
+                          <td>
+                            {(currentPage - 1) * itemsPerPage + index + 1}
+                          </td>
+                          <td>{data.k_emp_code}</td>
+                          <td>{data.k_emp_name}</td>
+                          <td>{data.k_designation}</td>
+                          <td>{data.k_department}</td>
+                          <td>{data.k_kpi_code}</td>
+                          <td>{data.k_kpi_des}</td>
+                          <td>{data.k_uom}</td>
+                          {/* <td>{new Date(data.k_targetdate).toLocaleDateString('en-GB')} </td> */}
+                          <td>{formatDate(data.k_targetdate)}</td>
+                          <td>{data.k_occurance}</td>
+                          <td>{data.k_isactive}</td>
+                          <td>
+                            <Edit
+                              className="text-success mr-2"
+                              type="button"
+                              onClick={() => GetKpi(data.k_id)}
+                            />
+                            <Delete
+                              className="text-danger"
+                              type="button"
+                              style={{ marginLeft: "0.5rem" }}
+                              onClick={() => DeleteKpi(data.k_id)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
@@ -194,26 +236,58 @@ const KPIMaster = () => {
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                  <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example">
                       <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handlePrevious(currentPage, setCurrentPage)}
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
                             disabled={currentPage === 1}
-                            aria-label="Previous">
+                            aria-label="Previous"
+                          >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        {calculatePaginationRange(currentPage, allKpi, itemsPerPage).map((number) =>
-                          <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`}>
-                            <button className="page-link" onClick={() => handlePageClick(number, setCurrentPage)}>{number}</button>
+                        {calculatePaginationRange(
+                          currentPage,
+                          allKpi,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
                           </li>
-                        )}
+                        ))}
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handleNext(currentPage, allKpi, itemsPerPage, setCurrentPage)}
-                            disabled={currentPage === Math.ceil(allKpi.length / itemsPerPage)}
-                            aria-label="Next">
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                allKpi,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(allKpi.length / itemsPerPage)
+                            }
+                            aria-label="Next"
+                          >
                             <span aria-hidden="true">&raquo;</span>
                           </button>
                         </li>

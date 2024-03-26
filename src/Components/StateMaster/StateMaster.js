@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Button, Form, Col, Row } from "react-bootstrap";
-import { Add, Delete, Edit } from "@material-ui/icons";
+import { Add, ArrowBack, Delete, Edit } from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
@@ -11,10 +11,12 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const StateMaster = () => {
   const navigate = useNavigate();
   // const { id, countryName  } = useParams();
+  const [searchData, setSearchData] = useState("")
   const [allState, setAllState] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
@@ -23,6 +25,7 @@ const StateMaster = () => {
   const [stateName, setStateName] = useState("");
   const [stateCode, setStateCode] = useState("");
   const [active, setActive] = useState(true);
+  const [toggleActive, setToggleActive] = useState(true);
   const [stateId, setStateId] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
@@ -35,14 +38,14 @@ const StateMaster = () => {
 
   useEffect(() => {
     getAllData();
-  }, [currentPage, itemsPerPage]); // Fetch data when currentPage or itemsPerPage changes
+  }, [currentPage, itemsPerPage, toggleActive]); // Fetch data when currentPage or itemsPerPage changes
 
   const getAllData = () => {
     axios({
       method: "get",
       url: new URL(
         UrlData +
-          `StateMaster/GetStateMasterByCoId?CountryId=${countryId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6&status=1`
+          `StateMaster/GetStateMasterByCoId?CountryId=${countryId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6&status=${toggleActive ? "1" : "0"}`
       ), // Include pageSize and pageNumber in the URL
     })
       .then((response) => {
@@ -94,7 +97,7 @@ const StateMaster = () => {
         s_country_id: countryId,
         s_state_name: stateName,
         s_state_code: stateCode,
-        s_isactive: "1",
+        s_isactive: active === true ? "1" : "0",
       };
 
       if (stateId) {
@@ -119,7 +122,9 @@ const StateMaster = () => {
         })
         .catch((error) => {
           console.log(error);
-          alert("Something went wrong");
+          // alert("Something went wrong");
+          let errors = ErrorHandler(error)
+          alert(errors)
         });
     }
   };
@@ -142,6 +147,24 @@ const StateMaster = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allState.filter(
+        (state) =>
+          state.s_state_name.toLowerCase().includes(searchDataValue) ||
+          state.s_state_code.toLowerCase().includes(searchDataValue)
+      );
+      setAllState(filteredData);
+    }
   };
 
   const handleStateNameClick = (coId, countryName, sId, stateName) => {
@@ -175,21 +198,39 @@ const StateMaster = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
+                  <div className="form-check form-switch mt-2 pt-1">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckDefault"
+                        checked={toggleActive} // Bind the checked state to the state variable
+                        onChange={()=>setToggleActive(!toggleActive)}
+                      />
+                    </div>
                     <div className="btn btn-add" title="Add New">
                       <button
                         className="btn btn-md text-light"
                         type="button"
                         style={{ backgroundColor: "#1B5A90" }}
-                        // data-bs-toggle="modal"
-                        // data-bs-target="#stateForm"
                         onClick={()=>{handleShow();setStateCode("");
-                        setStateName("")}}
-                        // onClick={() => {
-
-                        //   navigate(`/addStateMaster/${id}/${countryName}`);
-                        // }}
+                        setStateName("");setStateId();}}
                       >
                         <Add />
+                      </button>
+                    </div>
+                    <div
+                      className="btn btn-add"
+                      title="Back"
+                      onClick={() => {
+                        navigate(-1)
+                      }}
+                    >
+                      <button
+                        className="btn btn-md text-light"
+                        type="button"
+                        style={{ backgroundColor: "#1B5A90" }}
+                      >
+                        <ArrowBack />
                       </button>
                     </div>
                   </div>
@@ -212,6 +253,15 @@ const StateMaster = () => {
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
                 <Table striped hover responsive className="border text-left">
@@ -225,6 +275,9 @@ const StateMaster = () => {
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         State Name
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
+                        Status
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         Action
@@ -253,6 +306,7 @@ const StateMaster = () => {
                             >
                               {data.s_state_name}
                             </td>
+                            <td>{data.s_isactive}</td>
                             <td>
                               <Edit
                                 className="text-success mr-2"

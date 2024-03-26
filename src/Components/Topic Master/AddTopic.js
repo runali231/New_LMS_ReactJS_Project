@@ -41,7 +41,7 @@ const AddTopic = () => {
   };
   useEffect(() => {
     getAllData();
-    getAllSubject();
+  
     if (id) {
       axios({
         method: "get",
@@ -65,16 +65,26 @@ const AddTopic = () => {
     }
   }, [tId]);
 
+
   const addTopic = () => {
     if (
-      trainingCode === "" ||
-      description === "" ||
-      department === "" ||
-      trainingType === "" ||
-      trainingDuration === ""
+      trainingCode === "" 
     ) {
-      alert("Please fill all the details");
-    } else {
+      alert("Please enter training code!");
+    } 
+    else if(description === ""){
+      alert("Please enter description!");
+    }
+    else if(department === ""){
+      alert("Please enter department!");
+    }
+    else if(trainingType === ""){
+      alert("Please enter training type!");
+    }
+    else if(trainingDuration === ""){
+      alert("Please enter training duration!");
+    }
+    else {
       let data = {
         userId: UserId,
         t_code: trainingCode,
@@ -136,9 +146,16 @@ const AddTopic = () => {
   };
 
   const addSubject = () => {
-    if (subject === "" || content === "" || subContent === "") {
-      alert("Please fill the details");
-    } else {
+    if(content === ""){
+      alert("Please enter content!")
+    }
+    else if(subContent === ""){
+      alert("Please enter sub content!")
+    }
+    else if (subject === "") {
+      alert("Please enter subject!");
+    }
+    else {
       const newSubject = {
         s_subject: subject,
         s_content: content,
@@ -369,7 +386,7 @@ const AddTopic = () => {
                               // data-bs-toggle="modal"
                               // data-bs-target="#exampleModal"
                               style={{ backgroundColor: "#1B5A90" }}
-                              onClick={() => setModalOpen(true)}
+                              onClick={() => {setModalOpen(true); resetForm()}}
                             >
                               <Add />
                             </button>
@@ -569,14 +586,14 @@ const AddTopic = () => {
             </div>
           </div>
         </div>
-        <Modal show={modalOpen} onHide={handleClose}>
+        <Modal show={modalOpen} onHide={handleClose} backdrop="static">
           <Modal.Header closeButton>
             <Modal.Title><h5 className="fw-bold">Add Topic</h5></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group className="mb-3" controlId="formContent">
-                <Form.Label className="fw-bold">Content</Form.Label>
+                <Form.Label className="fw-bold">Content</Form.Label> <span className="text-danger">*</span>
                 <Form.Control
                   type="text"
                   placeholder="Enter Content"
@@ -585,7 +602,7 @@ const AddTopic = () => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formSubContent">
-                <Form.Label className="fw-bold">Sub Content</Form.Label>
+                <Form.Label className="fw-bold">Sub Content</Form.Label> <span className="text-danger">*</span>
                 <Form.Control
                   type="text"
                   placeholder="Enter Sub Content"
@@ -594,7 +611,7 @@ const AddTopic = () => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formSubject">
-                <Form.Label className="fw-bold">Subject</Form.Label>
+                <Form.Label className="fw-bold">Subject</Form.Label> <span className="text-danger">*</span>
                 <Form.Control
                   type="text"
                   placeholder="Enter Subject"
