@@ -328,9 +328,9 @@ const AddTrainingSchedule = () => {
   };
 
   useEffect(() => {
-console.log(editIndex, "after index")
-  }, [editIndex])
-  
+    console.log(editIndex, "after index");
+  }, [editIndex]);
+
   const getSingleHodTraining = (index, tsId) => {
     setSelectedRowIndex(index);
     console.log("Received index:", index);
@@ -351,8 +351,9 @@ console.log(editIndex, "after index")
     setRemark(scheduleToEdit1.tss_remark);
   };
   useEffect(() => {
-    console.log(editIndex, "after index")
-      }, [editIndex])
+    console.log(editIndex, "after index");
+  }, [editIndex]);
+
   const addSingleHrTraining = () => {
     console.log(tss_id, 318);
     // Create a new array by mapping over the existing sub-training schedules
@@ -383,6 +384,7 @@ console.log(editIndex, "after index")
       setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
       console.log(allSubTrainingSchedule, "all single sub training");
       alert("Added successfully!");
+      FirstHandleClose();
       resetForm();
     }
   };
@@ -404,6 +406,7 @@ console.log(editIndex, "after index")
       };
       setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
       alert("Updated successfully!");
+      FirstHandleClose();
       resetForm(); // Reset the form fields
     }
   };
@@ -445,6 +448,7 @@ console.log(editIndex, "after index")
       setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
       console.log(allSubTrainingSchedule, "all single sub training");
       alert("Added successfully!");
+      SecondHandleClose();
       resetForm();
     }
   };
@@ -471,6 +475,7 @@ console.log(editIndex, "after index")
       };
       setAllSubTrainingSchedule(updatedTrainings); // Set the updated array back to state
       alert("Updated successfully!");
+      SecondHandleClose();
       resetForm(); // Reset the form fields
     }
   };
@@ -1268,6 +1273,21 @@ console.log(editIndex, "after index")
             </Form>
           </Modal.Body>
           <Modal.Footer>
+            {/* {editIndex !== null || trainingAttended !== null || scheduledHours !== null || actualHoursAttended !==null ? (
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={() => updateSingleHrTraining()}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={() => addSingleHrTraining()}
+              >
+                Save
+              </Button>
+            )} */}
             <Button
               style={{ backgroundColor: "#1B5A90" }}
               onClick={() => addSingleHrTraining()}
@@ -1432,10 +1452,16 @@ console.log(editIndex, "after index")
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button style={{ backgroundColor: "#1B5A90" }} onClick={() => addSingleHodTraining()}>
+            <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={() => addSingleHodTraining()}
+            >
               Save
             </Button>
-            <Button style={{ backgroundColor: "#1B5A90" }} onClick={() => updateSingleHodTraining()}>
+            <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={() => updateSingleHodTraining()}
+            >
               Update
             </Button>
             <Button variant="secondary" onClick={FirstHandleClose}>
