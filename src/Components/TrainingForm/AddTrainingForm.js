@@ -63,7 +63,7 @@ const AddTrainingForm = () => {
     return dateTimeString.split("T")[0];
   };
   useEffect(() => {
-    getByOrder();
+    // getByOrder();
     getAllDepartment();
     GetAllDesignation();
     getAllTrainingTopic();
@@ -97,6 +97,13 @@ const AddTrainingForm = () => {
         });
     }
   }, [trId]);
+
+  useEffect(() => {
+    if (!id) {
+        getByOrder();
+    }
+}, [id]);
+
 
   const getAllTrainingNature = () => {
     axios

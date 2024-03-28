@@ -91,65 +91,66 @@ const AddEmployee = () => {
 
     var mobNo = /^[0-9\b]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (
-      empCode === "" ) {
-      alert("Please enter employee code!");
-    } 
-    else if(firstName === ""){
-      alert("Please enter first name!")
-    }
-    else if(lastName === ""){
-      alert("Please enter last name!")
-    }
-    else if(jobTitle === ""){
-      alert("Please enter job title!")
-    }
-    else if(designation === ""){
-      alert("Please enter designation!")
-    }
-    else if(departments === ""){
-      alert("Please enter departments!")
-    }
-    else if(address1 === ""){
-      alert("Please enter address!")
-    }
-    else if(city === ""){
-      alert("Please enter city!")
-    }
-    else if(state === ""){
-      alert("Please enter state!")
-    }
-    else if(country === ""){
-      alert("Please enter country!")
-    }
-    else if(pinCode === ""){
-      alert("Please enter pin code!")
-    }
-    else if(mobileNo === ""){
-      alert("Please enter mobile number!")
-    }
-    else if(emailId === ""){
-      alert("Please enter email id!")
-    }
-    else if(joiningDate === ""){
-      alert("Please enter joining date!")
-    }
-    else if (mobNo.test(mobileNo) === false) {
-      alert("Please Enter Only Numbers");
-    } else if (mobileNo.length !== 10) {
-      alert("Please enter valid Mobile number");
-    }
+    // if (
+    //   empCode === "" ) {
+    //   alert("Please enter employee code!");
+    // } 
+    // else if(firstName === ""){
+    //   alert("Please enter first name!")
+    // }
+    // else if(lastName === ""){
+    //   alert("Please enter last name!")
+    // }
+    // else if(jobTitle === ""){
+    //   alert("Please enter job title!")
+    // }
+    // else if(designation === ""){
+    //   alert("Please enter designation!")
+    // }
+    // else if(departments === ""){
+    //   alert("Please enter departments!")
+    // }
+    // else if(address1 === ""){
+    //   alert("Please enter address!")
+    // }
+    // else if(city === ""){
+    //   alert("Please enter city!")
+    // }
+    // else if(state === ""){
+    //   alert("Please enter state!")
+    // }
+    // else if(country === ""){
+    //   alert("Please enter country!")
+    // }
+    // else if(pinCode === ""){
+    //   alert("Please enter pin code!")
+    // }
+    // else if(mobileNo === ""){
+    //   alert("Please enter mobile number!")
+    // }
+    // else if(emailId === ""){
+    //   alert("Please enter email id!")
+    // }
+    // else if(joiningDate === ""){
+    //   alert("Please enter joining date!")
+    // }
+    // else if (mobNo.test(mobileNo) === false) {
+    //   alert("Please Enter Only Numbers");
+    // } else if (mobileNo.length !== 10) {
+    //   alert("Please enter valid Mobile number");
+    // }
     //  else if (mobNo.test(officeNo) === false) {
     //   alert("Please Enter Only Numbers");
     // } 
     // else if (officeNo.length !== 10) {
     //   alert("Please enter valid office number");
     // } 
-    else if (pinCode.length !== 6) {
-      alert("Please enter valid pin code");
-    } else if (!emailRegex.test(emailId)) {
-      alert("Please enter valid email id");
-    } else {
+    // else if (pinCode.length !== 6) {
+    //   alert("Please enter valid pin code");
+    // } else if (!emailRegex.test(emailId)) {
+    //   alert("Please enter valid email id");
+    // } 
+    // else {
       data = {
         userId: UserId,
         emp_code: empCode,
@@ -193,7 +194,7 @@ const AddEmployee = () => {
         .catch((error) => {
           console.log(error);
         });
-    }
+    // }
   };
 
   const getAllCountry = () => {
@@ -257,6 +258,22 @@ const AddEmployee = () => {
       });
   };
 
+  const handleEmpCodeChange = (e) => {
+    setEmpCode(e.target.value)
+    axios({
+      method: "get",
+      url: new URL(
+        UrlData + `EmployeeMaster/GetByCodeAdd?emp_code=${empCode}`
+      ),
+    })
+      .then((response) => {
+        console.log(response, "by code");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const getAllData = async () => {
     const designationData = await GetAllDesignation();
     const departmentData = await getAllDepartment();
@@ -308,7 +325,7 @@ const AddEmployee = () => {
 
                     <div
                       className="btn btn-add"
-                      title="Add New"
+                      title="Back"
                       onClick={() => {
                         navigate("/employeeMaster");
                       }}
@@ -340,7 +357,7 @@ const AddEmployee = () => {
                         autoComplete="off"
                         placeholder="Enter Employee Code"
                         value={empCode}
-                        onChange={(e) => setEmpCode(e.target.value)}
+                        onChange={handleEmpCodeChange}
                         required
                       />
                     </div>

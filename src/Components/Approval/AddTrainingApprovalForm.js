@@ -82,7 +82,6 @@ const AddTrainingApprovalForm = () => {
     return dateTimeString.split("T")[0];
   };
   useEffect(() => {
-    getByOrder();
     getAllDepartment();
     GetAllDesignation();
     getAllTrainingTopic();
@@ -117,6 +116,13 @@ const AddTrainingApprovalForm = () => {
         });
     }
   }, [trId]);
+
+  useEffect(() => {
+    if (!id) {
+        getByOrder();
+    }
+}, [id]);
+
   const getAllTrainingNature = () => {
     axios
       .get(
@@ -793,7 +799,6 @@ const AddTrainingApprovalForm = () => {
                             </th> */}
                           </tr>
                         </thead>
-
                         <tbody>
                           {allByDepartments.map((departmentItem, index) => {
                             return (

@@ -239,6 +239,7 @@ const TrainingScheduleApproval = () => {
                           <td>
                             <Edit
                               className="text-success mr-2"
+                              type="button"
                               onClick={() => GetTrainingSchedule(data.ts_id)}
                             />
                             {/* <Delete

@@ -167,7 +167,7 @@ const AddCompetency = () => {
                   <div className="col-auto d-flex flex-wrap">
                     <div
                       className="btn btn-add"
-                      title="Add New"
+                      title="Back"
                       onClick={() => {
                         navigate("/CompentencyMaster");
                       }}

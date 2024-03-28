@@ -247,7 +247,7 @@ const AddRoleMaster = () => {
 
                     <div
                       className="btn btn-add"
-                      title="Add New"
+                      title="Back"
                       onClick={() => {
                         navigate("/roleMaster");
                       }}

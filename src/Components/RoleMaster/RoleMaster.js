@@ -19,7 +19,7 @@ const RoleMaster = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
   const [searchData, setSearchData] = useState("")
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState(true)
 
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
