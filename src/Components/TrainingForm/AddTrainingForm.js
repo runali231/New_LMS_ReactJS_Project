@@ -1275,14 +1275,14 @@ const AddTrainingForm = () => {
                 className="btn text-white"
                 style={{ backgroundColor: "#1B5A90" }}
               >
-                Add Department Training
+                Add Training
               </Button>
             ) : (
               <Button
                 style={{ backgroundColor: "#1B5A90" }}
                 onClick={addSingleTraining}
               >
-                Add Single Training
+                Add Training
               </Button>
             )}
 

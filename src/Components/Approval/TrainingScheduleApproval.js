@@ -188,12 +188,15 @@ const TrainingScheduleApproval = () => {
                         Status
                       </th>
                       {/* <th scope="col" style={headerCellStyle}>
+                        Remark
+                      </th> */}
+                      {/* <th scope="col" style={headerCellStyle}>
                         Status 1
                       </th> */}
                       <th
                         scope="col"
                         style={headerCellStyle}
-                        className="fw-bold" /* style={headerCellStyle} */
+                         /* style={headerCellStyle} */
                       >
                         Action
                       </th>
@@ -235,6 +238,7 @@ const TrainingScheduleApproval = () => {
                               .substring(0, 16)}
                           </td>
                           <td>{data.ts_status}</td>
+                          {/* <td>{data.ts_remark}</td> */}
                           {/* <td>{data.ts_action}</td> */}
                           <td>
                             <Edit

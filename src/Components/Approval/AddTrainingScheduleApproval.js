@@ -38,6 +38,7 @@ const AddTrainingSchedule = () => {
   const [trainingCertificate, setTrainingCertificate] = useState();
   const [status1, setStatus1] = useState("");
   const [remark, setRemark] = useState("");
+  const [remark1, setRemark1] = useState("");
   const [allSubTrainingSchedule, setAllSubTrainingSchedule] = useState([]);
   const [trainingArray, setTrainingArray] = useState([]);
   const [tsId, setTsId] = useState("");
@@ -55,7 +56,7 @@ const AddTrainingSchedule = () => {
   const [allTrainingReoccurrence, setAllTrainingReoccurrence] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [selectedAction, setSelectedAction] = useState([])
+  const [selectedAction, setSelectedAction] = useState([]);
   const getLoginId = localStorage.getItem("loginId");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
@@ -293,12 +294,17 @@ const AddTrainingSchedule = () => {
     console.log(action, "selectedAction");
     console.log(id, "id");
     let data;
-
+    if (action === "7") {
+      if (!remark1) {
+        alert("Please enter the remark!");
+        return;
+      }
+    }
     data = {
       ts_action: action,
+      ts_remark: remark1,
       ts_id: id,
     };
-
     axios({
       method: "post",
       url: new URL(UrlData + `TrainingSchedule/UpdateStatus`),
@@ -478,7 +484,7 @@ const AddTrainingSchedule = () => {
                 <div className="row align-items-center">
                   <div className="col">
                     <h4 className="card-title fw-bold">
-                       Training Schedule Approval
+                      Training Schedule Approval
                     </h4>
                   </div>
 
@@ -830,7 +836,6 @@ const AddTrainingSchedule = () => {
                             <th scope="col" style={headerCellStyle}>
                               Remark
                             </th>
-                          
                           </tr>
                         </thead>
                         <tbody className="text-center">
@@ -877,10 +882,9 @@ const AddTrainingSchedule = () => {
                                     File not uploaded
                                   </span>
                                 )}
-                              </td>                           
+                              </td>
                               <td>{data.tss_status}</td>
                               <td>{data.tss_remark}</td>
-
                             </tr>
                           ))}
                         </tbody>
@@ -893,7 +897,7 @@ const AddTrainingSchedule = () => {
                         </div>
                         <div className="col-lg-4 col-12"></div>
                         <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                        <nav aria-label="Page navigation example ">
+                          <nav aria-label="Page navigation example ">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -938,7 +942,8 @@ const AddTrainingSchedule = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allSubTrainingSchedule.length / itemsPerPage
+                                      allSubTrainingSchedule.length /
+                                        itemsPerPage
                                     )
                                   }
                                   aria-label="Next"
@@ -971,6 +976,24 @@ const AddTrainingSchedule = () => {
                                 </option>
                               ))}
                             </select>
+                          </div>
+                        </div>
+                        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                          <div className="form-group form-group-sm">
+                            <label className="control-label fw-bold">
+                              Remark:
+                            </label>{" "}
+                            {action === "7" ? (
+                              <span className="text-danger">*</span>
+                            ) : null}
+                            <textarea
+                              className="form-control"
+                              id=""
+                              rows="3"
+                              placeholder="Enter Remark"
+                              value={remark1}
+                              onChange={(e) => setRemark1(e.target.value)}
+                            ></textarea>
                           </div>
                         </div>
                       </div>

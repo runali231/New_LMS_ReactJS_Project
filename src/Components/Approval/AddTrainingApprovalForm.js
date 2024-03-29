@@ -53,27 +53,27 @@ const AddTrainingApprovalForm = () => {
   const [remark, setRemark] = useState("");
   // const [action, setAction] = useState([])
 
-  const [alert, setAlert] = React.useState({
-    type: "error",
-    text: "This is a alert message",
-    show: false,
-  });
+  // const [alert, setAlert] = React.useState({
+  //   type: "error",
+  //   text: "This is a alert message",
+  //   show: false,
+  // });
 
-  function onCloseAlert() {
-    setAlert({
-      type: "",
-      text: "",
-      show: false,
-    });
-  }
+  // function onCloseAlert() {
+  //   setAlert({
+  //     type: "",
+  //     text: "",
+  //     show: false,
+  //   });
+  // }
 
-  function onShowAlert(type) {
-    setAlert({
-      type: type,
-      text: "Demo alert",
-      show: true,
-    });
-  }
+  // function onShowAlert(type) {
+  //   setAlert({
+  //     type: type,
+  //     text: "Demo alert",
+  //     show: true,
+  //   });
+  // }
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -106,7 +106,7 @@ const AddTrainingApprovalForm = () => {
           setTrainingHours(response.data.data.tr_hours);
           setTrainingDay(response.data.data.tr_days);
           setTrId(response.data.data.tr_id);
-          setRemark(response.data.data.tr_remark)
+          setRemark(response.data.data.tr_remark);
           console.log(response.data.data.tr_id, "trId");
           getAllTrainingTopic();
           getAllTraining();
@@ -119,9 +119,9 @@ const AddTrainingApprovalForm = () => {
 
   useEffect(() => {
     if (!id) {
-        getByOrder();
+      getByOrder();
     }
-}, [id]);
+  }, [id]);
 
   const getAllTrainingNature = () => {
     axios
@@ -507,7 +507,12 @@ const AddTrainingApprovalForm = () => {
     console.log(action, "selectedAction");
     console.log(id, "id");
     let data;
-
+    if (action === "3" || action === "5") {
+      if (!remark) {
+        alert("Please enter the remark!");
+        return;
+      }
+    }
     data = {
       tr_action: action,
       tr_remark: remark,
@@ -898,7 +903,8 @@ const AddTrainingApprovalForm = () => {
                 <div className="row mt-4 me-3">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Action:</label>
+                      <label className="control-label fw-bold">Action:</label>{" "}
+                      <span className="text-danger">*</span>
                       <select
                         className="form-select"
                         aria-label="Default select example"
@@ -918,7 +924,10 @@ const AddTrainingApprovalForm = () => {
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Remark:</label>
+                      <label className="control-label fw-bold">Remark:</label>{" "}
+                      {action === "3" || action === "5" ? (
+                        <span className="text-danger">*</span>
+                      ) : null}
                       <textarea
                         className="form-control"
                         id=""
@@ -1231,7 +1240,7 @@ const AddTrainingApprovalForm = () => {
           </div>
         </div>
 
-        <Alert
+        {/* <Alert
           header={"Header"}
           btnText={"Close"}
           text={alert.text}
@@ -1244,7 +1253,7 @@ const AddTrainingApprovalForm = () => {
           headerStyles={{}}
           textStyles={{}}
           buttonStyles={{}}
-        />
+        /> */}
       </div>
     </>
   );

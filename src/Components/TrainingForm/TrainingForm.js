@@ -170,6 +170,9 @@ const TrainingForm = () => {
                         Approval Status
                       </th>
                       <th scope="col" style={headerCellStyle}>
+                        Remark
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
                       {/* <th
@@ -198,9 +201,13 @@ const TrainingForm = () => {
                         <td>-</td> */}
 
                           <td>{data.tr_action}</td>
+                          <td>{data.tr_remark}</td>
                           <td>
                             {data.tr_action === "Approved By Hr" ||
-                            data.tr_action === "Approved By Hod" ? null : (
+                            data.tr_action === "Approved By Hod" || 
+                            data.tr_action === "Rejected by Hr" ||
+                            data.tr_action === "Rejected by HOD"
+                            ? null : (
                               <>
                                 <Edit
                                   className="text-success mr-2"

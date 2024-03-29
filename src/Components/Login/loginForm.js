@@ -34,7 +34,7 @@ const LoginForm = () => {
         localStorage.setItem("loginId", response.data.data.RoleId);
         localStorage.setItem("UserId", response.data.data.UserId)
         localStorage.setItem("username", response.data.data.username)
-        alert("Login Successful!")
+        alert("Login Successful!ly")
         navigate("/dashboard")
       })
       .catch((error) => {

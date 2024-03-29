@@ -4,7 +4,12 @@ import { Add, Edit, Delete } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import UrlData from "../UrlData";
 import axios from "axios";
-import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
 import UserId from "../UserId";
 
 const TrainingSchedule = () => {
@@ -49,7 +54,7 @@ const TrainingSchedule = () => {
       .post(new URL(UrlData + `TrainingSchedule/DeleteTrainingSchedule`), data)
       .then((response) => {
         console.log("delete topics", response);
-        alert("Training Schedule deleted successfully!")
+        alert("Training Schedule deleted successfully!");
         getAllTrainingSchedule();
       })
       .catch((error) => {
@@ -58,8 +63,10 @@ const TrainingSchedule = () => {
   };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allTrainingSchedule.slice(indexOfFirstItem, indexOfLastItem);
-
+  const currentItems = allTrainingSchedule.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <>
@@ -165,6 +172,9 @@ const TrainingSchedule = () => {
                       <th scope="col" style={headerCellStyle}>
                         Approval Status
                       </th>
+                      <th scope="col" style={headerCellStyle}>
+                        Remark
+                      </th>
                       <th
                         scope="col"
                         style={headerCellStyle}
@@ -175,82 +185,136 @@ const TrainingSchedule = () => {
                     </tr>
                   </thead>
                   <tbody className="text-left">
-                    {allTrainingSchedule && currentItems.map((data, index) => (
-                      <tr key={data.ts_id}>
-                        <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                        <td>{data.ts_training_no}</td>
-                        <td>{data.ts_trainer_name}</td>
-                        <td>{data.ts_training_dept}</td>
-                        <td>{data.ts_topic}</td>
-                        <td>{data.ts_training_type}</td>
-                        <td>{data.ts_training_agency}</td>
-                        <td>{data.ts_no_que}</td>
-                        <td>{data.ts_reoccurence}</td>
-                        <td>
-                          {/* {
+                    {allTrainingSchedule &&
+                      currentItems.map((data, index) => (
+                        <tr key={data.ts_id}>
+                          <td>
+                            {(currentPage - 1) * itemsPerPage + index + 1}
+                          </td>
+                          <td>{data.ts_training_no}</td>
+                          <td>{data.ts_trainer_name}</td>
+                          <td>{data.ts_training_dept}</td>
+                          <td>{data.ts_topic}</td>
+                          <td>{data.ts_training_type}</td>
+                          <td>{data.ts_training_agency}</td>
+                          <td>{data.ts_no_que}</td>
+                          <td>{data.ts_reoccurence}</td>
+                          <td>
+                            {/* {
                             new Date(data.ts_dt_tm_fromtraining)
                               .toISOString()
                               .split("T")[0]
                           } */}
-                          {data.ts_dt_tm_fromtraining.replace('T', ' ').substring(0, 16)}
-                        </td>
-                        <td>
-                          {/* {
+                            {data.ts_dt_tm_fromtraining
+                              .replace("T", " ")
+                              .substring(0, 16)}
+                          </td>
+                          <td>
+                            {/* {
                             new Date(data.ts_dt_tm_totraining)
                               .toISOString()
                               .split("T")[0]
                           } */}
-                          {data.ts_dt_tm_totraining.replace('T', ' ').substring(0, 16)}
-                        </td>
-                        <td>{data.ts_status}</td>
-                        <td>{data.ts_action}</td>
-                        <td>
-                          <Edit
-                            className="text-success mr-2"
-                            type="button"
-                            onClick={() => GetTrainingSchedule(data.ts_id)}
-                          />
-                          <Delete
-                            className="text-danger"
-                            type="button"
-                            style={{ marginLeft: "0.5rem" }}
-                            onClick={() => DeleteTrainingSchedule(data.ts_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                            {data.ts_dt_tm_totraining
+                              .replace("T", " ")
+                              .substring(0, 16)}
+                          </td>
+                          <td>{data.ts_status}</td>
+                          <td>{data.ts_action}</td>
+                          <td>{data.ts_remark}</td>
+                          <td>
+                            <td>
+                              {data.ts_action === "Reject By Manager" ||
+                              data.ts_action ===
+                                "Approved By Manager" ? null : (
+                                <>
+                                  <Edit
+                                    className="text-success mr-2"
+                                    type="button"
+                                    onClick={() =>
+                                      GetTrainingSchedule(data.ts_id)
+                                    }
+                                  />
+                                  <Delete
+                                    className="text-danger"
+                                    type="button"
+                                    style={{ marginLeft: "0.5rem" }}
+                                    onClick={() =>
+                                      DeleteTrainingSchedule(data.ts_id)
+                                    }
+                                  />
+                                </>
+                              )}
+                            </td>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
                     <h6 className="text-lg-start text-center">
-                    Showing {indexOfFirstItem + 1} to{" "}
+                      Showing {indexOfFirstItem + 1} to{" "}
                       {Math.min(indexOfLastItem, allTrainingSchedule.length)} of{" "}
-                      {allTrainingSchedule.length} entries</h6>
-                    
+                      {allTrainingSchedule.length} entries
+                    </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                  <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example">
                       <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handlePrevious(currentPage, setCurrentPage)}
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
                             disabled={currentPage === 1}
-                            aria-label="Previous">
+                            aria-label="Previous"
+                          >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        {calculatePaginationRange(currentPage, allTrainingSchedule, itemsPerPage).map((number) =>
-                          <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`}>
-                            <button className="page-link" onClick={() => handlePageClick(number, setCurrentPage)}>{number}</button>
+                        {calculatePaginationRange(
+                          currentPage,
+                          allTrainingSchedule,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
                           </li>
-                        )}
+                        ))}
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handleNext(currentPage, allTrainingSchedule, itemsPerPage, setCurrentPage)}
-                            disabled={currentPage === Math.ceil(allTrainingSchedule.length / itemsPerPage)}
-                            aria-label="Next">
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                allTrainingSchedule,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(
+                                allTrainingSchedule.length / itemsPerPage
+                              )
+                            }
+                            aria-label="Next"
+                          >
                             <span aria-hidden="true">&raquo;</span>
                           </button>
                         </li>
