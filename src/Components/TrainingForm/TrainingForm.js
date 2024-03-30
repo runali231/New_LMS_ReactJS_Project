@@ -16,23 +16,23 @@ const TrainingForm = () => {
   const navigate = useNavigate();
   const [allTrainingNeed, setAllTrainingNeed] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
   };
 
   const handleApprove = (trainingRequestId) => {
-    // Implement logic to update the approval status
     console.log("Training need approved:", trainingRequestId);
   };
   const handleApproveByHOD = (trainingRequestId) => {
-    // Implement logic to handle approval by HOD
     console.log("Training need approved by HOD:", trainingRequestId);
   };
   useEffect(() => {
     getAllData();
-  }, [currentPage]);
+  }, [currentPage, itemsPerPage]);
 
   const getAllData = () => {
     axios
@@ -65,6 +65,24 @@ const TrainingForm = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleSearch = (e) => {
+    const searchDataValue = (e.target.value || "").toLowerCase().trim(); // Ensure e.target.value is not null
+    setSearchData(searchDataValue);
+
+    if (!searchDataValue) {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allTrainingNeed.filter(
+        (training) =>
+          (training.tr_req_no || "").toLowerCase().includes(searchDataValue) ||
+          (training.tr_nature || "").toLowerCase().includes(searchDataValue)
+      );
+      setAllTrainingNeed(filteredData);
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -120,14 +138,27 @@ const TrainingForm = () => {
                     <select
                       className="form-select w-auto"
                       aria-label="Default select example"
+                      onChange={(e) => {
+                        setItemsPerPage(parseInt(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      value={itemsPerPage}
                     >
-                      <option defaultValue>10</option>
-                      <option value="1">10</option>
-                      <option value="2">50</option>
-                      <option value="3">100</option>
+                      <option value={10}>10</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
+                  </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
                   </div>
                 </div>
                 <br />
@@ -156,16 +187,6 @@ const TrainingForm = () => {
                       <th scope="col" style={headerCellStyle}>
                         No of Days
                       </th>
-                      {/* <th scope="col" style={headerCellStyle}>
-                        Employee Designation
-                      </th> */}
-                      {/* <th scope="col" style={headerCellStyle}>
-                        Reviewed By
-                      </th>
-                      <th scope="col" style={headerCellStyle}>
-                        Approved By
-                      </th>
-                       */}
                       <th scope="col" style={headerCellStyle}>
                         Approval Status
                       </th>
@@ -175,69 +196,63 @@ const TrainingForm = () => {
                       <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
-                      {/* <th
-                        scope="col" style={headerCellStyle}
-                        className="fw-bold" 
-                      >
-                       Action
-                      </th>  */}
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    {currentItems &&
-                      allTrainingNeed.map((data, index) => (
-                        <tr key={data.tr_id}>
-                          <td>
-                            {(currentPage - 1) * itemsPerPage + index + 1}
-                          </td>
-                          <td>{data.tr_req_no}</td>
-                          <td>{data.tr_nature}</td>
-                          <td>{data.tr_type}</td>
-                          <td>{formatDate(data.tr_req_date)}</td>
-                          <td>{data.tr_hours}</td>
-                          <td>{data.tr_days}</td>
-                          {/* <td>-</td>
-                        <td>-</td>
-                        <td>-</td> */}
-
-                          <td>{data.tr_action}</td>
-                          <td>{data.tr_remark}</td>
-                          <td>
-                            {data.tr_action === "Approved By Hr" ||
-                            data.tr_action === "Approved By Hod" || 
-                            data.tr_action === "Rejected by Hr" ||
-                            data.tr_action === "Rejected by HOD"
-                            ? null : (
-                              <>
-                                <Edit
-                                  className="text-success mr-2"
-                                  type="button"
-                                  onClick={() => GetTrainingNeed(data.tr_id)}
-                                />
-                                <Delete
-                                  className="text-danger"
-                                  type="button"
-                                  style={{ marginLeft: "0.5rem" }}
-                                  onClick={() => DeleteTrainingNeed(data.tr_id)}
-                                />
-                              </>
-                            )}
-                          </td>
-                          {/* <td>
-                          <Edit
-                            className="text-success mr-2"
-                            type="button"
-                            onClick={() => GetTrainingNeed(data.tr_id)}
-                          />
-                          <Delete
-                            className="text-danger"
-                            type="button"
-                            style={{ marginLeft: "0.5rem" }}
-                            onClick={() => DeleteTrainingNeed(data.tr_id)}
-                          />
-                        </td> */}
-                        </tr>
-                      ))}
+                    {currentItems.map((data, index) => (
+                      <tr key={data.tr_id}>
+                        <td>{indexOfFirstItem + index + 1}</td>
+                        <td>{data.tr_req_no}</td>
+                        <td>{data.tr_nature}</td>
+                        <td>{data.tr_type}</td>
+                        <td>{formatDate(data.tr_req_date)}</td>
+                        <td>{data.tr_hours}</td>
+                        <td>{data.tr_days}</td>
+                        <td>{data.tr_action}</td>
+                        <td>{data.tr_remark}</td>
+                        <td>
+                          {[
+                            "Approved By Hr",
+                            "Approved By Hod",
+                            "Rejected by Hr",
+                            "Rejected by HOD",
+                          ].includes(data.tr_action) ? (
+                            <>
+                              <Edit
+                                className="text-success mr-2"
+                                style={{ opacity: 0.5, pointerEvents: "none" }} // Reduce opacity and disable pointer events
+                                type="button"
+                                onClick={() => GetTrainingNeed(data.tr_id)}
+                              />
+                              <Delete
+                                className="text-danger"
+                                type="button"
+                                style={{
+                                  opacity: 0.5,
+                                  marginLeft: "0.5rem",
+                                  pointerEvents: "none",
+                                }} // Reduce opacity and disable pointer events
+                                onClick={() => DeleteTrainingNeed(data.tr_id)}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <Edit
+                                className="text-success mr-2"
+                                type="button"
+                                onClick={() => GetTrainingNeed(data.tr_id)}
+                              />
+                              <Delete
+                                className="text-danger"
+                                type="button"
+                                style={{ marginLeft: "0.5rem" }}
+                                onClick={() => DeleteTrainingNeed(data.tr_id)}
+                              />
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">

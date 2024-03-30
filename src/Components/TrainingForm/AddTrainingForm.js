@@ -104,7 +104,6 @@ const AddTrainingForm = () => {
     }
 }, [id]);
 
-
   const getAllTrainingNature = () => {
     axios
       .get(
@@ -183,12 +182,10 @@ const AddTrainingForm = () => {
         tr_isactive: "1",
         training: allByDepartments,
       };
-
       // If id is not null, undefined, or ":id", include it in the data object
       if (id !== null && id !== undefined && id !== ":id") {
         data.tr_id = id;
       }
-
       axios({
         method: "post",
         url: new URL(UrlData + `TrainingForm`),
@@ -197,14 +194,12 @@ const AddTrainingForm = () => {
         .then((response) => {
           console.log(response, "add training need form");
           console.log(response.data.data.OutcomeDetail);
-
           // Display success message based on whether it's an update or addition
           if (id !== null && id !== undefined && id !== ":id") {
             alert("Training updated successfully!");
           } else {
             alert("Training added successfully!");
           }
-
           // Navigate the user to /trainingForm
           navigate("/trainingForm");
         })

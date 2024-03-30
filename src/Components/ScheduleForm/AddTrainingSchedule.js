@@ -944,7 +944,7 @@ const AddTrainingSchedule = () => {
                         </thead>
                         <tbody className="text-center">
                           {allSubTrainingSchedule.map((data, index) => (
-                            <tr>
+                            <tr key={index}>
                               <td>{index + 1}</td>
                               <td>{data.tss_emp_code}</td>
                               <td>{data.tss_emp_name}</td>
@@ -957,7 +957,6 @@ const AddTrainingSchedule = () => {
                               <td>{data.tss_marks_obt}</td>
                               <td>{data.tss_traning_status}</td>
                               <td>{data.tss_re_traning_req}</td>
-
                               <td>
                                 {data.tss_traning_cert !== null &&
                                   data.tss_id && (

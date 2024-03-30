@@ -244,7 +244,7 @@ const Home = () => {
                       </NavLink>
                     </li>                  
                     <li className="nav-item ">
-                      <div className="nav-link" onClick={toggleMenu}>
+                      <div className="nav-link" onClick={toggleMenu} type="button">
                         {/* <span className="material-icons">person</span> */}
 
                         <PersonFill
@@ -289,7 +289,7 @@ const Home = () => {
                       </div>
                     </li>
                     <li className="nav-item">
-                      <NavLink className="nav-link" to="/">
+                      <NavLink className="nav-link" to="/dashboard">
                         <GearFill
                           style={{ fontSize: "24px", color: "white" }}
                         />
