@@ -17,7 +17,7 @@ const EmployeeMaster = () => {
   const [allEmployee, setAllEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [searchData, setSearchData] = useState("")
+  const [searchData, setSearchData] = useState("");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with your desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -52,7 +52,7 @@ const EmployeeMaster = () => {
       .post(new URL(UrlData + `EmployeeMaster/Delete`), data)
       .then((response) => {
         console.log("response", response);
-        alert("Employee deleted successfully!")
+        alert("Employee deleted successfully!");
         getAllData();
       })
       .catch((error) => {
@@ -60,7 +60,6 @@ const EmployeeMaster = () => {
       });
   };
 
-  
   const handleSearch = (e) => {
     const searchDataValue = e.target.value.toLowerCase();
     setSearchData(searchDataValue);
@@ -72,8 +71,8 @@ const EmployeeMaster = () => {
       // Filter data based on search input value
       const filteredData = allEmployee.filter(
         (employee) =>
-        employee.emp_code.toLowerCase().includes(searchDataValue) ||
-        employee.emp_fname.toLowerCase().includes(searchDataValue)
+          employee.emp_code.toLowerCase().includes(searchDataValue) ||
+          employee.emp_fname.toLowerCase().includes(searchDataValue)
       );
       setAllEmployee(filteredData);
     }
@@ -134,6 +133,7 @@ const EmployeeMaster = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                     >

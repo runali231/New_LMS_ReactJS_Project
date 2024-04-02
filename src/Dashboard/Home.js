@@ -161,10 +161,25 @@ const Home = () => {
                       id={`menu-${menuItem.m_id}`}
                     >
                       {sidebarData
-                        .filter(
-                          (subMenuItem) =>
-                            subMenuItem.ParentId === menuItem.m_id.toUpperCase()
-                        )
+                        // .filter(
+                        //   (subMenuItem) =>
+                        //     subMenuItem.ParentId === menuItem.m_id.toUpperCase()
+                        // )
+                       
+                          .filter(subMenuItem => subMenuItem.ParentId === menuItem.m_id.toUpperCase())
+                          .sort((a, b) => {
+                            if (a.m_menuname === "Country Master") return -1; // prioritize "Country Master"
+                            if (b.m_menuname === "Country Master") return 1; // prioritize "Country Master"
+                            if (a.m_menuname === "Department Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Department Master") return 1;
+                            if (a.m_menuname === "Designation Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Designation Master") return 1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (a.m_menuname === "Employee Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Employee Master") return 1;
+                            if (a.m_menuname === "Topic Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Topic Master") return 1;
+                            return 0; // maintain original order for other submenu items
+                          })
                         .map((subMenuItem, subIndex) => (
                           <li key={subIndex}>
                             <NavLink to={subMenuItem.m_action}>

@@ -17,6 +17,7 @@ const TrainingScheduleApproval = () => {
   const [allTrainingSchedule, setAllTrainingSchedule] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -77,6 +78,28 @@ const TrainingScheduleApproval = () => {
       });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = (e.target.value || "").toLowerCase().trim(); // Ensure e.target.value is not null
+    setSearchData(searchDataValue);
+
+    if (!searchDataValue) {
+      // If search input is empty, fetch all data
+      getAllApproval();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allTrainingSchedule.filter(
+        (trainingSchedule) =>
+          (trainingSchedule.ts_training_no || "")
+            .toLowerCase()
+            .includes(searchDataValue) ||
+          (trainingSchedule.ts_trainer_name || "")
+            .toLowerCase()
+            .includes(searchDataValue)
+      );
+      setAllTrainingSchedule(filteredData);
+    }
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allTrainingSchedule.slice(
@@ -134,6 +157,7 @@ const TrainingScheduleApproval = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                     >
@@ -145,9 +169,17 @@ const TrainingScheduleApproval = () => {
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
-
                 <Table striped hover responsive className="border ">
                   <thead>
                     <tr>
@@ -196,7 +228,7 @@ const TrainingScheduleApproval = () => {
                       <th
                         scope="col"
                         style={headerCellStyle}
-                         /* style={headerCellStyle} */
+                        /* style={headerCellStyle} */
                       >
                         Action
                       </th>

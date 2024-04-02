@@ -128,6 +128,7 @@ const KPIMaster = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                     >

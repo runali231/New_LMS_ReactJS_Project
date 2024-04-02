@@ -1,40 +1,36 @@
-import React,{useState, useEffect} from "react";
-import { Table, Button } from "react-bootstrap";
-import { Add, ArrowBack, Edit, Delete } from "@material-ui/icons";
+import React, { useState, useEffect } from "react";
+import { Table } from "react-bootstrap";
+import { Edit } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
-import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
 import UserId from "../UserId";
 
 const TrainingApprovalForm = () => {
   const navigate = useNavigate();
   const [allTrainingApproval, setAllTrainingApproval] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("");
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
   };
 
-  const handleApprove = (trainingRequestId) => {
-    // Implement logic to update the approval status
-    console.log("Training need approved:", trainingRequestId);
-  };
-  const handleApproveByHOD = (trainingRequestId) => {
-    // Implement logic to handle approval by HOD
-    console.log("Training need approved by HOD:", trainingRequestId);
-  };
   useEffect(() => {
     getAllApproval();
-  }, [currentPage]);
-  
+  }, [currentPage, itemsPerPage]);
+
   const getLoginId = localStorage.getItem("loginId");
   const getAllApproval = () => {
     axios
-      .get(new URL(UrlData +`TrainingForm/GetAllApprove?roleid=${getLoginId}`))
-      // .get(new URL(UrlData +`TrainingForm/GetAllApprove?roleid=4CA10CB9-F0EA-406E-8B01-428E62670FE9`))
-      // .get(new URL(UrlData +`TrainingForm/GetAllApprove?roleid=C4E34142-1525-4E06-9D31-D40150CBB573`))
+      .get(new URL(UrlData + `TrainingForm/GetAllApprove?roleid=${getLoginId}`))
       .then((response) => {
         console.log("response", response.data.data);
         setAllTrainingApproval(response.data.data);
@@ -44,8 +40,7 @@ const TrainingApprovalForm = () => {
       });
   };
 
-
-  const GetTrainingNeed= (tr_Id) => {
+  const GetTrainingNeed = (tr_Id) => {
     navigate(`/addTrainingApprovalForm/${tr_Id}`);
   };
 
@@ -55,7 +50,7 @@ const TrainingApprovalForm = () => {
       tr_id: tr_Id,
     };
     axios
-      .post(new URL(UrlData +`TrainingForm/DeleteTrainingNeed`), data)
+      .post(new URL(UrlData + `TrainingForm/DeleteTrainingNeed`), data)
       .then((response) => {
         console.log("delete topics", response);
         getAllApproval();
@@ -65,16 +60,37 @@ const TrainingApprovalForm = () => {
       });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = (e.target.value || "").toLowerCase().trim(); // Ensure e.target.value is not null
+    setSearchData(searchDataValue);
+
+    if (!searchDataValue) {
+      // If search input is empty, fetch all data
+      getAllApproval();
+    } else {
+      // Filter data based on search input value
+      const filteredData = allTrainingApproval.filter(
+        (training) =>
+          (training.tr_req_no || "").toLowerCase().includes(searchDataValue) ||
+          (training.tr_nature || "").toLowerCase().includes(searchDataValue)
+      );
+      setAllTrainingApproval(filteredData);
+    }
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allTrainingApproval.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allTrainingApproval.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
-  
+
     return `${day}-${month}-${year}`;
   }
   return (
@@ -86,10 +102,12 @@ const TrainingApprovalForm = () => {
         >
           <div className="row">
             <div className="col-lg-12">
-            <div className="card-header">
+              <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold">Training Approval Form</h4>
+                    <h4 className="card-title fw-bold">
+                      Training Approval Form
+                    </h4>
                   </div>
 
                   <div className="col-auto d-flex flex-wrap">
@@ -112,24 +130,37 @@ const TrainingApprovalForm = () => {
                 </div>
               </div>
               <div className="card-body pt-3">
-              <div className="row ">
+                <div className="row ">
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
+                      onChange={(e) => {
+                        setItemsPerPage(parseInt(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      value={itemsPerPage}
                     >
-                      <option defaultValue>10</option>
-                      <option value="1">10</option>
-                      <option value="2">50</option>
-                      <option value="3">100</option>
+                      <option value={10}>10</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
-
                 <Table striped hover responsive className="border text-center">
                   <thead>
                     <tr>
@@ -166,7 +197,7 @@ const TrainingApprovalForm = () => {
                       */}
                       <th scope="col" style={headerCellStyle}>
                         Approval Status
-                      </th> 
+                      </th>
                       <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
@@ -179,7 +210,7 @@ const TrainingApprovalForm = () => {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                  {currentItems && allTrainingApproval.map((data, index) => (
+                    {currentItems.map((data, index) => (
                       <tr key={data.tr_id}>
                         <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                         <td>{data.tr_req_no}</td>
@@ -210,32 +241,69 @@ const TrainingApprovalForm = () => {
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
-                    <h6 className="text-lg-start text-center"> Showing {indexOfFirstItem + 1} to{" "}
+                    <h6 className="text-lg-start text-center">
+                      {" "}
+                      Showing {indexOfFirstItem + 1} to{" "}
                       {Math.min(indexOfLastItem, allTrainingApproval.length)} of{" "}
-                      {allTrainingApproval.length} entries</h6>
+                      {allTrainingApproval.length} entries
+                    </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                  <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example">
                       <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handlePrevious(currentPage, setCurrentPage)}
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
                             disabled={currentPage === 1}
-                            aria-label="Previous">
+                            aria-label="Previous"
+                          >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        {calculatePaginationRange(currentPage, allTrainingApproval, itemsPerPage).map((number) =>
-                          <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`}>
-                            <button className="page-link" onClick={() => handlePageClick(number, setCurrentPage)}>{number}</button>
+                        {calculatePaginationRange(
+                          currentPage,
+                          allTrainingApproval,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
                           </li>
-                        )}
+                        ))}
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handleNext(currentPage, allTrainingApproval, itemsPerPage, setCurrentPage)}
-                            disabled={currentPage === Math.ceil(allTrainingApproval.length / itemsPerPage)}
-                            aria-label="Next">
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                allTrainingApproval,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(
+                                allTrainingApproval.length / itemsPerPage
+                              )
+                            }
+                            aria-label="Next"
+                          >
                             <span aria-hidden="true">&raquo;</span>
                           </button>
                         </li>

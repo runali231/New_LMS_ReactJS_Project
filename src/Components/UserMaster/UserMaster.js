@@ -25,12 +25,15 @@ const UserMaster = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
-const [searchData, setSearchData] = useState("")
+  const [searchData, setSearchData] = useState("");
   const [active, setActive] = useState(true);
   const [toggleActive, setToggleActive] = useState(true);
   const [umId, setUmId] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const handleShow = () => {setShowModal(true); ResetForm()};
+  const handleShow = () => {
+    setShowModal(true);
+    ResetForm();
+  };
   const handleClose = () => setShowModal(false);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
@@ -48,7 +51,9 @@ const [searchData, setSearchData] = useState("")
       method: "get",
       url: new URL(
         UrlData +
-          `UserMaster/GetAll?status=${toggleActive ? "1": "0"}&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          `UserMaster/GetAll?status=${
+            toggleActive ? "1" : "0"
+          }&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ),
     })
       .then((response) => {
@@ -114,55 +119,50 @@ const [searchData, setSearchData] = useState("")
     let data;
     if (employee === "") {
       alert("Please enter employee name!");
-    }
-    else if(userName === ""){
-      alert("Please enter user name!")
-    }
-    else if(role === ""){
-      alert("Please enter role!")
-    }
-    else {
-    data = {
-      userId: UserId,
-      um_user_name: userName,
-      um_password: "",
-      um_staffname: employee.label,
-      um_staffid: employee.value,
-      um_isactive: active === true ? "1": "0",
-      um_roleid: role.value,
-      um_rolename: role.label,
-    };
+    } else if (userName === "") {
+      alert("Please enter user name!");
+    } else if (role === "") {
+      alert("Please enter role!");
+    } else {
+      data = {
+        userId: UserId,
+        um_user_name: userName,
+        um_password: "",
+        um_staffname: employee.label,
+        um_staffid: employee.value,
+        um_isactive: active === true ? "1" : "0",
+        um_roleid: role.value,
+        um_rolename: role.label,
+      };
       if (umId) {
         data.um_id = umId;
       }
-    axios({
-      method: "post",
-      url: new URL(UrlData + `UserMaster`),
-      data: data,
-    })
-      .then((response) => {
-        console.log(response, "add User");
-        if (umId) {
-          alert("User updated successfully!");
-        }
-        else{
-          alert("User added successfully!");
-        }
-        getAllData();
-        handleClose();
-        ResetForm();
-        
+      axios({
+        method: "post",
+        url: new URL(UrlData + `UserMaster`),
+        data: data,
       })
-      .catch((error) => {
-        console.log(error);
-        alert("Something went wrong");
-      });
+        .then((response) => {
+          console.log(response, "add User");
+          if (umId) {
+            alert("User updated successfully!");
+          } else {
+            alert("User added successfully!");
+          }
+          getAllData();
+          handleClose();
+          ResetForm();
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Something went wrong");
+        });
     }
   };
 
   const GetRole = (umId) => {
     // navigate(`/addCountryMaster/${coId}`);
-    handleShow()
+    handleShow();
     axios({
       method: "get",
       url: new URL(UrlData + `UserMaster/Get?status=1&um_id=${umId}`),
@@ -170,14 +170,14 @@ const [searchData, setSearchData] = useState("")
       .then((response) => {
         console.log(response);
         setEmployee({
-            value: response.data.data.um_staffid,
-            label: response.data.data.um_staffname,
-          });
+          value: response.data.data.um_staffid,
+          label: response.data.data.um_staffname,
+        });
         setUserName(response.data.data.um_user_name);
         setRole({
-            value: response.data.data.um_roleid,
-            label: response.data.data.um_rolename,
-          });
+          value: response.data.data.um_roleid,
+          label: response.data.data.um_rolename,
+        });
         setUmId(umId);
       })
       .catch((error) => {
@@ -203,8 +203,7 @@ const [searchData, setSearchData] = useState("")
       .catch((error) => {
         console.log(error);
         let errors = ErrorHandler(error);
-          alert(errors);
-        
+        alert(errors);
       });
   };
 
@@ -219,19 +218,19 @@ const [searchData, setSearchData] = useState("")
       // Filter data based on search input value
       const filteredData = allUsers.filter(
         (users) =>
-        users.um_staffname.toLowerCase().includes(searchDataValue) ||
-        users.um_user_name.toLowerCase().includes(searchDataValue)
+          users.um_staffname.toLowerCase().includes(searchDataValue) ||
+          users.um_user_name.toLowerCase().includes(searchDataValue)
       );
       setAllUsers(filteredData);
     }
   };
 
-  const ResetForm=()=>{
+  const ResetForm = () => {
     setEmployee("");
     setRole("");
-    setUserName("")
-    setUmId("")
-  }
+    setUserName("");
+    setUmId("");
+  };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allUsers.slice(indexOfFirstItem, indexOfLastItem);
@@ -251,13 +250,13 @@ const [searchData, setSearchData] = useState("")
                     <h4 className="card-title fw-bold">User Master</h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                  <div className="form-check form-switch mt-2 pt-1">
+                    <div className="form-check form-switch mt-2 pt-1">
                       <input
                         className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckDefault"
                         checked={toggleActive} // Bind the checked state to the state variable
-                        onChange={()=>setToggleActive(!toggleActive)}
+                        onChange={() => setToggleActive(!toggleActive)}
                       />
                     </div>
                     <div className="btn btn-add" title="Add New">
@@ -280,6 +279,7 @@ const [searchData, setSearchData] = useState("")
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                       value={selectedItemsPerPage}
@@ -337,7 +337,7 @@ const [searchData, setSearchData] = useState("")
                             <td>
                               <Edit
                                 className="text-success mr-2"
-                                type="button" 
+                                type="button"
                                 onClick={() => GetRole(data.um_id)}
                               />
                               <Delete
@@ -546,83 +546,89 @@ const [searchData, setSearchData] = useState("")
           </div>
         </div>
       </div> */}
-       <Modal show={showModal} onHide={handleClose} size="lg" backdrop="static">
-      <Modal.Header closeButton>
-        <Modal.Title ><h5 className="fw-bold">Add User</h5></Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Row>
-          <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
-            <Form.Group className="form-group-sm">
-              <Form.Label className="control-label fw-bold">Employee Name:</Form.Label>
-              <span className="text-danger fw-bold">*</span>
-              <Select
-                options={allEmployee}
-                value={employee}
-                onChange={handleEmployee}
-                className="mt-2"
-              />
-            </Form.Group>
-          </Col>
-          <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
-            <Form.Group className="form-group-sm">
-              <Form.Label className="control-label fw-bold">User Name:</Form.Label>
-              <span className="text-danger fw-bold">*</span>
-              <Form.Control
-                type="text"
-                id="userName"
-                name="userName"
-                autoComplete="off"
-                placeholder="Enter User Name"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="mt-4">
-          <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-4">
-            <Form.Group className="form-group-sm">
-              <Form.Label className="control-label fw-bold">Role:</Form.Label>
-              <span className="text-danger fw-bold">*</span>
-              <Select
-                options={allRole}
-                value={role}
-                onChange={handleRole}
-                className="mt-2"
-              />
-            </Form.Group>
-          </Col>
-          <Col xs={12} sm={12} md={12} lg={6}>
-          <Form.Group className="mb-3 mt-5" controlId="isActive">
-              <Form.Check
-                type="checkbox"
-                label="Is Active"
-                checked={active}
-                onChange={(e) => setActive(e.target.checked)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-      </Modal.Body>
-      <Modal.Footer>
-        <div className="col-lg-12 text-end">
-          <Button
-            className="text-light"
-            onClick={() => {
-              addCountry();
-            }}
-            style={{ backgroundColor: "#1B5A90" }}
-          >
-            Save
-          </Button>
-          <Button variant="secondary" className="mx-2" onClick={handleClose}>
-            Close
-          </Button>
-        </div>
-      </Modal.Footer>
-    </Modal>
+      <Modal show={showModal} onHide={handleClose} size="lg" backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <h5 className="fw-bold">Add User</h5>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+              <Form.Group className="form-group-sm">
+                <Form.Label className="control-label fw-bold">
+                  Employee Name:
+                </Form.Label>
+                <span className="text-danger fw-bold">*</span>
+                <Select
+                  options={allEmployee}
+                  value={employee}
+                  onChange={handleEmployee}
+                  className="mt-2"
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+              <Form.Group className="form-group-sm">
+                <Form.Label className="control-label fw-bold">
+                  User Name:
+                </Form.Label>
+                <span className="text-danger fw-bold">*</span>
+                <Form.Control
+                  type="text"
+                  id="userName"
+                  name="userName"
+                  autoComplete="off"
+                  placeholder="Enter User Name"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mt-4">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-4">
+              <Form.Group className="form-group-sm">
+                <Form.Label className="control-label fw-bold">Role:</Form.Label>
+                <span className="text-danger fw-bold">*</span>
+                <Select
+                  options={allRole}
+                  value={role}
+                  onChange={handleRole}
+                  className="mt-2"
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={6}>
+              <Form.Group className="mb-3 mt-5" controlId="isActive">
+                <Form.Check
+                  type="checkbox"
+                  label="Is Active"
+                  checked={active}
+                  onChange={(e) => setActive(e.target.checked)}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="col-lg-12 text-end">
+            <Button
+              className="text-light"
+              onClick={() => {
+                addCountry();
+              }}
+              style={{ backgroundColor: "#1B5A90" }}
+            >
+              Save
+            </Button>
+            <Button variant="secondary" className="mx-2" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

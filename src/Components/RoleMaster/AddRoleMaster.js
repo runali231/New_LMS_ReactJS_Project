@@ -306,7 +306,7 @@ const AddRoleMaster = () => {
                       <label className="control-label fw-bold">
                         Enter Module:
                       </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <input
                         type="text"
                         id="module"

@@ -287,9 +287,9 @@ const DepartmentMaster = () => {
                       <th scope="col" style={headerCellStyle}>
                         Department Name
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      {/* <th scope="col" style={headerCellStyle}>
                         Department Head
-                      </th>
+                      </th> */}
                       <th scope="col" style={headerCellStyle}>
                         Status
                       </th>
@@ -308,7 +308,7 @@ const DepartmentMaster = () => {
                             </td>
                             <td>{data.d_department_code}</td>
                             <td>{data.d_department_name}</td>
-                            <td>{data.d_head}</td>
+                            {/* <td>{data.d_head}</td> */}
                             <td>{data.d_isactive}</td>
                             <td>
                               <Edit
@@ -439,7 +439,7 @@ const DepartmentMaster = () => {
               </Col>
             </Row>
             <Row>
-              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+              {/* <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
                 <Form.Group className="mt-4 mt-lg-0">
                   <Form.Label className="fw-bold">Department Head:</Form.Label>
                   <Form.Select
@@ -458,9 +458,9 @@ const DepartmentMaster = () => {
                     ))}
                   </Form.Select>
                 </Form.Group>
-              </Col>
+              </Col> */}
               <Col xs={12} sm={12} md={6} lg={6} className="mt-3 mt-lg-0">
-                <Form.Group className="mb-3 mt-5" controlId="isActive">
+                <Form.Group className="" controlId="isActive">
                   <Form.Check
                     type="checkbox"
                     label="Is Active"

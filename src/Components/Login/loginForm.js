@@ -31,11 +31,15 @@ const LoginForm = () => {
       .then((response) => {
         console.log("response", response.data.data);
         // setAllDesignation(response.data.data);
+        if(response.data.data === null){
+          alert("Something went wrong!")
+        }
         localStorage.setItem("loginId", response.data.data.RoleId);
         localStorage.setItem("UserId", response.data.data.UserId)
         localStorage.setItem("username", response.data.data.username)
         alert("Login Successfully!")
         navigate("/dashboard")
+       
       })
       .catch((error) => {
         console.log(error);

@@ -17,9 +17,9 @@ const RoleMaster = () => {
   const [allRoleMaster, setAllRoleMaster] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // Initial value
-  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
-  const [searchData, setSearchData] = useState("")
-  const [active, setActive] = useState(true)
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState("");
+  const [active, setActive] = useState(true);
 
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
@@ -89,8 +89,8 @@ const RoleMaster = () => {
       // Filter data based on search input value
       const filteredData = allRoleMaster.filter(
         (role) =>
-        role.r_rolename.toLowerCase().includes(searchDataValue) ||
-        role.r_description.toLowerCase().includes(searchDataValue)
+          role.r_rolename.toLowerCase().includes(searchDataValue) ||
+          role.r_description.toLowerCase().includes(searchDataValue)
       );
       setAllRoleMaster(filteredData);
     }
@@ -123,13 +123,13 @@ const RoleMaster = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                  <div className="form-check form-switch mt-2 pt-1">
+                    <div className="form-check form-switch mt-2 pt-1">
                       <input
                         className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckDefault"
                         checked={active} // Bind the checked state to the state variable
-                        onChange={()=>setActive(!active)}
+                        onChange={() => setActive(!active)}
                       />
                     </div>
                     <div className="btn btn-add" title="Add New">
@@ -153,6 +153,7 @@ const RoleMaster = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                       value={selectedItemsPerPage} // Set value to selectedItemsPerPage
@@ -224,7 +225,7 @@ const RoleMaster = () => {
                           {" "}
                           <Edit
                             className="text-success mr-2"
-                            type="button"                            
+                            type="button"
                             onClick={() => GetRoleMaster(data.r_id)}
                           />
                           <Delete

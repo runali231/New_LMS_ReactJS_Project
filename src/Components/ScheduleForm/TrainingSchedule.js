@@ -18,6 +18,7 @@ const TrainingSchedule = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [searchData, setSearchData] = useState("");
+
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -43,8 +44,11 @@ const TrainingSchedule = () => {
         console.log(error);
       });
   };
-  const GetTrainingSchedule = (ts_Id) => {
-    navigate(`/addTrainingSchedule/${ts_Id}`);
+  const GetTrainingSchedule = (ts_Id, ts_action) => {
+    console.log("ts_action:", ts_action);
+    navigate(`/addTrainingSchedule/${ts_Id}`, {
+      state: { action1: ts_action },
+    });
   };
   const DeleteTrainingSchedule = (ts_Id) => {
     const data = {
@@ -74,9 +78,9 @@ const TrainingSchedule = () => {
       // Filter data based on search input value
       const filteredData = allTrainingSchedule.filter(
         (schedule) =>
-          schedule.ts_training_no.toLowerCase().includes(searchDataValue) 
-          // ||
-          // schedule.ts_trainer_name.toLowerCase().includes(searchDataValue)
+          schedule.ts_training_no.toLowerCase().includes(searchDataValue)
+        // ||
+        // schedule.ts_trainer_name.toLowerCase().includes(searchDataValue)
       );
       setAllTrainingSchedule(filteredData);
     }
@@ -137,6 +141,7 @@ const TrainingSchedule = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                     >
@@ -229,21 +234,11 @@ const TrainingSchedule = () => {
                           <td>{data.ts_no_que}</td>
                           <td>{data.ts_reoccurence}</td>
                           <td>
-                            {/* {
-            new Date(data.ts_dt_tm_fromtraining)
-              .toISOString()
-              .split("T")[0]
-          } */}
                             {data.ts_dt_tm_fromtraining
                               .replace("T", " ")
                               .substring(0, 16)}
                           </td>
                           <td>
-                            {/* {
-            new Date(data.ts_dt_tm_totraining)
-              .toISOString()
-              .split("T")[0]
-          } */}
                             {data.ts_dt_tm_totraining
                               .replace("T", " ")
                               .substring(0, 16)}
@@ -251,26 +246,35 @@ const TrainingSchedule = () => {
                           <td>{data.ts_status}</td>
                           <td>{data.ts_action}</td>
                           <td>{data.ts_remark}</td>
-                          <td>
+                          {/* <td>
                             {data.ts_action === "Reject By Manager" ||
-                            data.ts_action === "Approved By Manager" ?  <>
-                            <Edit
-                              className="text-success mr-2"
-                              style={{ opacity: 0.5, pointerEvents: "none" }} // Reduce opacity and disable pointer events
-                              type="button"
-                              onClick={() => GetTrainingSchedule(data.ts_id)}
-                            />
-                            <Delete
-                              className="text-danger"
-                              type="button"
-                              style={{
-                                opacity: 0.5,
-                                marginLeft: "0.5rem",
-                                pointerEvents: "none",
-                              }} // Reduce opacity and disable pointer events
-                              onClick={() => DeleteTrainingSchedule(data.ts_id)}
-                            />
-                          </> : (
+                            data.ts_action === "Approved By Manager" ? (
+                              <>
+                                <Edit
+                                  className="text-success mr-2"
+                                  style={{
+                                    opacity: 0.5,
+                                    pointerEvents: "none",
+                                  }} 
+                                  type="button"
+                                  onClick={() =>
+                                    GetTrainingSchedule(data.ts_id)
+                                  }
+                                />
+                                <Delete
+                                  className="text-danger"
+                                  type="button"
+                                  style={{
+                                    opacity: 0.5,
+                                    marginLeft: "0.5rem",
+                                    pointerEvents: "none",
+                                  }} 
+                                  onClick={() =>
+                                    DeleteTrainingSchedule(data.ts_id)
+                                  }
+                                />
+                              </>
+                            ) : (
                               <>
                                 <Edit
                                   className="text-success mr-2"
@@ -289,6 +293,21 @@ const TrainingSchedule = () => {
                                 />
                               </>
                             )}
+                          </td> */}
+                          <td>
+                            <Edit
+                              className="text-success mr-2"
+                              type="button"
+                              onClick={() =>
+                                GetTrainingSchedule(data.ts_id, data.ts_action)
+                              }
+                            />
+                            <Delete
+                              className="text-danger"
+                              type="button"
+                              style={{ marginLeft: "0.5rem" }}
+                              onClick={() => DeleteTrainingSchedule(data.ts_id)}
+                            />
                           </td>
                         </tr>
                       ))}

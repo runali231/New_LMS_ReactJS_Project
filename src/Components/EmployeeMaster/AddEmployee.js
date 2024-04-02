@@ -134,17 +134,17 @@ const AddEmployee = () => {
     else if(joiningDate === ""){
       alert("Please enter joining date!")
     }
-    else if (mobNo.test(mobileNo) === false) {
+    else if (mobNo.test(mobileNo) === false ) {
       alert("Please Enter Only Numbers");
     } else if (mobileNo.length !== 10) {
       alert("Please enter valid Mobile number");
     }
-     else if (mobNo.test(officeNo) === false) {
-      alert("Please Enter Only Numbers");
-    } 
-    else if (officeNo.length !== 10) {
-      alert("Please enter valid office number");
-    } 
+    //  else if (mobNo.test(officeNo) === false) {
+    //   alert("Please Enter Only Numbers");
+    // } 
+    // else if (officeNo.length !== 10) {
+    //   alert("Please enter valid office number");
+    // } 
     else if (pinCode.length !== 6) {
       alert("Please enter valid pin code");
     } else if (!emailRegex.test(emailId)) {
