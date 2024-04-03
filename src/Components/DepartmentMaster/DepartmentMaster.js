@@ -44,9 +44,9 @@ const DepartmentMaster = () => {
     getAllData();
   }, [currentPage, toggleActive]);
 
-  useEffect(() => {
-    GetAllDepartmentHead();
-  }, []);
+  // useEffect(() => {
+  //   GetAllDepartmentHead();
+  // }, []);
 
   const getAllData = () => {
     axios({
@@ -79,7 +79,6 @@ const DepartmentMaster = () => {
         userId: UserId,
         d_department_name: deptName,
         d_department_code: deptCode,
-        d_head: deptHead,
         d_isactive: active === true ? "1" : "0",
       };
 
@@ -112,26 +111,26 @@ const DepartmentMaster = () => {
     }
   };
 
-  const handleDepartmentHead = (e) => {
-    const selectedValue = e.target.value;
-    setDeptHead(selectedValue);
-    console.log(selectedValue);
-    GetAllDepartmentHead();
-  };
+  // const handleDepartmentHead = (e) => {
+  //   const selectedValue = e.target.value;
+  //   setDeptHead(selectedValue);
+  //   console.log(selectedValue);
+  //   GetAllDepartmentHead();
+  // };
 
-  const GetAllDepartmentHead = () => {
-    axios({
-      method: "get",
-      url: new URL(UrlData + `EmployeeMaster/GetAll?status=1`),
-    })
-      .then((response) => {
-        console.log("response", response.data.data);
-        setSelectedDeptHead(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const GetAllDepartmentHead = () => {
+  //   axios({
+  //     method: "get",
+  //     url: new URL(UrlData + `EmployeeMaster/GetAll?status=1`),
+  //   })
+  //     .then((response) => {
+  //       console.log("response", response.data.data);
+  //       setSelectedDeptHead(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   const GetDepartment = (d_id) => {
     handleShow();
     axios({

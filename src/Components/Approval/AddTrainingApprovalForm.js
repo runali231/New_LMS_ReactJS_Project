@@ -526,6 +526,7 @@ const AddTrainingApprovalForm = () => {
     })
       .then((response) => {
         console.log(response, "add action");
+        alert("Training Approved Successfully!")
         navigate("/trainingApprovalForm");
       })
       .catch((error) => {

@@ -101,9 +101,6 @@ const AddEmployee = () => {
     else if(lastName === ""){
       alert("Please enter last name!")
     }
-    else if(jobTitle === ""){
-      alert("Please enter job title!")
-    }
     else if(designation === ""){
       alert("Please enter designation!")
     }
@@ -157,7 +154,6 @@ const AddEmployee = () => {
         emp_fname: firstName,
         emp_mname: middleName,
         emp_lname: lastName,
-        emp_job_title: jobTitle,
         emp_des: designation,
         emp_dep: departments,
         emp_hod: hod,
@@ -424,25 +420,6 @@ const AddEmployee = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                        Job Title:
-                      </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
-                      <input
-                        type="text"
-                        id="jobTitle"
-                        name="jobTitle"
-                        className="form-control "
-                        autoComplete="off"
-                        placeholder="Enter Job Title"
-                        value={jobTitle}
-                        onChange={(e) => setJobTitle(e.target.value)}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
                         Designation
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
@@ -463,8 +440,6 @@ const AddEmployee = () => {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -488,6 +463,9 @@ const AddEmployee = () => {
                       </select>
                     </div>
                   </div>
+                </div>
+                <div className="row mt-4">
+                  
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">HOD</label>{" "}
@@ -548,8 +526,6 @@ const AddEmployee = () => {
                       </select>
                     </div>
                   </div>
-                </div>
-                <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -567,6 +543,9 @@ const AddEmployee = () => {
                       ></textarea>
                     </div>
                   </div>
+                </div>
+                <div className="row mt-4">
+                 
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -613,8 +592,6 @@ const AddEmployee = () => {
                     
                     </div>
                   </div>
-                </div>
-                <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">State:</label>{" "}
@@ -646,6 +623,9 @@ const AddEmployee = () => {
                       /> */}
                     </div>
                   </div>
+                </div>
+                <div className="row mt-4">
+                
 
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
@@ -684,8 +664,6 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -705,6 +683,9 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="row mt-4">
+                 
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -740,8 +721,6 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -761,6 +740,9 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="row mt-4">
+                 
                 </div>
                 <br />
               </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { ArrowBack} from "@material-ui/icons";
+import { ArrowBack, Edit, Delete} from "@material-ui/icons";
 import {  useNavigate } from "react-router-dom";
+import { Table} from "react-bootstrap";
 
 const AddEmployeeCompetency = () => {
    const navigate = useNavigate();
@@ -252,6 +253,91 @@ const [requirement, setRequirement] = useState("");
                 </div>
                 <br />
               </div>
+              <Table
+                  striped
+                  hover
+                  responsive
+                  className="table-bordered table mx-3 mt-2"
+                  id="dataTable"
+                  width="100%"
+                  cellSpacing="0"
+                >
+                  <thead className="text-center">
+                    <tr>
+                      <th scope="col" className="fw-bold">Sr.No</th>
+                      <th scope="col" className="fw-bold">
+                        Training need assessed and skill development need
+                        recognized
+                      </th>
+                      <th scope="col" className="fw-bold">Training need Assessed by</th>
+                      <th scope="col" className="fw-bold">Date of Need Assessment</th>
+                      <th scope="col" className="fw-bold">
+                        Training need fulfilled by training on the job/ seminar
+                        etc
+                      </th>
+                      <th scope="col" className="fw-bold">Person/ organization giving training</th>
+                      <th scope="col" className="fw-bold">Date of Training</th>
+                      <th scope="col" className="fw-bold">
+                        Remark & review of the effectiveness of Training and
+                        Skill Development
+                      </th>
+                      <th scope="col" className="fw-bold">Sign and Date of Reviewing Officer</th>
+                      <th
+                        scope="col"
+                        className="fw-bold" /* style={headerCellStyle} */
+                      >
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="text-center">
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>
+                        <Edit className="text-success mr-2" type="button" />
+                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
+                      </td>
+                    </tr>
+                    <tr className="text-center">
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>
+                        <Edit className="text-success mr-2" type="button" />
+                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
+                      </td>
+                    </tr>
+                    <tr className="text-center">
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>
+                        <Edit className="text-success mr-2" type="button" />
+                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
               <div className="card-footer">
               <div className="row">
                   <div className="col-lg-12 text-end">

@@ -193,8 +193,6 @@ const AddTrainingSchedule = () => {
       alert("Please enter no of questions!");
     } else if (trainingType === null) {
       alert("Please enter training type!");
-    } else if (reoccurrence === null) {
-      alert("Please enter reoccurrence!");
     } else if (trainingFrom === null) {
       alert("Please enter training from date!");
     } else if (trainingTo === null) {
@@ -219,7 +217,7 @@ const AddTrainingSchedule = () => {
         ts_dt_tm_totraining: (trainingTo + ":00").replace(" ", "T"),
         ts_status: status,
         ts_isactive: "1",
-        ts_action: action,
+        ts_action: action1 === "Approved By Manager" ? "6" : action,
         trainingsubschedule: allSubTrainingSchedule,
 
         // training: allByDepartments,
@@ -773,7 +771,7 @@ const AddTrainingSchedule = () => {
                       <label className="control-label fw-bold">
                         Reoccurrence:
                       </label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <select
                         className="form-select"
                         value={reoccurrence}
@@ -961,7 +959,7 @@ const AddTrainingSchedule = () => {
                               <td>{index + 1}</td>
                               <td>{data.tss_emp_code}</td>
                               <td>{data.tss_emp_name}</td>
-                              <td>{data.tss_description}</td>
+                              <td>{data.tss_topic}</td>
                               <td>{data.tss_traning_attend}</td>
                               <td>{data.tss_traning_des}</td>
                               <td>{data.tss_sch_hour}</td>
@@ -1244,7 +1242,37 @@ const AddTrainingSchedule = () => {
                       </div>
                       <div className="row mt-4 me-3">
                         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                          {/* {
+                        action1 === "Approved By Manager" ? null :
                           <div className="form-group form-group-sm">
+                            <label className="control-label fw-bold">
+                              Action:
+                            </label>
+                            <span className="text-danger fw-bold">*</span>
+                            <select
+                              className="form-select"
+                              value={action}
+                              onChange={(e) => {
+                                const selectedAction = e.target.value;
+                                setAction(selectedAction);
+                                console.log(selectedAction, "action");
+                              }}
+                            >
+                              <option>Please Select</option>
+                              <option value="1">Submit</option>
+                              <option value="0">Save Draft</option>
+                            </select>
+                          </div>
+                          } */}
+                          <div
+                            className="form-group form-group-sm"
+                            style={{
+                              display:
+                                action1 === "Approved By Manager"
+                                  ? "none"
+                                  : "block",
+                            }}
+                          >
                             <label className="control-label fw-bold">
                               Action:
                             </label>

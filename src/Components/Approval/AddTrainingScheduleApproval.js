@@ -312,6 +312,7 @@ const AddTrainingSchedule = () => {
     })
       .then((response) => {
         console.log(response, "add action");
+        alert("Training Scheduled Approved Successfully!")
         navigate("/trainingScheduleApproval");
       })
       .catch((error) => {
@@ -801,6 +802,9 @@ const AddTrainingSchedule = () => {
                               Employee Name
                             </th>
                             <th scope="col" style={headerCellStyle}>
+                              Training Topic
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
                               Training Attended
                             </th>
                             <th scope="col" style={headerCellStyle}>
@@ -844,6 +848,7 @@ const AddTrainingSchedule = () => {
                               <td>{index + 1}</td>
                               <td>{data.tss_emp_code}</td>
                               <td>{data.tss_emp_name}</td>
+                              <td>{data.tss_topic}</td>
                               <td>{data.tss_traning_attend}</td>
                               <td>{data.tss_traning_des}</td>
                               <td>{data.tss_sch_hour}</td>
