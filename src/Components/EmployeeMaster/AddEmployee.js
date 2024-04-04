@@ -9,6 +9,7 @@ import {
   GetAllDesignation,
 } from "../Api/DesignationAndDepartment";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const AddEmployee = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const AddEmployee = () => {
   const [mobileNo, setMobileNo] = useState("");
   const [officeNo, setOfficeNo] = useState("");
   const [emailId, setEmailId] = useState("");
-  const [joiningDate, setJoiningDate] = useState([])
+  const [joiningDate, setJoiningDate] = useState([]);
   const [selectedDesignation, setSelectedDesignation] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState([]);
   const { id } = useParams();
@@ -65,19 +66,17 @@ const AddEmployee = () => {
           setHodToEmployee(response.data.data.emp_hodToEmp);
           setAddress1(response.data.data.emp_add1);
           setAddress2(response.data.data.emp_add2);
-          setCity(
-            {
-              value :response.data.data.emp_city,
-              label: response.data.data.emp_city_name
-            }
-            );
+          setCity({
+            value: response.data.data.emp_city,
+            label: response.data.data.emp_city_name,
+          });
           setState(response.data.data.emp_state);
           setCountry(response.data.data.emp_country);
           setPinCode(response.data.data.emp_pincode);
           setMobileNo(response.data.data.emp_mob_no);
           setOfficeNo(response.data.data.emp_off_no);
           setEmailId(response.data.data.emp_email);
-          setJoiningDate(response.data.data.emp_joiningDate.split('T')[0])
+          setJoiningDate(response.data.data.emp_joiningDate.split("T")[0]);
         })
 
         .catch((error) => {
@@ -91,63 +90,48 @@ const AddEmployee = () => {
 
     var mobNo = /^[0-9\b]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (
-      empCode === "" ) {
+    if (empCode === "") {
       alert("Please enter employee code!");
-    } 
-    else if(firstName === ""){
-      alert("Please enter first name!")
-    }
-    else if(lastName === ""){
-      alert("Please enter last name!")
-    }
-    else if(designation === ""){
-      alert("Please enter designation!")
-    }
-    else if(departments === ""){
-      alert("Please enter departments!")
-    }
-    else if(address1 === ""){
-      alert("Please enter address!")
-    }
-    else if(city === ""){
-      alert("Please enter city!")
-    }
-    else if(state === ""){
-      alert("Please enter state!")
-    }
-    else if(country === ""){
-      alert("Please enter country!")
-    }
-    else if(pinCode === ""){
-      alert("Please enter pin code!")
-    }
-    else if(mobileNo === ""){
-      alert("Please enter mobile number!")
-    }
-    else if(emailId === ""){
-      alert("Please enter email id!")
-    }
-    else if(joiningDate === ""){
-      alert("Please enter joining date!")
-    }
-    else if (mobNo.test(mobileNo) === false ) {
+    } else if (firstName === "") {
+      alert("Please enter first name!");
+    } else if (lastName === "") {
+      alert("Please enter last name!");
+    } else if (designation === "") {
+      alert("Please enter designation!");
+    } else if (departments === "") {
+      alert("Please enter departments!");
+    } else if (address1 === "") {
+      alert("Please enter address!");
+    } else if (city === "") {
+      alert("Please enter city!");
+    } else if (state === "") {
+      alert("Please enter state!");
+    } else if (country === "") {
+      alert("Please enter country!");
+    } else if (pinCode === "") {
+      alert("Please enter pin code!");
+    } else if (mobileNo === "") {
+      alert("Please enter mobile number!");
+    } else if (emailId === "") {
+      alert("Please enter email id!");
+    } else if (joiningDate === "") {
+      alert("Please enter joining date!");
+    } else if (mobNo.test(mobileNo) === false) {
       alert("Please Enter Only Numbers");
     } else if (mobileNo.length !== 10) {
       alert("Please enter valid Mobile number");
     }
     //  else if (mobNo.test(officeNo) === false) {
     //   alert("Please Enter Only Numbers");
-    // } 
+    // }
     // else if (officeNo.length !== 10) {
     //   alert("Please enter valid office number");
-    // } 
+    // }
     else if (pinCode.length !== 6) {
       alert("Please enter valid pin code");
     } else if (!emailRegex.test(emailId)) {
       alert("Please enter valid email id");
-    } 
-    else {
+    } else {
       data = {
         userId: UserId,
         emp_code: empCode,
@@ -189,6 +173,8 @@ const AddEmployee = () => {
         })
         .catch((error) => {
           console.log(error);
+          let errors = ErrorHandler(error);
+          alert(errors);
         });
     }
   };
@@ -255,18 +241,50 @@ const AddEmployee = () => {
   };
 
   const handleEmpCodeChange = (e) => {
-    setEmpCode(e.target.value)
+    const newEmpCode = e.target.value;
+    setEmpCode(newEmpCode);
     axios({
       method: "get",
       url: new URL(
-        UrlData + `EmployeeMaster/GetByCodeAdd?emp_code=${empCode}`
+        UrlData + `EmployeeMaster/GetByCodeAdd?emp_code=${newEmpCode}`
       ),
     })
       .then((response) => {
         console.log(response, "by code");
+
+        // Split full name to get parts
+        const fullName = response.data.data.emp_fname;
+        const nameParts = fullName.split(" ");
+        const firstName = nameParts[0]; // First word as first name
+        const middleName =
+          nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : ""; // All words between first and last as middle name, if available
+        const lastName = nameParts[nameParts.length - 1]; // Last word as last name
+
+        // Set individual name parts
+        setFirstName(firstName);
+        setMiddleName(middleName);
+        setLastName(lastName);
+
+        // Set other data
+        setDepartments(response.data.data.emp_dep);
+        setDesignation(response.data.data.emp_des);
+        setJoiningDate(response.data.data.emp_joiningdate.split("T")[0]);
+        setHodToEmployee(response.data.data.emp_hodToEmp);
+        setAddress1(response.data.data.emp_add1);
+        setAddress2(response.data.data.emp_add2);
+        setCity({
+          value: response.data.data.emp_city,
+          label: response.data.data.emp_city_name,
+        });
+        setState(response.data.data.emp_state);
+        setCountry(response.data.data.emp_country);
+        setPinCode(response.data.data.emp_pincode);
+        setMobileNo(response.data.data.emp_mob_no);
+        setOfficeNo(response.data.data.emp_off_no);
+        setEmailId(response.data.data.emp_email);
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Error fetching data: ", error);
       });
   };
 
@@ -449,7 +467,7 @@ const AddEmployee = () => {
                       <select
                         className="form-select"
                         aria-label="Default select example"
-                        value={departments}
+                        value={departments !== null ? departments : ""}
                         onChange={handleDepartment}
                       >
                         <option value="" disabled>
@@ -465,11 +483,10 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                  
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">HOD</label>{" "}
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                       <br />
                       <div className="form-check form-check-inline mt-2">
                         <input
@@ -545,7 +562,6 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                 
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -589,7 +605,6 @@ const AddEmployee = () => {
                         onChange={CityHandleChange}
                         className="mt-2"
                       />
-                    
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
@@ -625,8 +640,6 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                
-
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">Country:</label>{" "}
@@ -685,7 +698,6 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                 
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
@@ -741,9 +753,7 @@ const AddEmployee = () => {
                     </div>
                   </div>
                 </div>
-                <div className="row mt-4">
-                 
-                </div>
+                <div className="row mt-4"></div>
                 <br />
               </div>
               <div className="card-footer">

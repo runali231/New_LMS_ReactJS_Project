@@ -170,9 +170,6 @@ const EmployeeMaster = () => {
                         Full Name
                       </th>
                       <th scope="col" style={headerCellStyle}>
-                        Title
-                      </th>
-                      <th scope="col" style={headerCellStyle}>
                         Designation
                       </th>
                       <th scope="col" style={headerCellStyle}>
@@ -216,7 +213,7 @@ const EmployeeMaster = () => {
                               " " +
                               data.emp_lname}
                           </td>
-                          <td>{data.emp_job_title}</td>
+                          {/* <td>{data.emp_job_title}</td> */}
                           <td>{data.emp_des}</td>
                           <td>{data.emp_dep}</td>
                           <td>{data.emp_city}</td>
