@@ -67,21 +67,29 @@ const CompetencyMaster = () => {
   const handleSearch = (e) => {
     const searchDataValue = e.target.value.toLowerCase();
     setSearchData(searchDataValue);
-
+  
     if (searchDataValue.trim() === "") {
       // If search input is empty, fetch all data
       getAllData();
     } else {
       // Filter data based on search input value
       const filteredData = allCompetency.filter(
-        (Competency) =>
-          Competency.cp_designation.toLowerCase().includes(searchDataValue) ||
-          Competency.cp_qualification.toLowerCase().includes(searchDataValue)
+        (competency) =>
+          competency.cp_designation.toLowerCase().includes(searchDataValue) ||
+          competency.cp_qualification.toLowerCase().includes(searchDataValue) ||
+          competency.cp_experiance.toLowerCase().includes(searchDataValue) ||
+          competency.cp_skillreq.toLowerCase().includes(searchDataValue) ||
+          // Search in the concatenated training string
+          competency.cp_training
+            .split(/,(?=[a-zA-Z])/)
+            .some((item) => item.trim().toLowerCase().includes(searchDataValue))
       );
       setAllCompetency(filteredData);
+      setCurrentPage(1); // Reset pagination to first page
     }
   };
-
+  
+  
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allCompetency.slice(indexOfFirstItem, indexOfLastItem);
@@ -108,7 +116,7 @@ const CompetencyMaster = () => {
                       placeholder="Search"
                     />
                   </div>
-                  <div className="col-auto d-flex flex-wrap">                   
+                  <div className="col-auto d-flex flex-wrap">
                     <div
                       className="btn btn-add"
                       title="Add New"
@@ -133,7 +141,7 @@ const CompetencyMaster = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
-                    style={{ height: "35px" }}
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                     >
@@ -237,29 +245,15 @@ const CompetencyMaster = () => {
                             <td>{data.cp_qualification}</td>
                             <td>{data.cp_experiance}</td>
                             <td>{data.cp_skillreq}</td>
-                            {/* <td>
+                            <td>
                               {data.cp_training
-                                .split(",")
+                                .split(/,(?=[a-zA-Z])/)
                                 .map((item, index) => (
                                   <React.Fragment key={index}>
-                                    {item}
+                                    {item.trim()}
                                     <br />
                                   </React.Fragment>
                                 ))}
-                            </td> */}
-                            <td>
-                              {
-                                data.cp_training
-                                  ? data.cp_training
-                                      .split(",")
-                                      .map((item, index) => (
-                                        <React.Fragment key={index}>
-                                          {item}
-                                          <br />
-                                        </React.Fragment>
-                                      ))
-                                  : "" // or any other fallback value you want to display when cp_training is null
-                              }
                             </td>
                             <td>{data.cp_isactive}</td>
                             <td>

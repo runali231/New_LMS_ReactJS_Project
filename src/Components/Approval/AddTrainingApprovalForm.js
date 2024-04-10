@@ -774,7 +774,7 @@ const AddTrainingApprovalForm = () => {
                         responsive
                         className="border text-center"
                       >
-                        <thead>
+                        <thead className="text-start">
                           <tr>
                             <th scope="col" style={headerCellStyle}>
                               Sr.No
@@ -805,7 +805,7 @@ const AddTrainingApprovalForm = () => {
                             </th> */}
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-start">
                           {allByDepartments.map((departmentItem, index) => {
                             return (
                               <tr key={index}>
@@ -832,16 +832,15 @@ const AddTrainingApprovalForm = () => {
                                         ))
                                     : departmentItem.td_topic_training}
                                 </td>
-                                <td style={{ whiteSpace: "pre-line" }}>
-                                  {departmentItem.td_topic_training_name &&
-                                  typeof departmentItem.td_topic_training_name ===
-                                    "string"
-                                    ? departmentItem.td_topic_training_name
-                                        .split(",")
-                                        .map((value, index) => (
-                                          <div key={index}>{value.trim()}</div>
-                                        ))
-                                    : departmentItem.td_topic_training_name}
+                                <td>
+                                     {departmentItem.td_topic_training_name
+                                    .split(/,(?=[a-zA-Z])/)
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))}
                                 </td>
                               </tr>
                             );

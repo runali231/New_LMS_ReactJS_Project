@@ -165,7 +165,7 @@ const TrainingForm = () => {
                 <br />
 
                 <Table striped hover responsive className="border text-center">
-                  <thead>
+                  <thead className="text-start">
                     <tr>
                       <th scope="col" style={headerCellStyle}>
                         Sr.No
@@ -199,7 +199,7 @@ const TrainingForm = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="text-center">
+                  <tbody className="text-start">
                     {currentItems.map((data, index) => (
                       <tr key={data.tr_id}>
                         <td>{indexOfFirstItem + index + 1}</td>

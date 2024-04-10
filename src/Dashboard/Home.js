@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef} from "react";
 import {
   Speedometer2,
   GearWideConnected,
@@ -28,9 +28,13 @@ const Home = () => {
   const [content, setContent] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  // const toggleMenu = () => {
+  //   setIsSubMenuOpen(!isSubMenuOpen);
+  // };
   const toggleMenu = () => {
-    setIsSubMenuOpen(!isSubMenuOpen);
+    setIsSubMenuOpen((prevState) => !prevState);
   };
   const userName = localStorage.getItem("username");
   useEffect(() => {
@@ -48,7 +52,17 @@ const Home = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  // const handleClickOutside = (event) => {
+  //   if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //     setIsSubMenuOpen(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
   useEffect(() => {
     getMenu();
   }, []);
@@ -92,6 +106,8 @@ const Home = () => {
           <nav className="sidebar" id="sidebar">
             <div className="sidebar-header">
               <h3>
+              <img src="./lms_logo.png" alt="" style={{ width: "35px" }} className="rounded-circle" />&nbsp;&nbsp;
+
                 <span className="text-light">LMS Dashboard</span>
               </h3>
             </div>
@@ -199,7 +215,7 @@ const Home = () => {
             <div className="top-navbar ">
               <nav
                 className="navbar navbar-expand-lg sticky-top "
-                style={{ backgroundColor: "#1B5A90" }}
+                style={{ backgroundColor: "#1B5A90", height: "72px" }}
               >
                 <button
                   type="button"
@@ -216,8 +232,8 @@ const Home = () => {
                     onClick={() => setSidebar(!sidebar)}
                   />
                 </button>
-                <NavLink className="navbar-brand text-white" to="/">
-                  {/* Dashboard */}
+                <NavLink className="navbar-brand text-white fw-bold" >
+                 {/* LMS DASHBOARD */}
                 </NavLink>
                 <button
                   id="exnavbar"

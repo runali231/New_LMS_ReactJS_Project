@@ -45,7 +45,9 @@ const CityMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `CityMaster/GetCity?status=${toggleActive ? "1" : "0"}&StateId=${stateId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6`
+          `CityMaster/GetCity?status=${
+            toggleActive ? "1" : "0"
+          }&StateId=${stateId}&UserId=3fa85f64-5717-4562-b3fc-2c963f66afa6`
         //   `CityMaster/GetCity?StateId=${id}?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ), // Include pageSize and pageNumber in the URL
     })
@@ -195,13 +197,13 @@ const CityMaster = () => {
                     />
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                  <div className="form-check form-switch mt-2 pt-1">
+                    <div className="form-check form-switch mt-2 pt-1">
                       <input
                         className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckDefault"
                         checked={toggleActive} // Bind the checked state to the state variable
-                        onChange={()=>setToggleActive(!toggleActive)}
+                        onChange={() => setToggleActive(!toggleActive)}
                       />
                     </div>
                     <div className="btn btn-add" title="Add New">
@@ -278,6 +280,9 @@ const CityMaster = () => {
                         City Name
                       </th>
                       <th scope="col" style={headerCellStyle}>
+                        Status
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
                     </tr>
@@ -292,6 +297,7 @@ const CityMaster = () => {
                             </td>
                             <td>{data.ci_city_code}</td>
                             <td>{data.ci_city_name}</td>
+                            <td>{data.ci_isactive}</td>
                             <td>
                               <Edit
                                 className="text-success mr-2"

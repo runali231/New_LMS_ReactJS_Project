@@ -181,7 +181,7 @@ const TrainingScheduleApproval = () => {
                 </div>
                 <br />
                 <Table striped hover responsive className="border ">
-                  <thead>
+                  <thead className="text-start">
                     <tr>
                       <th scope="col" style={headerCellStyle}>
                         Sr.No
@@ -234,7 +234,7 @@ const TrainingScheduleApproval = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="text-left">
+                  <tbody className="text-start">
                     {allTrainingSchedule &&
                       currentItems.map((data, index) => (
                         <tr key={data.ts_id}>

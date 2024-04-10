@@ -19,7 +19,8 @@ h5,
 h6,
 td,
 th,
-label {
+label,
+.navbar-brand {
   font-family: cairo;
   /* margin-top: 0; */
   font-weight: 500;

@@ -39,10 +39,6 @@ const AddTrainingForm = () => {
   const [allTraining, setAllTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [editingIndex, setEditingIndex] = useState([]);
-  // const [editIndex, setEditIndex] = useState(null);
-  const [editIndex1, setEditIndex1] = useState();
-  // const [allByDepartments, setAllByDepartments] = useState([]);
   const [allByDepartments, setAllByDepartments] = useState([]);
   const [empCodeOptions, setEmpCodeOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -100,9 +96,9 @@ const AddTrainingForm = () => {
 
   useEffect(() => {
     if (!id) {
-        getByOrder();
+      getByOrder();
     }
-}, [id]);
+  }, [id]);
 
   const getAllTrainingNature = () => {
     axios
@@ -363,14 +359,14 @@ const AddTrainingForm = () => {
     // }));
     let data = [];
     if (Array.isArray(trainingTopic)) {
-        data = trainingTopic.map(item => ({
-            value: item.value,
-            label: item.label
-        }));
+      data = trainingTopic.map((item) => ({
+        value: item.value,
+        label: item.label,
+      }));
     } else {
-        console.error("trainingTopic is not an array.");
-        // Handle the case when trainingTopic is not an array
-        // You might want to provide a default value or handle it differently based on your requirements.
+      console.error("trainingTopic is not an array.");
+      // Handle the case when trainingTopic is not an array
+      // You might want to provide a default value or handle it differently based on your requirements.
     }
     // Check if any required field is empty
     if (departments === "") {
@@ -379,11 +375,9 @@ const AddTrainingForm = () => {
       alert("Please select employee code!");
     } else if (trainingDate === "") {
       alert("Please select training date!");
-    }
-     else if (data.length <=0) {
+    } else if (data.length <= 0) {
       alert("Please select topics for training required!");
-    }
-     else {
+    } else {
       const newTraining = {
         td_dept: departments.value,
         td_des: designation.label,
@@ -893,7 +887,7 @@ const AddTrainingForm = () => {
                         responsive
                         className="border text-center"
                       >
-                        <thead>
+                        <thead className="text-start">
                           <tr>
                             <th scope="col" style={headerCellStyle}>
                               Sr.No
@@ -932,7 +926,7 @@ const AddTrainingForm = () => {
                           </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody className="text-start">
                           {allByDepartments.map((departmentItem, index) => {
                             return (
                               <tr key={index}>
@@ -960,16 +954,15 @@ const AddTrainingForm = () => {
                                         ))
                                     : departmentItem.td_topic_training}
                                 </td>
-                                <td style={{ whiteSpace: "pre-line" }}>
-                                  {departmentItem.td_topic_training_name &&
-                                  typeof departmentItem.td_topic_training_name ===
-                                    "string"
-                                    ? departmentItem.td_topic_training_name
-                                        .split(",")
-                                        .map((value, index) => (
-                                          <div key={index}>{value.trim()}</div>
-                                        ))
-                                    : departmentItem.td_topic_training_name}
+                                <td className="text-start">
+                                  {departmentItem.td_topic_training_name
+                                    .split(/,(?=[a-zA-Z])/)
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))}
                                 </td>
                                 <td>
                                   <Edit

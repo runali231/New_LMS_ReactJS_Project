@@ -162,7 +162,7 @@ const TrainingApprovalForm = () => {
                 </div>
                 <br />
                 <Table striped hover responsive className="border text-center">
-                  <thead>
+                  <thead className="text-start">
                     <tr>
                       <th scope="col" style={headerCellStyle}>
                         Sr.No
@@ -209,7 +209,7 @@ const TrainingApprovalForm = () => {
                       </th>  */}
                     </tr>
                   </thead>
-                  <tbody className="text-center">
+                  <tbody className="text-start">
                     {currentItems.map((data, index) => (
                       <tr key={data.tr_id}>
                         <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>

@@ -894,7 +894,7 @@ const AddTrainingSchedule = () => {
                         responsive
                         className="border text-center"
                       >
-                        <thead>
+                        <thead className="text-start">
                           <tr>
                             <th scope="col" style={headerCellStyle}>
                               Sr.No
@@ -953,13 +953,22 @@ const AddTrainingSchedule = () => {
                             </th>
                           </tr>
                         </thead>
-                        <tbody className="text-center">
+                        <tbody className="text-start">
                           {allSubTrainingSchedule.map((data, index) => (
                             <tr key={index}>
                               <td>{index + 1}</td>
                               <td>{data.tss_emp_code}</td>
                               <td>{data.tss_emp_name}</td>
-                              <td>{data.tss_topic}</td>
+                              <td>
+                              {data.tss_topic
+                                    .split(/,(?=[a-zA-Z])/)
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))}
+                              </td>
                               <td>{data.tss_traning_attend}</td>
                               <td>{data.tss_traning_des}</td>
                               <td>{data.tss_sch_hour}</td>
