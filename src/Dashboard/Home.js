@@ -106,7 +106,7 @@ const Home = () => {
           <nav className="sidebar" id="sidebar">
             <div className="sidebar-header">
               <h3>
-              <img src="./lms_logo.png" alt="" style={{ width: "35px" }} className="rounded-circle" />&nbsp;&nbsp;
+              {/* <img src="./lms_logo.png" alt="" style={{ width: "35px" }} className="rounded-circle" />&nbsp;&nbsp; */}
 
                 <span className="text-light">LMS Dashboard</span>
               </h3>
@@ -215,7 +215,7 @@ const Home = () => {
             <div className="top-navbar ">
               <nav
                 className="navbar navbar-expand-lg sticky-top "
-                style={{ backgroundColor: "#1B5A90", height: "72px" }}
+                style={{ backgroundColor: "#1B5A90"/* , height: "72px" */ }}
               >
                 <button
                   type="button"
