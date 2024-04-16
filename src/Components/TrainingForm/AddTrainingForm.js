@@ -326,13 +326,13 @@ const AddTrainingForm = () => {
     axios
       .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
       .then((response) => {
-        console.log("response", response.data.data);
+        console.log("response 328", response.data.data);
         const trainingTopics = response.data.data.map((item, index) => ({
           value: item.t_id,
           label: item.t_description,
         }));
         setSelectedTrainingTopic(trainingTopics);
-        console.log(trainingTopic);
+        console.log(trainingTopic, "training topic 335");
       })
       .catch((error) => {
         console.log(error);
@@ -388,6 +388,7 @@ const AddTrainingForm = () => {
         td_date_training: trainingDate,
         td_topic_training: data.map((item) => item.value).join(","),
         td_topic_training_name: data.map((item) => item.label).join(","),
+      
       };
 
       // Updating state with new training entry
@@ -454,16 +455,33 @@ const AddTrainingForm = () => {
     setTrainingDept(trainingToEdit.td_req_dept);
     setTrainingDate(var2);
 
-    const topicValues = trainingToEdit.td_topic_training.split(",");
-    const topicLabels = trainingToEdit.td_topic_training_name.split(",");
+  //   const topicValues = trainingToEdit.td_topic_training.split(",");
+  //   const topicLabels = trainingToEdit.td_topic_training_name.split(",");
 
-    const selectedTrainingTopic1 = topicValues.map((value, index) => ({
-      value: topicValues[index],
-      label: topicLabels[index],
-    }));
+  //   const selectedTrainingTopic1 = topicValues.map((value, index) => ({
+  //     value: topicValues[index],
+  //     label: topicLabels[index],
+  //   }));
 
-    setTrainingTopic(selectedTrainingTopic1);
-  };
+  //   setTrainingTopic(selectedTrainingTopic1);
+  // };
+  const topicValues =trainingToEdit.td_topic_training.split(",");
+  const topicLabels =
+    trainingToEdit.td_topic_training_name.split(/,(?=[a-zA-Z])/);
+
+  const maxLength = Math.max(topicValues.length, topicLabels.length);
+
+  const selectedTrainingTopic1 = [];
+  for (let i = 0; i < maxLength; i++) {
+    selectedTrainingTopic1.push({
+      value: topicValues[i] || "", // Use empty string if value is undefined
+      label: topicLabels[i] || "", // Use empty string if label is undefined
+    });
+  }
+
+  setTrainingTopic(selectedTrainingTopic1);
+  console.log(selectedTrainingTopic1,"482");
+};
   useEffect(() => {
     console.log("before useEffect:", editIndex);
     setEditIndex(editIndex);
@@ -944,7 +962,7 @@ const AddTrainingForm = () => {
                                   style={{ whiteSpace: "pre-line" }}
                                   className="d-none"
                                 >
-                                  {departmentItem.td_topic_training &&
+                                  {/* {departmentItem.td_topic_training &&
                                   typeof departmentItem.td_topic_training ===
                                     "string"
                                     ? departmentItem.td_topic_training
@@ -952,7 +970,23 @@ const AddTrainingForm = () => {
                                         .map((value, index) => (
                                           <div key={index}>{value.trim()}</div>
                                         ))
-                                    : departmentItem.td_topic_training}
+                                    : departmentItem.td_topic_training} */}
+                                  {departmentItem.td_topic_training
+                                    .split(/,(?=[a-zA-Z])/)
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))}
+                                     {/* {departmentItem.td_topic_training
+                                    .split(",")
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))} */}
                                 </td>
                                 <td className="text-start">
                                   {departmentItem.td_topic_training_name
@@ -963,6 +997,14 @@ const AddTrainingForm = () => {
                                         <br />
                                       </React.Fragment>
                                     ))}
+                                    {/* {departmentItem.td_topic_training_name
+                                    .split(",")
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))} */}
                                 </td>
                                 <td>
                                   <Edit

@@ -115,7 +115,7 @@ const UserMaster = () => {
     setCurrentPage(1);
   };
 
-  const addCountry = () => {
+  const addUser = () => {
     let data;
     if (employee === "") {
       alert("Please enter employee name!");
@@ -578,11 +578,9 @@ const UserMaster = () => {
                   type="text"
                   id="userName"
                   name="userName"
-                  autoComplete="off"
                   placeholder="Enter User Name"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  required
                 />
               </Form.Group>
             </Col>
@@ -617,7 +615,7 @@ const UserMaster = () => {
             <Button
               className="text-light"
               onClick={() => {
-                addCountry();
+                addUser();
               }}
               style={{ backgroundColor: "#1B5A90" }}
             >

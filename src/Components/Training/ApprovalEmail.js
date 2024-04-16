@@ -1,63 +1,104 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
+import UserId from "../UserId";
+import axios from "axios";
+import UrlData from "../UrlData";
 
-function ApprovalEmail({ }) {
+const ApprovalEmail = () => {
+  const [empId, setEmpId] = useState("")
+  const [trId, setTrId] = useState("")
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const trainingId = params.get("trainingId");
+    const employeeId = params.get("employeeId");
+    setEmpId(employeeId)
+    setTrId(trainingId)
+    console.log(trainingId, employeeId); // Check if values are correctly obtained
+    // You can use trainingId and employeeId in your logic here
+  }, []);
+  const AcceptSchedule = () => {
+    let data;
+
+    data = {
+      userId: UserId,
+      ts_empid: empId,
+      ts_tag: "Accepted",
+      ts_id: trId,
+    };
+
+    axios({
+      method: "post",
+      url: new URL(UrlData + `TrainingSchedule/UpdateTag`),
+      data: data,
+    })
+      .then((response) => {
+        console.log(response, "add update tag");
+        alert("Your response has been accepted!");
+        window.close();
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Something went wrong");
+      });
+  };
+  const RejectSchedule = () => {
+    let data;
+
+    data = {
+      userId: UserId,
+      ts_empid: empId,
+      ts_tag: "Rejected",
+      ts_id: trId,
+    };
+
+    axios({
+      method: "post",
+      url: new URL(UrlData + `TrainingSchedule/UpdateTag`),
+      data: data,
+    })
+      .then((response) => {
+        console.log(response, "add update tag");
+        alert("Your response has been Rejected!");
+        window.close();
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Something went wrong");
+      });
+  };
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-lg-4"></div>
-        <div className="col-lg-5">
-          <div className="card p-5 m-3 shadow">
-            <div style={{ fontFamily: "Arial, sans-serif" }}>
-              <h2 className="text-center">Approval for Attending Training</h2>
-              <h5 className="mt-5">March, 2024</h5>
-              <p className="fw-bold mt-4">
-               Rachel McFarlin{" "}
-              </p>
-              <p className=" " style={{marginTop:"-7px"}}>
-               HR Assistant
-              </p>
-              <p style={{marginTop:"-7px"}}>Email: rachel@gmail.com</p>
-              <h5 className="mt-5 fw-bold">Dear  Ms. McFarlin,</h5>
-              <p>
-                I am pleased to inform you that your request to attend the training program has been approved. We recognize the value of professional development and are confident that this opportunity will enhance your skills and contribute to your continued growth within our organization.
-              </p>
-              <p>The approval of your attendance is subject to the following conditions and instructions:</p>
-              <p>
-                <strong>Time:</strong> {"9:00 AM - 12:00 PM"}
-              </p>
-              <p>
-                <strong>Location:</strong> {"Training Room 1"}
-              </p>
-              <p>
-                <strong>Trainer:</strong> {"John Doe"}
-              </p>
-              <p>
-                <strong>Agenda:</strong> {"Introduction to ReactJS"}
-              </p>
-              <p>
-                <strong>Note:</strong>{" "}
-                {"Please bring your laptop for hands-on exercises."}
-              </p>
-              <div className="text-center mt-5">
-                <button className="btn btn-success" type="button">
-                  Accept
-                </button>
-                <button
-                  className="btn btn-danger"
-                  type="button"
-                  style={{ marginLeft: "0.5rem" }}
-                >
-                  Reject
-                </button>
+    <>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-4"></div>
+          <div className="col-lg-5">
+            <div className="card p-5 m-3 shadow">
+              <div style={{ fontFamily: "Arial, sans-serif" }}>
+                <h2 className="text-center">Approval for Attending Training</h2>
+                <div className="text-center mt-5">
+                  <button
+                    className="btn btn-success"
+                    type="button"
+                    onClick={AcceptSchedule}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    type="button"
+                    onClick={RejectSchedule}
+                    style={{ marginLeft: "0.5rem" }}
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+          <div className="col-lg-4"></div>
         </div>
-        <div className="col-lg-4"></div>
       </div>
-    </div>
+    </>
   );
-}
-
+};
 
 export default ApprovalEmail;

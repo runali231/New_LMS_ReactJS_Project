@@ -128,16 +128,16 @@ const Home = () => {
               {/* <br /> */}
               {sidebarData
                 .filter((item) =>
-                  ["Master", "Transaction", "Reports", "Approval"].includes(
+                  ["Master", "Transaction", "Approval", "Report"].includes(
                     item.m_menuname
                   )
                 )
                 .sort((a, b) => {
                   const menuOrder = [
                     "Master",
-                    "Transaction",
-                    "Reports",
+                    "Transaction",                  
                     "Approval",
+                    "Report",
                   ];
                   return (
                     menuOrder.indexOf(a.m_menuname) -
@@ -162,7 +162,7 @@ const Home = () => {
                         <BookFill style={{ fontSize: "22px" }} /> // Use BookFill icon
                       ) : menuItem.m_menuname === "Approval" ? (
                         <CheckCircleFill style={{ fontSize: "22px" }} />
-                      ) : menuItem.m_menuname === "Reports" ? (
+                      ) : menuItem.m_menuname === "Report" ? (
                         <ClipboardCheck style={{ fontSize: "22px" }} />
                       ) : (
                         <GearWideConnected style={{ fontSize: "22px" }} />
@@ -194,6 +194,14 @@ const Home = () => {
                             if (b.m_menuname === "Employee Master") return 1;
                             if (a.m_menuname === "Topic Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
                             if (b.m_menuname === "Topic Master") return 1;
+                            if (a.m_menuname === "Training Need Form") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Topic Master") return 1;
+                            if (a.m_menuname === "Training Schedule") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Training Schedule") return 1;
+                            if (a.m_menuname === "Training View") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Training View") return 1;
+                            if (a.m_menuname === "Feedback") return -1; // prioritize "Designation Master" if "Country Master" is not present
+                            if (b.m_menuname === "Feedback") return 1;
                             return 0; // maintain original order for other submenu items
                           })
                         .map((subMenuItem, subIndex) => (

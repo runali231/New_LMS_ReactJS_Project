@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 // import { useNavigate } from "react-router-dom";
-import '../Css/Site.css'
+import "../Css/Site.css";
+import axios from "axios";
+import UrlData from "../UrlData";
 const CompetencyChart = () => {
+  const [report, setReport] = useState([]);
+
+  useEffect(() => {
+    getAllData();
+  }, []);
+
+  const getAllData = () => {
+    axios({
+      method: "get",
+      url: new URL(UrlData + `CompentencyChartReport/GetAll`),
+    })
+      .then((response) => {
+        console.log("response all report", response.data.data);
+        setReport(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <>
       <div className="container-fluid">
@@ -12,12 +33,12 @@ const CompetencyChart = () => {
         >
           <div className="row">
             <div className="col-lg-12">
-              <div
-                className="card-header" 
-              >
+              <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold py-2">Competency Chart</h4>
+                    <h4 className="card-title fw-bold py-2">
+                      Competency Chart
+                    </h4>
                   </div>
                   <div className="col-md-2  justify-content-end">
                     <input
@@ -27,11 +48,10 @@ const CompetencyChart = () => {
                       placeholder="Search"
                     />
                   </div>
-                  
                 </div>
               </div>
               <div className="card-body pt-3">
-              <div className="row ">
+                <div className="row ">
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
@@ -49,8 +69,16 @@ const CompetencyChart = () => {
                 </div>
                 <br />
 
-                <Table striped hover responsive className="table-bordered table " id="dataTable" width="100%" cellSpacing="0">
-                  <thead>
+                <Table
+                  striped
+                  hover
+                  responsive
+                  className="table-bordered table "
+                  id="dataTable"
+                  width="100%"
+                  cellSpacing="0"
+                >
+                  <thead className="text-start">
                     <tr>
                       <th scope="col" className="fw-bold">
                         Sr.No
@@ -63,64 +91,66 @@ const CompetencyChart = () => {
                       </th>
                       <th scope="col" className="fw-bold">
                         Training start
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold">
                         Training end
-                      </th>  
+                      </th>
                       <th scope="col" className="fw-bold">
                         Training hours
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold text-center">
-                        Awareness, CH, Annex, WI & FT WI/<br/>SOP, DPR/FM & SAP, Special Training
-                      </th>    
+                        Awareness, CH, Annex, WI & FT WI/
+                        <br />
+                        SOP, DPR/FM & SAP, Special Training
+                      </th>
                       <th scope="col" className="fw-bold">
                         Title
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold">
-                      Issue No
-                      </th> 
+                        Issue No
+                      </th>
                       <th scope="col" className="fw-bold">
-                       Rev No.
-                      </th>    
+                        Rev No.
+                      </th>
                       <th scope="col" className="fw-bold">
-                       Rev Date
-                      </th> 
+                        Rev Date
+                      </th>
                       <th scope="col" className="fw-bold">
-                       Other
-                      </th>   
+                        Other
+                      </th>
                       <th scope="col" className="fw-bold">
                         Training Topic
-                      </th>      
+                      </th>
                       <th scope="col" className="fw-bold">
                         Training Given By
-                      </th>  
+                      </th>
                       <th scope="col" className="fw-bold">
                         Emp Code
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold">
                         Name of Employees
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold">
                         Designation
-                      </th>  
+                      </th>
                       <th scope="col" className="fw-bold">
                         Department
-                      </th>   
+                      </th>
                       <th scope="col" className="fw-bold">
                         Number Question in Training Evaluation
-                      </th>    
+                      </th>
                       <th scope="col" className="fw-bold">
                         Marks Obtained in Training Evaluation
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold">
-                       Result
-                      </th> 
+                        Result
+                      </th>
                       <th scope="col" className="fw-bold">
                         Hard Copy Location
-                      </th> 
+                      </th>
                       <th scope="col" className="fw-bold">
-                      Soft Copy Location
-                      </th> 
+                        Soft Copy Location
+                      </th>
                       {/* <th
                         scope="col" 
                        
@@ -130,239 +160,47 @@ const CompetencyChart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="text-center">
-                    <td>
-                       1
-                      </td>
-                      <td>
-                        21/3/2024
-                      </td>
-                      <td>
-                      12/4/2024
-                      </td>
-                      <td>
-                        9:00 
-                      </td> 
-                      <td>
-                        5:00
-                      </td>  
-                      <td>
-                       8
-                      </td> 
-                      <td>
-                       xyz
-                      </td>    
-                      <td>
-                        pqr
-                      </td> 
-                      <td>
-                     5757
-                      </td> 
-                      <td>
-                       232
-                      </td>    
-                      <td>
-                       6
-                      </td> 
-                      <td>
-                       2
-                      </td>   
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
+                    {report.map((data, index) => {
+                      return (
+                        <tr className="text-start" key={index}>
+                          <td>1</td>
+                          <td></td>
+                          <td>{data.DateofTrainning}</td>
+                          <td>{data.StartTime}</td>
+                          <td>{data.EndTime}</td>
+                          <td>{data.TrainingHours}</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>{data.TrainingTopic}</td>
+                          <td>-</td>
+                          <td>{data.EmpCode}</td>
+                          <td>{data.NameOfEmp}</td>
+                          <td>{data.Designation}</td>
+                          <td>{data.Department}</td>
 
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      {/* <td>
-                        <Edit className="text-success mr-2" type="button" />
-                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-                      </td> */}
-                    </tr>
-                    <tr className="text-center">
-                    <td>
-                       1
-                      </td>
-                      <td>
-                        21/3/2024
-                      </td>
-                      <td>
-                      12/4/2024
-                      </td>
-                      <td>
-                        9:00 
-                      </td> 
-                      <td>
-                        5:00
-                      </td>  
-                      <td>
-                       8
-                      </td> 
-                      <td>
-                       xyz
-                      </td>    
-                      <td>
-                        pqr
-                      </td> 
-                      <td>
-                     5757
-                      </td> 
-                      <td>
-                       232
-                      </td>    
-                      <td>
-                       6
-                      </td> 
-                      <td>
-                       2
-                      </td>   
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      {/* <td>
-                        <Edit className="text-success mr-2" type="button" />
-                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-                      </td> */}
-                    </tr>
-                    <tr className="text-center">
-                    <td>
-                       1
-                      </td>
-                      <td>
-                        21/3/2024
-                      </td>
-                      <td>
-                      12/4/2024
-                      </td>
-                      <td>
-                        9:00 
-                      </td> 
-                      <td>
-                        5:00
-                      </td>  
-                      <td>
-                       8
-                      </td> 
-                      <td>
-                       xyz
-                      </td>    
-                      <td>
-                        pqr
-                      </td> 
-                      <td>
-                     5757
-                      </td> 
-                      <td>
-                       232
-                      </td>    
-                      <td>
-                       6
-                      </td> 
-                      <td>
-                       2
-                      </td>   
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      <td>
-                        -
-                      </td>
-                      {/* <td>
-                        <Edit className="text-success mr-2" type="button" />
-                        <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-                      </td> */}
-                    </tr>
+                          <td>{data.NoOfQues}</td>
+                          <td>{data.Marks}</td>
+                          <td>{data.Result}</td>
+                          <td>-</td>
+                          <td>-</td>
+                          {/* <td>
+    <Edit className="text-success mr-2" type="button" />
+    <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
+  </td> */}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
-                    <h6 className="text-lg-start text-center">Showing 1 to 3 of 3 entries</h6>
+                    <h6 className="text-lg-start text-center">
+                      Showing 1 to 3 of 3 entries
+                    </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
@@ -413,8 +251,6 @@ const CompetencyChart = () => {
             </div>
           </div>
         </div>
-
-       
       </div>
     </>
   );

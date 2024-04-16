@@ -164,6 +164,7 @@ const TrainingForm = () => {
                 </div>
                 <br />
 
+
                 <Table striped hover responsive className="border text-center">
                   <thead className="text-start">
                     <tr>

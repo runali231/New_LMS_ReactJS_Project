@@ -1613,7 +1613,7 @@ const AddTrainingSchedule = () => {
                       onChange={(e) => setStatus1(e.target.value)}
                       aria-label="Default select example"
                     >
-                      <option>select status</option>
+                      <option>Select Status</option>
                       <option value="Open">Open</option>
                       <option value="Close">Close</option>
                     </Form.Select>

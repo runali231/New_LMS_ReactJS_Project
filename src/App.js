@@ -21,6 +21,7 @@ import SignUpForm from "./Components/Signup/Signup";
 import LoginForm from "./Components/Login/loginForm";
 import HomePage from "./Dashboard/HomePage";
 import Sample from "./Components/Scheduling/Sample.js";
+import ApprovalEmail from "./Components/Training/ApprovalEmail.js";
 
 const App = (props) => {
   const loginId = localStorage.getItem("loginId");
@@ -60,6 +61,8 @@ const App = (props) => {
     
     {/* Additional routes */}
     <Route exact path="/*" element={<Home/>} />
+    <Route exact path="/approvalEmail" element={<ApprovalEmail/>} />
+    {/* { path: '/approvalEmail', name: 'approvalEmail', element:ApprovalEmail}, */}
   </Routes>
 </Router>
     </>

@@ -35,6 +35,7 @@ import CityMaster from './Components/CityMaster/CityMaster';
 import StateMaster from './Components/StateMaster/StateMaster';
 import CountryMaster from './Components/CountryMaster/CountryMaster';
 import UserMaster from './Components/UserMaster/UserMaster';
+import TrainingEmailView from './Components/Training/TrainingEmailView';
 
 
 const routes1=[
@@ -67,7 +68,7 @@ const routes1=[
     { path: '/addEmployeeCompetency', name: 'AddEmployeeCompetency', element:AddEmployeeCompetency},
     { path: '/employeeCompetency', name: 'employeeCompetency', element:employeeCompetency},
     { path: '/email', name: 'Email', element:Email},
-    { path: '/approvalEmail', name: 'approvalEmail', element:ApprovalEmail},
+
     { path: '/designationMaster', name: 'DesignationMaster', element:DesignationMaster},
     { path: '/roleMaster', name: 'RoleMaster', element:RoleMaster},
     { path: '/addRoleMaster', name: 'AddRoleMaster', element:AddRoleMaster},
@@ -81,6 +82,7 @@ const routes1=[
     { path: '/stateMaster/:countryId/:countryName', name: 'StateMaster', element:StateMaster},
     { path: '/countryMaster', name: 'CountryMaster', element:CountryMaster},
     { path: '/userMaster', name: 'UserMaster', element:UserMaster},
+    { path: '/trainingEmailView', name: 'TrainingEmailView', element:TrainingEmailView},
 
     // { path: '/sample', name: 'Sample', element:Sample  },
 
