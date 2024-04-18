@@ -1,15 +1,117 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Table } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
 import "../Css/Site.css";
 import axios from "axios";
 import UrlData from "../UrlData";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
+// import * as XLSXStyle from "xlsx-style";
+import * as XLSX from "xlsx";
+import { PDFDocument, rgb } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
+
 const CompetencyChart = () => {
+  const pdfContentRef = useRef(null);
   const [report, setReport] = useState([]);
+  const [pdfResponse, setPdfResponse] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
+  const tableRef = useRef(null);
+  const [tableLoaded, setTableLoaded] = useState(false);
 
   useEffect(() => {
-    getAllData();
+    // Check if the table element is loaded
+    if (tableRef.current) {
+      setTableLoaded(true);
+    }
   }, []);
+  const exportPdfHandler = () => {
+    // Get the table element
+    const table = document.getElementById("dataTable");
+  
+    // Use html2canvas to capture the table as an image
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL("image/jpeg");
+  
+      // Calculate dimensions for the PDF
+      const imgWidth = 290; // A4 page width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+      // Create a new jsPDF instance
+      const doc = new jsPDF({
+        orientation: "landscape",
+      });
+  
+      // Add the captured image to the PDF
+      doc.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+  
+      // Save the PDF
+      doc.save("competency-chart.pdf");
+    });
+  };
+  // const exportPdfHandler = () => {
+  //   // Get the table element
+  //   const table = document.getElementById("dataTable");
+  
+  //   // Set the width of the table and its container to be wider than the page width
+  //   table.style.width = "1000px"; // Adjust the width as needed
+  //   table.parentElement.style.overflowX = "auto"; // Enable horizontal scrolling
+  
+  //   // Use html2canvas to capture the table as an image
+  //   html2canvas(table).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/jpeg");
+  
+  //     // Calculate dimensions for the PDF
+  //     const imgWidth = 300; // A4 page width in mm
+  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+  //     // Create a new jsPDF instance
+  //     const doc = new jsPDF({
+  //       orientation: "landscape",
+  //     });
+  
+  //     // Add the captured image to the PDF
+  //     doc.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+  
+  //     // Save the PDF
+  //     doc.save("table.pdf");
+  
+  //     // Reset table and container width after capturing
+  //     table.style.width = "auto";
+  //     table.parentElement.style.overflowX = "hidden";
+  //   });
+  // };
+  // const exportPdfHandler = () => {
+  //   // Get the table element
+  //   const table = document.getElementById("dataTable");
+  
+  //   // Create a new jsPDF instance
+  //   const doc = new jsPDF({
+  //     orientation: "landscape",
+  //   });
+  
+  //   // Add autoTable plugin options
+  //   const options = {
+  //     startY: 10, // Start y position of the table. This is optional.
+  //     margin: { top: 10, bottom: 10, left: 10, right: 10 }, // Page margins
+  //   };
+  
+  //   // Generate PDF directly from the table
+  //   doc.autoTable({ html: table, ...options });
+  
+  //   // Save the PDF
+  //   doc.save("competency-chart.pdf");
+  // };
+  useEffect(() => {
+    getAllData();
+  }, [currentPage, itemsPerPage]);
 
   const getAllData = () => {
     axios({
@@ -24,8 +126,65 @@ const CompetencyChart = () => {
         console.log(error);
       });
   };
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
+  // const doc = new jsPDF();
+  // const exportPdfHandler = () => {
+  //   doc.autoTable({ html: "#dataTable" });
+  //   doc.save("competencyChart.pdf");
+  //   console.log("Table Data Exported");
+  // };
+  // const exportPdfHandler = () => {
+  //   const doc = new jsPDF('landscape'); // Creating a PDF in landscape orientation
+  //   const pdfContent = pdfContentRef.current;
+
+  //   if (!pdfContent) {
+  //     console.error("Element with ref 'pdfContentRef' not found");
+  //     return;
+  //   }
+
+  //   html2canvas(pdfContent).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+  //     const imgWidth = 297; // Adjust width as needed for landscape orientation
+  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  //     doc.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+
+  //     // Add table using jspdf-autotable
+  //     doc.autoTable({ html: '#dataTable' });
+
+  //     doc.save("competency_report.pdf");
+  //   });
+  // };
+
+  const exportToExcel = () => {
+    import("xlsx").then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(report);
+      const workbook = xlsx.utils.book_new();
+      xlsx.utils.book_append_sheet(workbook, worksheet, "Competency Report");
+      xlsx.writeFile(workbook, "competency_report.xlsx");
+    });
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = report.slice(indexOfFirstItem, indexOfLastItem);
   return (
     <>
+      <style>
+        {`
+      #dataTable tbody tr {
+        height: 30px; 
+      }
+    `}
+      </style>
       <div className="container-fluid">
         <div
           className="card m-3"
@@ -40,17 +199,31 @@ const CompetencyChart = () => {
                       Competency Chart
                     </h4>
                   </div>
-                  <div className="col-md-2  justify-content-end">
-                    <input
-                      type="text"
-                      id="custom-search"
-                      className="form-control d-none"
-                      placeholder="Search"
-                    />
+                  <div className="col-auto d-flex flex-wrap">
+                    <div className="btn btn-add" title="Add New">
+                      <button
+                        className="btn btn-md text-light"
+                        type="button"
+                        style={{ backgroundColor: "#1B5A90" }}
+                        onClick={exportPdfHandler}
+                      >
+                        Pdf
+                      </button>
+                    </div>
+                    <div className="btn btn-add" title="Add New">
+                      <button
+                        className="btn btn-md text-light"
+                        type="button"
+                        style={{ backgroundColor: "#1B5A90" }}
+                        onClick={exportToExcel}
+                      >
+                        Excel
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="card-body pt-3">
+              <div className="card-body pt-3" ref={pdfContentRef} id="cardBody">
                 <div className="row ">
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
@@ -68,177 +241,188 @@ const CompetencyChart = () => {
                   </div>
                 </div>
                 <br />
+                <div ref={tableRef}>
+                  <Table
+                    striped
+                    hover
+                    responsive
+                    className="table-bordered table"
+                    id="dataTable"
+                    width="100%"
+                    cellSpacing="0"
+                  >
+                    <thead className="text-start">
+                      <tr>
+                        <th scope="col" className="fw-bold">
+                          Sr.No
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Training need assessment date
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Date of training
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Training start
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Training end
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Training hours
+                        </th>
+                        <th scope="col" className="fw-bold text-center">
+                          Awareness, CH, Annex, WI & FT WI/
+                          <br />
+                          SOP, DPR/FM & SAP, Special Training
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Title
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Issue No
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Rev No.
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Rev Date
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Other
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Training Topic
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Training Given By
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Emp Code
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Name of Employees
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Designation
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Department
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Number Question in Training Evaluation
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Marks Obtained in Training Evaluation
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Result
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Hard Copy Location
+                        </th>
+                        <th scope="col" className="fw-bold">
+                          Soft Copy Location
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {report &&
+                        currentItems.map((data, index) => {
+                          return (
+                            <tr className="text-start" key={index}>
+                              <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                              <td></td>
+                              <td>{formatDate(data.DateofTrainning)}</td>
+                              <td>{data.StartTime}</td>
+                              <td>{data.EndTime}</td>
+                              <td>{data.TrainingHours}</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td>{data.TrainingTopic}</td>
+                              <td>-</td>
+                              <td>{data.EmpCode}</td>
+                              <td>{data.NameOfEmp}</td>
+                              <td>{data.Designation}</td>
+                              <td>{data.Department}</td>
 
-                <Table
-                  striped
-                  hover
-                  responsive
-                  className="table-bordered table "
-                  id="dataTable"
-                  width="100%"
-                  cellSpacing="0"
-                >
-                  <thead className="text-start">
-                    <tr>
-                      <th scope="col" className="fw-bold">
-                        Sr.No
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Training need assessment date
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Date of training
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Training start
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Training end
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Training hours
-                      </th>
-                      <th scope="col" className="fw-bold text-center">
-                        Awareness, CH, Annex, WI & FT WI/
-                        <br />
-                        SOP, DPR/FM & SAP, Special Training
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Title
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Issue No
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Rev No.
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Rev Date
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Other
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Training Topic
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Training Given By
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Emp Code
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Name of Employees
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Designation
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Department
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Number Question in Training Evaluation
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Marks Obtained in Training Evaluation
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Result
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Hard Copy Location
-                      </th>
-                      <th scope="col" className="fw-bold">
-                        Soft Copy Location
-                      </th>
-                      {/* <th
-                        scope="col" 
-                       
-                      >
-                       Action
-                      </th>  */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {report.map((data, index) => {
-                      return (
-                        <tr className="text-start" key={index}>
-                          <td>1</td>
-                          <td></td>
-                          <td>{data.DateofTrainning}</td>
-                          <td>{data.StartTime}</td>
-                          <td>{data.EndTime}</td>
-                          <td>{data.TrainingHours}</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td>{data.TrainingTopic}</td>
-                          <td>-</td>
-                          <td>{data.EmpCode}</td>
-                          <td>{data.NameOfEmp}</td>
-                          <td>{data.Designation}</td>
-                          <td>{data.Department}</td>
+                              <td>{data.NoOfQues}</td>
+                              <td>{data.Marks}</td>
+                              <td>{data.Result}</td>
+                              <td>-</td>
+                              <td>-</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </Table>
+                </div>
 
-                          <td>{data.NoOfQues}</td>
-                          <td>{data.Marks}</td>
-                          <td>{data.Result}</td>
-                          <td>-</td>
-                          <td>-</td>
-                          {/* <td>
-    <Edit className="text-success mr-2" type="button" />
-    <Delete className="text-danger" type="button" style={{ marginLeft: "0.5rem" }}/>
-  </td> */}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
                 <div className="row mt-4 mt-xl-3">
                   <div className="col-lg-4 col-12 ">
                     <h6 className="text-lg-start text-center">
-                      Showing 1 to 3 of 3 entries
+                      Showing {indexOfFirstItem + 1} to{" "}
+                      {Math.min(indexOfLastItem, report.length)} of{" "}
+                      {report.length} entries
                     </h6>
                   </div>
                   <div className="col-lg-4 col-12"></div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0">
                     <nav aria-label="Page navigation example">
-                      <ul className="pagination justify-content-lg-end justify-content-center">
+                      <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
                           <button
                             className="page-link"
-                            /* onClick={handlePrevious} */ aria-label="Previous"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
+                            disabled={currentPage === 1}
+                            aria-label="Previous"
                           >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        <li className="page-item active">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(1)} */
+                        {calculatePaginationRange(
+                          currentPage,
+                          report,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
                           >
-                            1
-                          </button>
-                        </li>
-                        <li className="page-item">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(2)} */
-                          >
-                            2
-                          </button>
-                        </li>
-                        <li className="page-item">
-                          <button
-                            className="page-link" /* onClick={handlePageClick(3)} */
-                          >
-                            3
-                          </button>
-                        </li>
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
+                          </li>
+                        ))}
                         <li className="page-item">
                           <button
                             className="page-link"
-                            /* onClick={handleNext} */ aria-label="Next"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                report,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(report.length / itemsPerPage)
+                            }
+                            aria-label="Next"
                           >
                             <span aria-hidden="true">&raquo;</span>
                           </button>

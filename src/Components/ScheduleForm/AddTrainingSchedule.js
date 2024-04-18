@@ -362,13 +362,24 @@ const AddTrainingSchedule = () => {
     setIsAddingTraining(true);
     console.log(tss_id, 318);
     // Create a new array by mapping over the existing sub-training schedules
-    if (
-      trainingAttended === null ||
-      scheduledHours === null ||
-      actualHoursAttended === null
-    ) {
-      alert("Please fill all the details");
-    } else {
+    // if (
+    //   trainingAttended === null ||
+    //   scheduledHours === null ||
+    //   actualHoursAttended === null
+    // ) {
+    //   alert("Please fill all the details");
+    // } 
+    // if (trainingAttended === null || (!scheduledHours || !actualHoursAttended)) {
+    //   alert('Please fill all the details');   
+    // }
+    if ((trainingAttended === 'Yes' || trainingAttended === null) && (!scheduledHours || !actualHoursAttended)) {
+      alert('Please fill all the details');   
+    }
+    // if (trainingAttended === 'No' && (!scheduledHours || !actualHoursAttended)) {
+    //   alert('Please fill all the details');
+      
+    // }
+    else {
       const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
         (training) => {
           // If the current sub-training schedule has the same tss_id as the one being edited
@@ -426,7 +437,7 @@ const AddTrainingSchedule = () => {
       // marksObtained === null ||
       completionStatus === null ||
       trainingStatus === null ||
-      trainingCertificate === null ||
+      // trainingCertificate === null ||
       status1 === null
     ) {
       alert("Please fill all the details");
@@ -1592,7 +1603,7 @@ const AddTrainingSchedule = () => {
                   <Form.Group controlId="formTrainingCertificate">
                     <Form.Label className="control-label fw-bold">
                       Training Certificate:
-                      <span className="text-danger fw-bold">*</span>
+                      {/* <span className="text-danger fw-bold">*</span> */}
                     </Form.Label>
                     <input
                       type="file"

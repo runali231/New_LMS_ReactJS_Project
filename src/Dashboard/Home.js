@@ -195,7 +195,7 @@ const Home = () => {
                             if (a.m_menuname === "Topic Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
                             if (b.m_menuname === "Topic Master") return 1;
                             if (a.m_menuname === "Training Need Form") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Topic Master") return 1;
+                            if (b.m_menuname === "Training Need Form") return 1;
                             if (a.m_menuname === "Training Schedule") return -1; // prioritize "Designation Master" if "Country Master" is not present
                             if (b.m_menuname === "Training Schedule") return 1;
                             if (a.m_menuname === "Training View") return -1; // prioritize "Designation Master" if "Country Master" is not present

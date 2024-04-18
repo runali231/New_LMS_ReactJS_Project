@@ -250,8 +250,29 @@ const AddEmployee = () => {
       ),
     })
       .then((response) => {
-        console.log(response, "by code");
-
+        console.log(response.data.data, "by code");
+  
+        if (response.data.data === null || newEmpCode === undefined) {
+          // If response data is null, set all fields to null
+          setFirstName("");
+          setMiddleName("");
+          setLastName("");
+          setDepartments("");
+          setDesignation("");
+          setJoiningDate("");
+          setHodToEmployee("");
+          setAddress1("");
+          setAddress2("");
+          setCity("");
+          setState("");
+          setCountry("");
+          setPinCode("");
+          setMobileNo("");
+          setOfficeNo("");
+          setEmailId("");
+          return;
+        }
+  
         // Split full name to get parts
         const fullName = response.data.data.emp_fname;
         const nameParts = fullName.split(" ");
@@ -259,12 +280,11 @@ const AddEmployee = () => {
         const middleName =
           nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : ""; // All words between first and last as middle name, if available
         const lastName = nameParts[nameParts.length - 1]; // Last word as last name
-
+  
         // Set individual name parts
         setFirstName(firstName);
         setMiddleName(middleName);
         setLastName(lastName);
-
         // Set other data
         setDepartments(response.data.data.emp_dep);
         setDesignation(response.data.data.emp_des);
@@ -285,9 +305,25 @@ const AddEmployee = () => {
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
+        setFirstName("");
+        setMiddleName("");
+        setLastName("");
+        setDepartments("");
+        setDesignation("");
+        setJoiningDate("");
+        setHodToEmployee("");
+        setAddress1("");
+        setAddress2("");
+        setCity("");
+        setState("");
+        setCountry("");
+        setPinCode("");
+        setMobileNo("");
+        setOfficeNo("");
+        setEmailId("");
       });
   };
-
+  
   const getAllData = async () => {
     const designationData = await GetAllDesignation();
     const departmentData = await getAllDepartment();

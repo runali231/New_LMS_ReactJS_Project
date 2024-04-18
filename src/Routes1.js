@@ -59,6 +59,7 @@ const routes1=[
     { path: '/trainingSchedule', name: 'TrainingSchedule', element:TrainingSchedule},
     { path: '/trainingSchedule1', name: 'TrainingSchedule11', element:TrainingSchedule1},
     { path: '/addTrainingFeedback', name: 'AddTrainingFeedback', element:AddTrainingFeedback},
+    { path: '/addTrainingFeedback/:id', name: 'AddTrainingFeedback', element:AddTrainingFeedback},
     { path: '/trainingFeedback', name: 'TrainingFeedback', element:TrainingFeedback},
     { path: '/trainingFeedback1', name: 'TrainingFeedback1', element:TrainingFeedback1},
     { path: '/competencyChart', name: 'CompetencyChart', element:CompetencyChart},
