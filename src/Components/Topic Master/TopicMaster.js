@@ -4,14 +4,20 @@ import { Add, Delete, Edit } from "@material-ui/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
-import { handlePageClick, handlePrevious, handleNext, calculatePaginationRange } from "../PaginationUtils";
+import {
+  handlePageClick,
+  handlePrevious,
+  handleNext,
+  calculatePaginationRange,
+} from "../PaginationUtils";
 
 const TopicMaster = () => {
   const navigate = useNavigate();
   const [allTopics, setAllTopics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [searchData, setSearchData] = useState("")
+  const [searchData, setSearchData] = useState("");
+  const [toggleActive, setToggleActive] = useState(true);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with your desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -19,11 +25,16 @@ const TopicMaster = () => {
 
   useEffect(() => {
     getAllData();
-  }, [currentPage]);
+  }, [currentPage, toggleActive]);
 
   const getAllData = () => {
     axios
-      .get(new URL(UrlData +`TopicMaster/GetAllTopics?t_isactive=1`))
+      .get(
+        new URL(
+          UrlData +
+            `TopicMaster/GetAllTopics?t_isactive=${toggleActive ? "1" : "2"}`
+        )
+      )
       .then((response) => {
         console.log("response", response.data.data);
         setAllTopics(response.data.data);
@@ -42,10 +53,10 @@ const TopicMaster = () => {
       t_id: tId,
     };
     axios
-      .post(new URL(UrlData +`TopicMaster/DeleteTopics`), data)
+      .post(new URL(UrlData + `TopicMaster/DeleteTopics`), data)
       .then((response) => {
         console.log("delete topics", response);
-        alert("Topic deleted successfully!")
+        alert("Topic deleted successfully!");
         getAllData();
       })
       .catch((error) => {
@@ -64,8 +75,8 @@ const TopicMaster = () => {
       // Filter data based on search input value
       const filteredData = allTopics.filter(
         (topics) =>
-        topics.t_code.toLowerCase().includes(searchDataValue) ||
-        topics.t_description.toLowerCase().includes(searchDataValue)
+          topics.t_code.toLowerCase().includes(searchDataValue) ||
+          topics.t_description.toLowerCase().includes(searchDataValue)
       );
       setAllTopics(filteredData);
     }
@@ -90,6 +101,15 @@ const TopicMaster = () => {
                     <h4 className="card-title fw-bold">Topic Master</h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
+                    <div className="form-check form-switch mt-2 pt-1">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckDefault"
+                        checked={toggleActive} // Bind the checked state to the state variable
+                        onChange={() => setToggleActive(!toggleActive)}
+                      />
+                    </div>
                     <div
                       className="btn btn-add"
                       title="Add New"
@@ -109,15 +129,15 @@ const TopicMaster = () => {
                 </div>
               </div>
               <div className="card-body pt-3">
-              <div className="row">
+                <div className="row">
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
-                    style={{ height: "35px" }}
+                      style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
-                      // value={selectedItemsPerPage} 
-                      // onChange={handleChange} 
+                      // value={selectedItemsPerPage}
+                      // onChange={handleChange}
                     >
                       <option value="10">10</option>
                       <option value="20">20</option>
@@ -136,7 +156,12 @@ const TopicMaster = () => {
                     />
                   </div>
                 </div>
-                <Table striped hover responsive className="border text-left mt-4">
+                <Table
+                  striped
+                  hover
+                  responsive
+                  className="border text-left mt-4"
+                >
                   <thead>
                     <tr>
                       <th scope="col" style={headerCellStyle}>
@@ -163,29 +188,46 @@ const TopicMaster = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentItems && currentItems.map((data, index) => (
-                      <tr key={data.t_id}>
-                        <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                        <td>{data.t_code}</td>
-                        <td>{data.t_description}</td>
-                        <td>{data.t_department}</td>
-                        <td>{data.t_trainingtype}</td>
-                        <td>{data.t_duration}</td>
-                        <td>
-                          <Edit
-                            className="text-success mr-2"
-                            type="button"
-                            onClick={() => GetTopics(data.t_id)}
-                          />
-                          <Delete
-                            className="text-danger"
-                            type="button"
-                            style={{ marginLeft: "0.5rem" }}
-                            onClick={() => DeleteTopics(data.t_id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                    {currentItems &&
+                      currentItems.map((data, index) => (
+                        <tr key={data.t_id}>
+                          <td>
+                            {(currentPage - 1) * itemsPerPage + index + 1}
+                          </td>
+                          <td>{data.t_code}</td>
+                          <td>{data.t_description}</td>
+                          <td>{data.t_department}</td>
+                          <td>{data.t_trainingtype}</td>
+                          <td>{data.t_duration}</td>
+                          <td>
+                            <Edit
+                              className="text-success mr-2"
+                              type="button"
+                              onClick={() => GetTopics(data.t_id)}
+                            />
+                            {toggleActive === true ? (
+                              <Delete
+                                className="text-danger"
+                                type="button"
+                                style={{ marginLeft: "0.5rem" }}
+                                onClick={() => DeleteTopics(data.t_id)}
+                              />
+                            ) : (
+                              <Delete
+                                className="text-danger"
+                                type="button"
+                                // style={{ marginLeft: "0.5rem" }}
+                                style={{
+                                  opacity: 0.5,
+                                  marginLeft: "0.5rem",
+                                  pointerEvents: "none",
+                                }} 
+                                onClick={() => DeleteTopics(data.t_id)}
+                              />
+                            )}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">
@@ -202,23 +244,55 @@ const TopicMaster = () => {
                     <nav aria-label="Page navigation example">
                       <ul className="pagination justify-content-center justify-content-lg-end">
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handlePrevious(currentPage, setCurrentPage)}
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handlePrevious(currentPage, setCurrentPage)
+                            }
                             disabled={currentPage === 1}
-                            aria-label="Previous">
+                            aria-label="Previous"
+                          >
                             <span aria-hidden="true">&laquo;</span>
                           </button>
                         </li>
-                        {calculatePaginationRange(currentPage, allTopics, itemsPerPage).map((number) =>
-                          <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`}>
-                            <button className="page-link" onClick={() => handlePageClick(number, setCurrentPage)}>{number}</button>
+                        {calculatePaginationRange(
+                          currentPage,
+                          allTopics,
+                          itemsPerPage
+                        ).map((number) => (
+                          <li
+                            key={number}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() =>
+                                handlePageClick(number, setCurrentPage)
+                              }
+                            >
+                              {number}
+                            </button>
                           </li>
-                        )}
+                        ))}
                         <li className="page-item">
-                          <button className="page-link"
-                            onClick={() => handleNext(currentPage, allTopics, itemsPerPage, setCurrentPage)}
-                            disabled={currentPage === Math.ceil(allTopics.length / itemsPerPage)}
-                            aria-label="Next">
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              handleNext(
+                                currentPage,
+                                allTopics,
+                                itemsPerPage,
+                                setCurrentPage
+                              )
+                            }
+                            disabled={
+                              currentPage ===
+                              Math.ceil(allTopics.length / itemsPerPage)
+                            }
+                            aria-label="Next"
+                          >
                             <span aria-hidden="true">&raquo;</span>
                           </button>
                         </li>

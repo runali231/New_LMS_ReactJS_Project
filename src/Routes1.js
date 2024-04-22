@@ -36,6 +36,8 @@ import StateMaster from './Components/StateMaster/StateMaster';
 import CountryMaster from './Components/CountryMaster/CountryMaster';
 import UserMaster from './Components/UserMaster/UserMaster';
 import TrainingEmailView from './Components/Training/TrainingEmailView';
+import ParameterMaster from './Components/ParameterMaster/ParameterMaster';
+import ParameterValueMaster from './Components/ParameterMaster/ParameterValueMaster';
 
 
 const routes1=[
@@ -82,6 +84,8 @@ const routes1=[
     { path: '/cityMaster/:coId/:coName/:stateId/:stateName', name: 'CityMaster', element:CityMaster},
     { path: '/stateMaster/:countryId/:countryName', name: 'StateMaster', element:StateMaster},
     { path: '/countryMaster', name: 'CountryMaster', element:CountryMaster},
+    { path: '/parameterMaster', name: 'ParameterMaster', element:ParameterMaster},
+    { path: '/parameterValueMaster/:parameterId/:parameterNamee', name: 'ParameterValueMaster', element:ParameterValueMaster},
     { path: '/userMaster', name: 'UserMaster', element:UserMaster},
     { path: '/trainingEmailView', name: 'TrainingEmailView', element:TrainingEmailView},
 

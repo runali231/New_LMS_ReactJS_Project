@@ -312,7 +312,11 @@ const AddTrainingSchedule = () => {
     })
       .then((response) => {
         console.log(response, "add action");
-        alert("Training Scheduled Approved Successfully!");
+        if (action === "6") {
+          alert("Training Scheduled Approved Successfully!");
+        } else {
+          alert("Training Scheduled Rejected Successfully!");
+        }
         navigate("/trainingScheduleApproval");
       })
       .catch((error) => {
@@ -320,15 +324,7 @@ const AddTrainingSchedule = () => {
         // alert("Something went wrong")
       });
   };
-  const getSingleHrTraining = (tss_id) => {
-    console.log("Received index:", tss_id);
-    setTss_id(tss_id);
-  };
-  const getSingleHodTraining = (tss_id) => {
-    setSelectedRowIndex(tss_id);
-    console.log("Received index:", tss_id);
-    setTss_id(tss_id);
-  };
+
 
   const addSingleHrTraining = () => {
     // Create a new array by mapping over the existing sub-training schedules
@@ -381,16 +377,6 @@ const AddTrainingSchedule = () => {
     setAllSubTrainingSchedule(updatedAllSubTrainingSchedule);
     console.log(allSubTrainingSchedule, "all single sub training");
     resetForm();
-  };
-
-  const deleteTrainingSchedule = (tss_id) => {
-    // Filter out the item with the specified tss_id
-    const updatedTraining = allSubTrainingSchedule.filter(
-      (training) => training.tss_id !== tss_id
-    );
-
-    // Update the state with the filtered array
-    setAllSubTrainingSchedule(updatedTraining);
   };
 
   const handleFileChange = (e) => {

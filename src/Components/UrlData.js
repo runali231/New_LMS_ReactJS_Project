@@ -1,6 +1,7 @@
 
 const UrlData = "https://localhost:44355/api/";
-// const UrlData = "https://tms.initialinfinity.com/api/"
+// const UrlData = "https://tmsback.initialinfinity.com/api/"
+
 // const UrlData = "http://tmsback/api/";
 // const UrlData = "http://lmspublish:803/api/"
 

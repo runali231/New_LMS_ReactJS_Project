@@ -526,7 +526,11 @@ const AddTrainingApprovalForm = () => {
     })
       .then((response) => {
         console.log(response, "add action");
-        alert("Training Approved Successfully!")
+        if (action === "2") {
+          alert("Training Approved Successfully!");
+        } else {
+          alert("Training Rejected Successfully!");
+        }
         navigate("/trainingApprovalForm");
       })
       .catch((error) => {
@@ -833,7 +837,7 @@ const AddTrainingApprovalForm = () => {
                                     : departmentItem.td_topic_training}
                                 </td>
                                 <td>
-                                     {departmentItem.td_topic_training_name
+                                  {departmentItem.td_topic_training_name
                                     .split(/,(?=[a-zA-Z])/)
                                     .map((item, index) => (
                                       <React.Fragment key={index}>

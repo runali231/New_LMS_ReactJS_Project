@@ -11,6 +11,7 @@ import {
   calculatePaginationRange,
 } from "../PaginationUtils";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const CompetencyMaster = () => {
   const navigate = useNavigate();
@@ -35,7 +36,8 @@ const CompetencyMaster = () => {
         setAllCompetency(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        let errors = ErrorHandler(error)
+        alert(errors)
       });
   };
 
@@ -60,7 +62,8 @@ const CompetencyMaster = () => {
         getAllData();
       })
       .catch((error) => {
-        console.log(error);
+        let errors = ErrorHandler(error)
+        alert(errors)
       });
   };
 

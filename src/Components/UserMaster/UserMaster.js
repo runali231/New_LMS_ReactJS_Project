@@ -13,6 +13,10 @@ import {
 } from "../PaginationUtils";
 import UserId from "../UserId";
 import ErrorHandler from "../ErrorHandler";
+import {
+  GetAllDesignation,
+  getAllDepartment,
+} from "../Api/DesignationAndDepartment";
 
 const UserMaster = () => {
   const navigate = useNavigate();
@@ -22,6 +26,10 @@ const UserMaster = () => {
   const [role, setRole] = useState("");
   const [employee, setEmployee] = useState("");
   const [userName, setUserName] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [selectedDesignation, setSelectedDesignation] = useState([]);
+  const [department, setDepartment] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
@@ -41,6 +49,7 @@ const UserMaster = () => {
   };
 
   useEffect(() => {
+    getData();
     getAllData();
     getAllRole();
     getAllEmployee();
@@ -93,7 +102,7 @@ const UserMaster = () => {
         setAllEmployee(response.data.data);
         const emp = response.data.data.map((item, index) => ({
           value: item.emp_id,
-          label: item.emp_fname,
+          label: item.emp_code,
         }));
         setAllEmployee(emp);
       })
@@ -104,6 +113,8 @@ const UserMaster = () => {
 
   const handleEmployee = (selected) => {
     setEmployee(selected);
+    console.log(selected.label, "selected");
+    setUserName(selected.label);
   };
   const handleRole = (selected) => {
     setRole(selected);
@@ -205,6 +216,24 @@ const UserMaster = () => {
         let errors = ErrorHandler(error);
         alert(errors);
       });
+  };
+
+  const getData = async () => {
+    const designationData = await GetAllDesignation();
+    const departmentData = await getAllDepartment();
+
+    setSelectedDesignation(designationData);
+    setSelectedDepartment(departmentData);
+  };
+
+  const handleDesignation = (e) => {
+    const selectedValue = e.target.value;
+    setDesignation(selectedValue);
+  };
+
+  const handleDepartment = (e) => {
+    const selectedValue = e.target.value;
+    setDepartment(selectedValue);
   };
 
   const handleSearch = (e) => {
@@ -426,126 +455,6 @@ const UserMaster = () => {
           </div>
         </div>
       </div>
-      {/* <div
-        className="modal fade"
-        id="userForm"
-        tabIndex="-1"
-        aria-labelledby="userFormLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title fw-bold" id="userFormLabel">
-                User Master
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">
-                      Employee Name:
-                    </label>{" "}
-                    <span className="text-danger fw-bold">*</span>
-
-                    <Select
-                      options={allEmployee}
-                      value={employee}
-                      onChange={handleEmployee}
-                      className="mt-2"
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">User Name:</label>{" "}
-                    <span className="text-danger fw-bold">*</span>
-                    <input
-                      type="text"
-                      id="userName"
-                      name="userName"
-                      className="form-control "
-                      autoComplete="off"
-                      placeholder="Enter User Name"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">Role:</label>{" "}
-                    <span className="text-danger fw-bold">*</span>
-                    <Select
-                      options={allRole}
-                      value={role}
-                      onChange={handleRole}
-                      className="mt-2"
-                    />
-                  </div>
-                </div>
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                  <div className="form-group form-group-sm">
-                    <label className="control-label fw-bold">
-                    </label>
-                    <div className="form-group form-group-sm">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          checked={active}
-                          onChange={(e) => setActive(e.target.checked)}
-                          id="defaultCheck1"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="defaultCheck1"
-                        >
-                          Is Active
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <div className="row">
-                <div className="col-lg-12 text-end">
-                  <button
-                    className="btn text-light"
-                    type="button"
-                    data-bs-dismiss="modal"
-                    style={{ backgroundColor: "#1B5A90" }}
-                    onClick={() => {
-                      addCountry();
-                    }}
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary mx-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <Modal show={showModal} onHide={handleClose} size="lg" backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>
@@ -557,7 +466,7 @@ const UserMaster = () => {
             <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">
-                  Employee Name:
+                  Employee Code:
                 </Form.Label>
                 <span className="text-danger fw-bold">*</span>
                 <Select
@@ -583,6 +492,50 @@ const UserMaster = () => {
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </Form.Group>
+            </Col>
+          </Row>
+          <Row className=" mt-4">
+            <Col xs={12} sm={12} md={12} lg={6}>
+              <div className="form-group form-group-sm">
+                <label className="control-label fw-bold">Designation:</label>{" "}
+                <span className="text-danger fw-bold">*</span>
+                <select
+                  className="form-select"
+                  aria-label="Default select example"
+                  value={designation}
+                  onChange={handleDesignation}
+                >
+                  <option value="" disabled>
+                    Select Designation
+                  </option>
+                  {selectedDesignation.map((data, index) => (
+                    <option key={index} value={data.de_id}>
+                      {data.de_designation_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+              <div className="form-group form-group-sm">
+                <label className="control-label fw-bold">Departments:</label>{" "}
+                <span className="text-danger fw-bold">*</span>
+                <select
+                  className="form-select"
+                  aria-label="Default select example"
+                  value={department}
+                  onChange={handleDepartment}
+                >
+                  <option value="" disabled>
+                    Select Department
+                  </option>
+                  {selectedDepartment.map((data, index) => (
+                    <option key={index} value={data.d_id}>
+                      {data.d_department_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </Col>
           </Row>
           <Row className="mt-4">

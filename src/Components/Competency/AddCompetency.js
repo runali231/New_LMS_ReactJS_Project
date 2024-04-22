@@ -44,7 +44,8 @@ const AddCompetency = () => {
         console.log(selectedDesignation, "all designation");
       })
       .catch((error) => {
-        console.log(error);
+        let errors = ErrorHandler(error)
+        alert(errors)
       });
   };
 
@@ -76,7 +77,8 @@ const AddCompetency = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        let errors = ErrorHandler(error)
+        alert(errors)
       });
   };
 
@@ -146,7 +148,8 @@ const AddCompetency = () => {
         console.log(topics, "options");
       })
       .catch((error) => {
-        console.log(error);
+        let errors = ErrorHandler(error)
+        alert(errors)
       });
   };
 
@@ -162,7 +165,7 @@ const AddCompetency = () => {
               <div className="card-header">
                 <div className="row align-items-center">
                   <div className="col">
-                    <h4 className="card-title fw-bold">Competency Master</h4>
+                    <h4 className="card-title fw-bold">Add Competency Master</h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
                     <div

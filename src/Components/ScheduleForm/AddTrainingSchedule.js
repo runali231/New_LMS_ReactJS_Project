@@ -1436,8 +1436,9 @@ const AddTrainingSchedule = () => {
                 <Col sm={6}>
                   <Form.Group className="mb-3" controlId="formScheduledHours">
                     <Form.Label className="control-label fw-bold">
-                      Scheduled Hours:
-                      <span className="text-danger fw-bold">*</span>
+                      Scheduled Hours: 
+                      {trainingAttended === "Yes" ? <span className="text-danger fw-bold">*</span> : null}
+                      
                     </Form.Label>
                     <Form.Control
                       type="text"
@@ -1456,7 +1457,8 @@ const AddTrainingSchedule = () => {
                   >
                     <Form.Label className="control-label fw-bold">
                       Actual Hours Attended:
-                      <span className="text-danger fw-bold">*</span>
+                      {trainingAttended === "Yes" ? <span className="text-danger fw-bold">*</span> : null}
+                      {/* <span className="text-danger fw-bold">*</span> */}
                     </Form.Label>
                     <Form.Control
                       type="text"
