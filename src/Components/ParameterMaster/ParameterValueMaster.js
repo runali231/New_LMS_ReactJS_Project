@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Modal, Button, Form, Row, Col } from "react-bootstrap";
-import { Add, Delete, Edit, Height } from "@material-ui/icons";
+import { Add, Delete, Edit, Height , ArrowBack} from "@material-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
@@ -121,7 +121,8 @@ const ParameterValueMaster = () => {
       .then((response) => {
         console.log(response, "get parameter value");
         setCode(response.data.data.pv_code);
-        setName(response.data.data.pv_parametername);
+        setName(response.data.data.pv_parametervalue);
+        setParameterName(response.data.data.pv_parametername);
         setParameterValueId(response.data.data.pv_id);
         handleShow(); // Show modal for editing
       })
@@ -162,9 +163,11 @@ const ParameterValueMaster = () => {
     } else {
       // Filter data based on search input value
       const filteredData = allParameterValue.filter(
-        (country) =>
-          country.co_country_name.toLowerCase().includes(searchDataValue) ||
-          country.co_country_code.toLowerCase().includes(searchDataValue)
+        (parameterValue) =>
+          parameterValue.pv_parametername.toLowerCase().includes(searchDataValue) ||
+          parameterValue.pv_code.toLowerCase().includes(searchDataValue) ||
+          parameterValue.pv_parametervalue.toLowerCase().includes(searchDataValue)
+          
       );
       setAllParameterValue(filteredData);
     }
@@ -215,6 +218,16 @@ const ParameterValueMaster = () => {
                         style={{ backgroundColor: "#1B5A90" }}
                       >
                         <Add />
+                      </Button>
+                      <Button
+                        // onClick={handleShow}
+                        className="mx-2"
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                        style={{ backgroundColor: "#1B5A90" }}
+                      >
+                        <ArrowBack />
                       </Button>
                     </div>
                   </div>

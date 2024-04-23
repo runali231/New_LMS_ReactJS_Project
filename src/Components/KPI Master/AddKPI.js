@@ -246,41 +246,6 @@ const AddKPI = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">KPI Code:</label>{" "}
-                      <span className="text-danger fw-bold">*</span>
-                      <input
-                        type="number"
-                        id="kpiCode"
-                        name="kpiCode"
-                        className="form-control "
-                        autoComplete="off"
-                        placeholder="Enter KPI Code"
-                        value={kpiCode}
-                        onChange={(e) => setKpiCode(e.target.value)}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
-                    <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">
-                        KPI Description:
-                      </label>{" "}
-                      {/* <span className="text-danger fw-bold">*</span> */}
-                      <textarea
-                        className="form-control"
-                        id="description"
-                        rows="3"
-                        placeholder="Enter KPI Description"
-                        value={kpiDescription}
-                        onChange={(e) => setKpiDescription(e.target.value)}
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-                <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                    <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Designation:
                       </label>{" "}
@@ -326,6 +291,41 @@ const AddKPI = () => {
                     </div>
                   </div>
                 </div>
+                <div className="row mt-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                    <div className="form-group form-group-sm">
+                      <label className="control-label fw-bold">KPI Code:</label>{" "}
+                      <span className="text-danger fw-bold">*</span>
+                      <input
+                        type="number"
+                        id="kpiCode"
+                        name="kpiCode"
+                        className="form-control "
+                        autoComplete="off"
+                        placeholder="Enter KPI Code"
+                        value={kpiCode}
+                        onChange={(e) => setKpiCode(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
+                    <div className="form-group form-group-sm">
+                      <label className="control-label fw-bold">
+                        KPI Description:
+                      </label>{" "}
+                      {/* <span className="text-danger fw-bold">*</span> */}
+                      <textarea
+                        className="form-control"
+                        id="description"
+                        rows="3"
+                        placeholder="Enter KPI Description"
+                        value={kpiDescription}
+                        onChange={(e) => setKpiDescription(e.target.value)}
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>      
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                     <div className="form-group form-group-sm">

@@ -156,9 +156,9 @@ const ParameterMaster = () => {
     } else {
       // Filter data based on search input value
       const filteredData = allParameter.filter(
-        (country) =>
-          country.co_country_name.toLowerCase().includes(searchDataValue) ||
-          country.co_country_code.toLowerCase().includes(searchDataValue)
+        (parameter) =>
+        parameter.p_code.toLowerCase().includes(searchDataValue) ||
+        parameter.p_parametername.toLowerCase().includes(searchDataValue)
       );
       setAllParameter(filteredData);
     }

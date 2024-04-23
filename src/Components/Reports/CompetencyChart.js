@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Table } from "react-bootstrap";
+import { PictureAsPdf, InsertDriveFile  } from '@material-ui/icons';
 import "../Css/Site.css";
 import axios from "axios";
 import UrlData from "../UrlData";
@@ -56,59 +57,8 @@ const CompetencyChart = () => {
       doc.save("competency-chart.pdf");
     });
   };
-  // const exportPdfHandler = () => {
-  //   // Get the table element
-  //   const table = document.getElementById("dataTable");
+ 
   
-  //   // Set the width of the table and its container to be wider than the page width
-  //   table.style.width = "1000px"; // Adjust the width as needed
-  //   table.parentElement.style.overflowX = "auto"; // Enable horizontal scrolling
-  
-  //   // Use html2canvas to capture the table as an image
-  //   html2canvas(table).then((canvas) => {
-  //     const imgData = canvas.toDataURL("image/jpeg");
-  
-  //     // Calculate dimensions for the PDF
-  //     const imgWidth = 300; // A4 page width in mm
-  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
-  //     // Create a new jsPDF instance
-  //     const doc = new jsPDF({
-  //       orientation: "landscape",
-  //     });
-  
-  //     // Add the captured image to the PDF
-  //     doc.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
-  
-  //     // Save the PDF
-  //     doc.save("table.pdf");
-  
-  //     // Reset table and container width after capturing
-  //     table.style.width = "auto";
-  //     table.parentElement.style.overflowX = "hidden";
-  //   });
-  // };
-  // const exportPdfHandler = () => {
-  //   // Get the table element
-  //   const table = document.getElementById("dataTable");
-  
-  //   // Create a new jsPDF instance
-  //   const doc = new jsPDF({
-  //     orientation: "landscape",
-  //   });
-  
-  //   // Add autoTable plugin options
-  //   const options = {
-  //     startY: 10, // Start y position of the table. This is optional.
-  //     margin: { top: 10, bottom: 10, left: 10, right: 10 }, // Page margins
-  //   };
-  
-  //   // Generate PDF directly from the table
-  //   doc.autoTable({ html: table, ...options });
-  
-  //   // Save the PDF
-  //   doc.save("competency-chart.pdf");
-  // };
   useEffect(() => {
     getAllData();
   }, [currentPage, itemsPerPage]);
@@ -135,34 +85,6 @@ const CompetencyChart = () => {
 
     return `${day}-${month}-${year}`;
   }
-  // const doc = new jsPDF();
-  // const exportPdfHandler = () => {
-  //   doc.autoTable({ html: "#dataTable" });
-  //   doc.save("competencyChart.pdf");
-  //   console.log("Table Data Exported");
-  // };
-  // const exportPdfHandler = () => {
-  //   const doc = new jsPDF('landscape'); // Creating a PDF in landscape orientation
-  //   const pdfContent = pdfContentRef.current;
-
-  //   if (!pdfContent) {
-  //     console.error("Element with ref 'pdfContentRef' not found");
-  //     return;
-  //   }
-
-  //   html2canvas(pdfContent).then((canvas) => {
-  //     const imgData = canvas.toDataURL("image/png");
-  //     const imgWidth = 297; // Adjust width as needed for landscape orientation
-  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  //     doc.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
-
-  //     // Add table using jspdf-autotable
-  //     doc.autoTable({ html: '#dataTable' });
-
-  //     doc.save("competency_report.pdf");
-  //   });
-  // };
 
   const exportToExcel = () => {
     import("xlsx").then((xlsx) => {
@@ -207,7 +129,7 @@ const CompetencyChart = () => {
                         style={{ backgroundColor: "#1B5A90" }}
                         onClick={exportPdfHandler}
                       >
-                        Pdf
+                        <PictureAsPdf/>
                       </button>
                     </div>
                     <div className="btn btn-add" title="Add New">
@@ -217,7 +139,7 @@ const CompetencyChart = () => {
                         style={{ backgroundColor: "#1B5A90" }}
                         onClick={exportToExcel}
                       >
-                        Excel
+                        <InsertDriveFile />
                       </button>
                     </div>
                   </div>

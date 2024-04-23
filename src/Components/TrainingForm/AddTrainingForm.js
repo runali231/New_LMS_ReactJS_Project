@@ -712,7 +712,7 @@ const AddTrainingForm = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                        Training Nature:
+                       Training Type:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       <select
@@ -724,7 +724,7 @@ const AddTrainingForm = () => {
                         <option>Induction</option>
                         <option>New Training</option> */}
                         <option value="" disabled>
-                          Select Training Nature
+                          Select Training Type
                         </option>
                         {allTrainingNature.map((data, index) => (
                           <option key={index} value={data.pv_id}>
@@ -737,7 +737,7 @@ const AddTrainingForm = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                        Training Type:
+                      Training Nature:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       <select
@@ -746,7 +746,7 @@ const AddTrainingForm = () => {
                         onChange={(e) => setTrainingType(e.target.value)}
                       >
                         <option value="" disabled>
-                          Select Training Type
+                          Select Training Nature
                         </option>
                         {allTrainingType.map((data, index) => (
                           <option key={index} value={data.pv_id}>

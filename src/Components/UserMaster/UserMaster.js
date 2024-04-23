@@ -60,9 +60,8 @@ const UserMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `UserMaster/GetAll?status=${
-            toggleActive ? "1" : "0"
-          }&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+        `UserMaster/GetAll?status=${toggleActive ? "1" : "0"
+        }&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ),
     })
       .then((response) => {
@@ -105,16 +104,38 @@ const UserMaster = () => {
           label: item.emp_code,
         }));
         setAllEmployee(emp);
+        const desg = response.data.data.map((item, index) => ({
+          value: item.emp_des,
+        }));
+
+        setSelectedDesignation(desg)
+
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+
+
   const handleEmployee = (selected) => {
     setEmployee(selected);
-    console.log(selected.label, "selected");
-    setUserName(selected.label);
+    console.log(selected, "selected");
+    // setUserName(selected.label);
+    axios({
+      method: "get",
+      url: new URL(UrlData + `EmployeeMaster/Get?status=1&emp_id=${selected.value}`),
+    })
+      .then((response) => {
+        console.log(response.data.data, "get employee");
+        setUserName(response.data.data.emp_code);
+        setDesignation(response.data.data.emp_des);
+        setDepartment(response.data.data.emp_dep);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const handleRole = (selected) => {
     setRole(selected);
@@ -139,6 +160,8 @@ const UserMaster = () => {
         userId: UserId,
         um_user_name: userName,
         um_password: "",
+        um_staffdepid: department,
+        um_staffdesid: designation,
         um_staffname: employee.label,
         um_staffid: employee.value,
         um_isactive: active === true ? "1" : "0",
@@ -189,6 +212,14 @@ const UserMaster = () => {
           value: response.data.data.um_roleid,
           label: response.data.data.um_rolename,
         });
+        setDesignation(response.data.data.
+          um_staffdesid
+
+        )
+        setDepartment(response.data.data.
+          um_staffdepid
+
+        )
         setUmId(umId);
       })
       .catch((error) => {
@@ -259,6 +290,8 @@ const UserMaster = () => {
     setRole("");
     setUserName("");
     setUmId("");
+    setDesignation("");
+    setDepartment("")
   };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -412,9 +445,8 @@ const UserMaster = () => {
                         ).map((number) => (
                           <li
                             key={number}
-                            className={`page-item ${
-                              currentPage === number ? "active" : ""
-                            }`}
+                            className={`page-item ${currentPage === number ? "active" : ""
+                              }`}
                           >
                             <button
                               className="page-link"
