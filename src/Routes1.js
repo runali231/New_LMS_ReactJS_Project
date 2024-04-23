@@ -86,7 +86,7 @@ const routes1=[
     { path: '/countryMaster', name: 'CountryMaster', element:CountryMaster},
     { path: '/parameterMaster', name: 'ParameterMaster', element:ParameterMaster},
     { path: '/parameterValueMaster/:parameterId/:parameterNamee', name: 'ParameterValueMaster', element:ParameterValueMaster},
-    { path: '/userMaster', name: 'UserMaster', element:UserMaster},
+    { path: '/userMaster', name: 'UserMaster', element:UserMaster , pageTitle:"User Master"},
     { path: '/trainingEmailView', name: 'TrainingEmailView', element:TrainingEmailView},
 
     // { path: '/sample', name: 'Sample', element:Sample  },

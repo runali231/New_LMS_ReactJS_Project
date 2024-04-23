@@ -265,7 +265,7 @@ const AddRoleMaster = () => {
               </div>
               <div className="card-body pt-3">
                 <div className="row">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-2 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Role Name:
@@ -301,7 +301,7 @@ const AddRoleMaster = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-0 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Enter Module:

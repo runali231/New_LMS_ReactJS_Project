@@ -241,6 +241,7 @@ const StateMaster = () => {
                   <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                     <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                     <select
+                    style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
                       value={selectedItemsPerPage} // Set value to selectedItemsPerPage
@@ -407,7 +408,7 @@ const StateMaster = () => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-2 mt-lg-0">
               <Form.Group className="form-group form-group-sm">
                 <Form.Label className="control-label fw-bold">
                   State Code:
@@ -424,7 +425,7 @@ const StateMaster = () => {
                 />
               </Form.Group>
             </Col>
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-2 mt-lg-0">
               <Form.Group className="form-group form-group-sm">
                 <Form.Label className="control-label fw-bold">
                   State Name:

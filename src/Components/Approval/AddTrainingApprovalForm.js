@@ -507,18 +507,23 @@ const AddTrainingApprovalForm = () => {
     console.log(action, "selectedAction");
     console.log(id, "id");
     let data;
+    if (action === "") {
+      alert("Please select action!");
+      return; // Added return to exit function
+    }
     if (action === "3" || action === "5") {
       if (!remark) {
         alert("Please enter the remark!");
-        return;
+        return; // Added return to exit function
       }
     }
+    // Adjusted logic for data assignment
     data = {
       tr_action: action,
       tr_remark: remark,
       tr_id: id,
     };
-
+  
     axios({
       method: "post",
       url: new URL(UrlData + `TrainingForm/UpdateStatus`),
@@ -526,18 +531,26 @@ const AddTrainingApprovalForm = () => {
     })
       .then((response) => {
         console.log(response, "add action");
-        if (action === "2") {
-          alert("Training Approved Successfully!");
-        } else {
-          alert("Training Rejected Successfully!");
-        }
-        navigate("/trainingApprovalForm");
-      })
+        // if (response.data.success) { // Check if response indicates success
+          if (action === "2" || action === "4") { // Changed to || operator
+            alert("Training Approved Successfully!");
+          } 
+          if (action === "3" || action === "5") { // Changed to || operator
+            alert("Training Rejected Successfully!");
+          }
+          navigate("/trainingApprovalForm");
+        } 
+        // else {
+        //   alert("Failed to update status: " + response.data.message);
+        // }
+      // }
+    )
       .catch((error) => {
         console.log(error);
-        // alert("Something went wrong")
+        alert("Failed to update status. Please try again.");
       });
   };
+  
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -926,7 +939,7 @@ const AddTrainingApprovalForm = () => {
                       </select>
                     </div>
                   </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">Remark:</label>{" "}
                       {action === "3" || action === "5" ? (

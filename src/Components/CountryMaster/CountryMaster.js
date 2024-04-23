@@ -388,7 +388,7 @@ const CountryMaster = () => {
         <Modal.Body>
           <Form>
             <Row>
-              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-2 mt-lg-0">
                 <Form.Group className="mb-3" controlId="countryCode">
                   <Form.Label className="fw-bold">Country Code:</Form.Label>{" "}
                   <span className="text-danger fw-bold">*</span>
@@ -401,7 +401,7 @@ const CountryMaster = () => {
                   />
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-2 mt-lg-0">
                 <Form.Group className="mb-3" controlId="countryName">
                   <Form.Label className="fw-bold">Country Name:</Form.Label>{" "}
                   <span className="text-danger fw-bold">*</span>

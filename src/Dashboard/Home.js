@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Speedometer2,
   GearWideConnected,
@@ -10,6 +10,7 @@ import {
   ThreeDotsVertical,
   CheckCircleFill,
   ClipboardCheck,
+  BoxArrowRight,
   BookFill, // Import the BookFill icon
 } from "react-bootstrap-icons";
 import axios from "axios";
@@ -22,7 +23,7 @@ import "../Components/Css/Profile.css";
 import UrlData from "../Components/UrlData";
 import LoginForm from "../Components/Login/loginForm";
 
-const Home = () => {
+const Home = ({pageTitle}) => {
   const [sidebarData, setSidebarData] = useState([]);
   const [sidebar, setSidebar] = useState(true);
   const [content, setContent] = useState(true);
@@ -30,13 +31,8 @@ const Home = () => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  // const toggleMenu = () => {
-  //   setIsSubMenuOpen(!isSubMenuOpen);
-  // };
-  const toggleMenu = () => {
-    setIsSubMenuOpen((prevState) => !prevState);
-  };
   const userName = localStorage.getItem("username");
+console.log(pageTitle, "title")
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 720) {
@@ -52,17 +48,7 @@ const Home = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  // const handleClickOutside = (event) => {
-  //   if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-  //     setIsSubMenuOpen(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+
   useEffect(() => {
     getMenu();
   }, []);
@@ -90,14 +76,10 @@ const Home = () => {
     localStorage.removeItem("loginId");
     localStorage.removeItem("UserId");
     localStorage.removeItem("username");
-    // Directly render the LoginForm component
-    // return <LoginForm />;
     navigate("/");
     window.location.reload();
   };
 
-
-  // Return null or any other component if needed
   return (
     <>
       <div className="wrapper">
@@ -106,13 +88,10 @@ const Home = () => {
           <nav className="sidebar" id="sidebar">
             <div className="sidebar-header">
               <h3>
-              {/* <img src="./lms_logo.png" alt="" style={{ width: "35px" }} className="rounded-circle" />&nbsp;&nbsp; */}
-
                 <span className="text-light">LMS Dashboard</span>
               </h3>
             </div>
             <ul className="list-unstyled components">
-              {/* Filter and sort the sidebarData array */}
               <li className="active">
                 <div className="dashboard">
                   <NavLink to="/dashboard" className="dashboard">
@@ -122,10 +101,6 @@ const Home = () => {
                   </NavLink>
                 </div>
               </li>
-              <div className="small-screen navbar-display d-lg-none d-md-none d-xl-none d-none">
-                {/* Rest of your small screen navigation */}
-              </div>
-              {/* <br /> */}
               {sidebarData
                 .filter((item) =>
                   ["Master", "Transaction", "Approval", "Report"].includes(
@@ -158,8 +133,8 @@ const Home = () => {
                       role="button"
                       aria-controls={`menu-${menuItem.m_id}`}
                     >
-                      {menuItem.m_menuname === "Transaction" ? ( // Check if dropdown name is "Transaction"
-                        <BookFill style={{ fontSize: "22px" }} /> // Use BookFill icon
+                      {menuItem.m_menuname === "Transaction" ? (
+                        <BookFill style={{ fontSize: "22px" }} />
                       ) : menuItem.m_menuname === "Approval" ? (
                         <CheckCircleFill style={{ fontSize: "22px" }} />
                       ) : menuItem.m_menuname === "Report" ? (
@@ -169,7 +144,6 @@ const Home = () => {
                       )}
                       <span className="ms-3">{menuItem.m_menuname}</span>
                     </NavLink>
-                    {/* Submenu */}
                     <ul
                       className={`collapse list-unstyled menu ${
                         openDropdown === menuItem.m_id ? "show" : ""
@@ -177,33 +151,28 @@ const Home = () => {
                       id={`menu-${menuItem.m_id}`}
                     >
                       {sidebarData
-                        // .filter(
-                        //   (subMenuItem) =>
-                        //     subMenuItem.ParentId === menuItem.m_id.toUpperCase()
-                        // )
-                       
-                          .filter(subMenuItem => subMenuItem.ParentId === menuItem.m_id.toUpperCase())
-                          .sort((a, b) => {
-                            if (a.m_menuname === "Country Master") return -1; // prioritize "Country Master"
-                            if (b.m_menuname === "Country Master") return 1; // prioritize "Country Master"
-                            if (a.m_menuname === "Department Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Department Master") return 1;
-                            if (a.m_menuname === "Designation Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Designation Master") return 1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (a.m_menuname === "Employee Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Employee Master") return 1;
-                            if (a.m_menuname === "Topic Master") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Topic Master") return 1;
-                            if (a.m_menuname === "Training Need Form") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Training Need Form") return 1;
-                            if (a.m_menuname === "Training Schedule") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Training Schedule") return 1;
-                            if (a.m_menuname === "Training View") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Training View") return 1;
-                            if (a.m_menuname === "Feedback") return -1; // prioritize "Designation Master" if "Country Master" is not present
-                            if (b.m_menuname === "Feedback") return 1;
-                            return 0; // maintain original order for other submenu items
-                          })
+                        .filter(subMenuItem => subMenuItem.ParentId === menuItem.m_id.toUpperCase())
+                        .sort((a, b) => {
+                          if (a.m_menuname === "Country Master") return -1;
+                          if (b.m_menuname === "Country Master") return 1;
+                          if (a.m_menuname === "Department Master") return -1;
+                          if (b.m_menuname === "Department Master") return 1;
+                          if (a.m_menuname === "Designation Master") return -1;
+                          if (b.m_menuname === "Designation Master") return 1;
+                          if (a.m_menuname === "Employee Master") return -1;
+                          if (b.m_menuname === "Employee Master") return 1;
+                          if (a.m_menuname === "Topic Master") return -1;
+                          if (b.m_menuname === "Topic Master") return 1;
+                          if (a.m_menuname === "Training Need Form") return -1;
+                          if (b.m_menuname === "Training Need Form") return 1;
+                          if (a.m_menuname === "Training Schedule") return -1;
+                          if (b.m_menuname === "Training Schedule") return 1;
+                          if (a.m_menuname === "Training View") return -1;
+                          if (b.m_menuname === "Training View") return 1;
+                          if (a.m_menuname === "Feedback") return -1;
+                          if (b.m_menuname === "Feedback") return 1;
+                          return 0;
+                        })
                         .map((subMenuItem, subIndex) => (
                           <li key={subIndex}>
                             <NavLink to={subMenuItem.m_action}>
@@ -214,6 +183,14 @@ const Home = () => {
                     </ul>
                   </li>
                 ))}
+              {window.innerWidth < 720 && (
+                <li className="nav-item mx-2 mt-3">
+                  <div className="nav-link" onClick={logout}>
+                    <BoxArrowRight style={{ fontSize: "24px", color: "white" }} />
+                    <span className="ms-3 text-white" onClick={logout}>Logout</span>
+                  </div>
+                </li>
+              )}
             </ul>
           </nav>
         )}
@@ -223,7 +200,7 @@ const Home = () => {
             <div className="top-navbar ">
               <nav
                 className="navbar navbar-expand-lg sticky-top "
-                style={{ backgroundColor: "#1B5A90"/* , height: "72px" */ }}
+                style={{ backgroundColor: "#1B5A90" }}
               >
                 <button
                   type="button"
@@ -240,9 +217,14 @@ const Home = () => {
                     onClick={() => setSidebar(!sidebar)}
                   />
                 </button>
-                <NavLink className="navbar-brand text-white fw-bold" >
-                 {/* LMS DASHBOARD */}
-                </NavLink>
+                {window.innerWidth < 720 && (
+                  <NavLink className="navbar-brand text-white fw-bold">
+                    LMS DASHBOARD
+                  </NavLink>
+                )}
+                {/* <NavLink className="navbar-brand text-white fw-bold">
+                    {pageTitle}
+                  </NavLink> */}
                 <button
                   id="exnavbar"
                   className="collapse d-inline-block d-lg-none d-sm-block d-block ms-auto more-button"
@@ -255,6 +237,7 @@ const Home = () => {
                   <ThreeDotsVertical
                     style={{ fontSize: "22px", color: "white" }}
                     onClick={() => setSidebar(!sidebar)}
+                   
                   />
                 </button>
 
@@ -281,15 +264,16 @@ const Home = () => {
                           style={{ fontSize: "22px", color: "white" }}
                         /> */}
                       </NavLink>
-                    </li>                  
+                    </li>
                     <li className="nav-item ">
-                      <div className="nav-link" onClick={toggleMenu} type="button">
-                        {/* <span className="material-icons">person</span> */}
-
+                      <div
+                        className="nav-link"
+                        onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
+                        type="button"
+                      >
                         <PersonFill
                           style={{ fontSize: "24px", color: "white" }}
                         />
-
                         <div
                           className={`sub-menu-wrap ${
                             isSubMenuOpen ? "open-menu" : ""

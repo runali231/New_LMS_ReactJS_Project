@@ -105,7 +105,7 @@ const AddTrainingForm = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
         )
       )
       .then((response) => {
@@ -121,7 +121,7 @@ const AddTrainingForm = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
         )
       )
       .then((response) => {
@@ -227,13 +227,18 @@ const AddTrainingForm = () => {
 
   const GetAllByDepart = () => {
     console.log(departments);
-    if (departments === "") {
-      alert("Please enter departments!");
-    } else if (trainingDate === "") {
-      alert("Please enter training date!");
-    } else if (trainingTopic === "") {
-      alert("Please enter training topic!");
-    } else {
+    // if (departments === "") {
+    //   alert("Please enter departments!");
+    // }
+    // else if (trainingDate === "") {
+    //   alert("Please enter training date!");
+    // } else if (trainingTopic === "") {
+    //   alert("Please enter training topic!");
+    // }
+    if(departments === "" || trainingDate === "" || trainingTopic === ""){
+      alert("Please fill the details!")
+    }
+    else {
       axios
         .get(
           new URL(
@@ -369,15 +374,20 @@ const AddTrainingForm = () => {
       // You might want to provide a default value or handle it differently based on your requirements.
     }
     // Check if any required field is empty
-    if (departments === "") {
-      alert("Please select departments!");
-    } else if (selectedOption === "") {
-      alert("Please select employee code!");
-    } else if (trainingDate === "") {
-      alert("Please select training date!");
-    } else if (data.length <= 0) {
-      alert("Please select topics for training required!");
-    } else {
+    // if (departments === "") {
+    //   alert("Please select departments!");
+    // } else 
+    // if (selectedOption === "") {
+    //   alert("Please select employee code!");
+    // } else if (trainingDate === "") {
+    //   alert("Please select training date!");
+    // } else if (data.length <= 0) {
+    //   alert("Please select topics for training required!");
+    // } 
+    if(selectedOption === "" || trainingDate === "" || data.length <= 0){
+      alert("Please fill the details!")
+    }
+    else {
       const newTraining = {
         td_dept: departments.value,
         td_des: designation.label,
@@ -388,7 +398,7 @@ const AddTrainingForm = () => {
         td_date_training: trainingDate,
         td_topic_training: data.map((item) => item.value).join(","),
         td_topic_training_name: data.map((item) => item.label).join(","),
-      
+
       };
 
       // Updating state with new training entry
@@ -455,33 +465,33 @@ const AddTrainingForm = () => {
     setTrainingDept(trainingToEdit.td_req_dept);
     setTrainingDate(var2);
 
-  //   const topicValues = trainingToEdit.td_topic_training.split(",");
-  //   const topicLabels = trainingToEdit.td_topic_training_name.split(",");
+    //   const topicValues = trainingToEdit.td_topic_training.split(",");
+    //   const topicLabels = trainingToEdit.td_topic_training_name.split(",");
 
-  //   const selectedTrainingTopic1 = topicValues.map((value, index) => ({
-  //     value: topicValues[index],
-  //     label: topicLabels[index],
-  //   }));
+    //   const selectedTrainingTopic1 = topicValues.map((value, index) => ({
+    //     value: topicValues[index],
+    //     label: topicLabels[index],
+    //   }));
 
-  //   setTrainingTopic(selectedTrainingTopic1);
-  // };
-  const topicValues =trainingToEdit.td_topic_training.split(",");
-  const topicLabels =
-    trainingToEdit.td_topic_training_name.split(/,(?=[a-zA-Z])/);
+    //   setTrainingTopic(selectedTrainingTopic1);
+    // };
+    const topicValues = trainingToEdit.td_topic_training.split(",");
+    const topicLabels =
+      trainingToEdit.td_topic_training_name.split(/,(?=[a-zA-Z])/);
 
-  const maxLength = Math.max(topicValues.length, topicLabels.length);
+    const maxLength = Math.max(topicValues.length, topicLabels.length);
 
-  const selectedTrainingTopic1 = [];
-  for (let i = 0; i < maxLength; i++) {
-    selectedTrainingTopic1.push({
-      value: topicValues[i] || "", // Use empty string if value is undefined
-      label: topicLabels[i] || "", // Use empty string if label is undefined
-    });
-  }
+    const selectedTrainingTopic1 = [];
+    for (let i = 0; i < maxLength; i++) {
+      selectedTrainingTopic1.push({
+        value: topicValues[i] || "", // Use empty string if value is undefined
+        label: topicLabels[i] || "", // Use empty string if label is undefined
+      });
+    }
 
-  setTrainingTopic(selectedTrainingTopic1);
-  console.log(selectedTrainingTopic1,"482");
-};
+    setTrainingTopic(selectedTrainingTopic1);
+    console.log(selectedTrainingTopic1, "482");
+  };
   useEffect(() => {
     console.log("before useEffect:", editIndex);
     setEditIndex(editIndex);
@@ -614,7 +624,7 @@ const AddTrainingForm = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
+        `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
       ),
     })
       .then((response) => {
@@ -712,7 +722,7 @@ const AddTrainingForm = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                       Training Type:
+                        Training Type:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       <select
@@ -737,7 +747,7 @@ const AddTrainingForm = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                      Training Nature:
+                        Training Nature:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       <select
@@ -979,7 +989,7 @@ const AddTrainingForm = () => {
                                         <br />
                                       </React.Fragment>
                                     ))}
-                                     {/* {departmentItem.td_topic_training
+                                  {/* {departmentItem.td_topic_training
                                     .split(",")
                                     .map((item, index) => (
                                       <React.Fragment key={index}>
@@ -997,7 +1007,7 @@ const AddTrainingForm = () => {
                                         <br />
                                       </React.Fragment>
                                     ))}
-                                    {/* {departmentItem.td_topic_training_name
+                                  {/* {departmentItem.td_topic_training_name
                                     .split(",")
                                     .map((item, index) => (
                                       <React.Fragment key={index}>
@@ -1014,8 +1024,8 @@ const AddTrainingForm = () => {
                                       getSingleTraining(index);
                                       handleShow();
                                     }}
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#addTrainingForm"
+                                  // data-bs-toggle="modal"
+                                  // data-bs-target="#addTrainingForm"
                                   />
                                   <Delete
                                     className="text-danger"
@@ -1058,9 +1068,8 @@ const AddTrainingForm = () => {
                                 },
                                 (_, index) => (
                                   <li
-                                    className={`page-item ${
-                                      currentPage === index + 1 ? "active" : ""
-                                    }`}
+                                    className={`page-item ${currentPage === index + 1 ? "active" : ""
+                                      }`}
                                     key={index}
                                   >
                                     <button
@@ -1110,7 +1119,7 @@ const AddTrainingForm = () => {
                           console.log(selectedAction, "action");
                         }}
                       >
-                        <option>Please Select</option>
+                        <option value="" disabled >Please Select</option>
                         <option value="1">Submit</option>
                         <option value="0">Save Draft</option>
                       </select>

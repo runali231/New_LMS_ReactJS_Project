@@ -112,6 +112,7 @@ const AddTrainingSchedule = () => {
               .replace("T", " ")
               .substring(0, 16)
           );
+          setAction(response.data.data.ts_action)
           setStatus(response.data.data.ts_status);
           setTsId(id);
           console.log(response.data.data.ts_id, "tsId");
@@ -1533,7 +1534,7 @@ const AddTrainingSchedule = () => {
                     />
                   </Form.Group>
                 </Col>
-                <Col sm={6}>
+                <Col sm={6} className="mt-4 mt-lg-0">
                   <Form.Group controlId="formMarksObtained">
                     <Form.Label className="control-label fw-bold">
                       Marks Obtained:
@@ -1566,7 +1567,7 @@ const AddTrainingSchedule = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col sm={6}>
+                <Col sm={6} className="mt-4 mt-lg-0">
                   <Form.Group controlId="formTrainingStatus">
                     <Form.Label className="control-label fw-bold">
                       Training Status:
@@ -1601,7 +1602,7 @@ const AddTrainingSchedule = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col sm={6}>
+                <Col sm={6} className="mt-4 mt-lg-0">
                   <Form.Group controlId="formTrainingCertificate">
                     <Form.Label className="control-label fw-bold">
                       Training Certificate:
@@ -1632,7 +1633,7 @@ const AddTrainingSchedule = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col sm={6}>
+                <Col sm={6} className="mt-4 mt-lg-0">
                   <Form.Group controlId="formRemark">
                     <Form.Label className="control-label fw-bold">
                       Remark:

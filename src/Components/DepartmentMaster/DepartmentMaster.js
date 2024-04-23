@@ -410,7 +410,7 @@ const DepartmentMaster = () => {
         <Modal.Body>
           <Form>
             <Row>
-              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-2 mt-lg-0">
                 <Form.Group className="mb-3" controlId="departmentCode">
                   <Form.Label className="fw-bold">Department Code:</Form.Label>{" "}
                   <span className="text-danger fw-bold">*</span>
@@ -423,7 +423,7 @@ const DepartmentMaster = () => {
                   />
                 </Form.Group>
               </Col>
-              <Col xs={12} sm={12} md={6} lg={6} className="mt-4 mt-lg-0">
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-2 mt-lg-0">
                 <Form.Group className="mb-3" controlId="departmentName">
                   <Form.Label className="fw-bold">Department Name:</Form.Label>{" "}
                   <span className="text-danger fw-bold">*</span>
@@ -458,7 +458,7 @@ const DepartmentMaster = () => {
                   </Form.Select>
                 </Form.Group>
               </Col> */}
-              <Col xs={12} sm={12} md={6} lg={6} className="mt-3 mt-lg-0">
+              <Col xs={12} sm={12} md={6} lg={6} className="mt-2 mt-lg-0">
                 <Form.Group className="" controlId="isActive">
                   <Form.Check
                     type="checkbox"

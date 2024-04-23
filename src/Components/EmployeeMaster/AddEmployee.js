@@ -393,7 +393,7 @@ const AddEmployee = () => {
               </div>
               <div className="card-body pt-3">
                 <div className="row">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-2 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Employee Code:
@@ -494,10 +494,10 @@ const AddEmployee = () => {
                       </select>
                     </div>
                   </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                        Departments
+                        Department
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       <select
@@ -519,7 +519,7 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-2 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">HOD</label>{" "}
                       {/* <span className="text-danger fw-bold">*</span> */}
@@ -579,7 +579,7 @@ const AddEmployee = () => {
                       </select>
                     </div>
                   </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-3 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Address 1:
@@ -598,7 +598,7 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-2 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Address 2:
@@ -643,7 +643,7 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-3 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">State:</label>{" "}
                       <span className="text-danger fw-bold">*</span>
@@ -676,7 +676,7 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-0 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">Country:</label>{" "}
                       <span className="text-danger fw-bold">*</span>
@@ -713,7 +713,7 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Mobile Phone:
@@ -734,7 +734,7 @@ const AddEmployee = () => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-0 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Office Number:
@@ -769,7 +769,7 @@ const AddEmployee = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
                         Joining Date:

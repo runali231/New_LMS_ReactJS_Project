@@ -495,7 +495,7 @@ const UserMaster = () => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-2 mt-lg-0">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">
                   Employee Code:
@@ -571,7 +571,7 @@ const UserMaster = () => {
             </Col>
           </Row>
           <Row className="mt-4">
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-4">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-0">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">Role:</Form.Label>
                 <span className="text-danger fw-bold">*</span>
