@@ -25,6 +25,7 @@ const UserMaster = () => {
   const [allEmployee, setAllEmployee] = useState([]);
   const [role, setRole] = useState("");
   const [employee, setEmployee] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
   const [userName, setUserName] = useState("");
   const [designation, setDesignation] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState([]);
@@ -107,16 +108,12 @@ const UserMaster = () => {
         const desg = response.data.data.map((item, index) => ({
           value: item.emp_des,
         }));
-
         setSelectedDesignation(desg)
-
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-
 
   const handleEmployee = (selected) => {
     setEmployee(selected);
@@ -128,11 +125,11 @@ const UserMaster = () => {
     })
       .then((response) => {
         console.log(response.data.data, "get employee");
-        setUserName(response.data.data.emp_code);
+        setUserName(response.data.data.emp_fname);
         setDesignation(response.data.data.emp_des);
         setDepartment(response.data.data.emp_dep);
+        setEmployeeName(response.data.data.emp_fname + response.data.data.emp_mname + response.data.data.emp_lname)
       })
-
       .catch((error) => {
         console.log(error);
       });
@@ -150,7 +147,7 @@ const UserMaster = () => {
   const addUser = () => {
     let data;
     if (employee === "") {
-      alert("Please enter employee name!");
+      alert("Please enter employee code!");
     } else if (userName === "") {
       alert("Please enter user name!");
     } else if (role === "") {
@@ -163,6 +160,7 @@ const UserMaster = () => {
         um_staffdepid: department,
         um_staffdesid: designation,
         um_staffname: employee.label,
+        um_fullname: employeeName,
         um_staffid: employee.value,
         um_isactive: active === true ? "1" : "0",
         um_roleid: role.value,
@@ -218,6 +216,10 @@ const UserMaster = () => {
         )
         setDepartment(response.data.data.
           um_staffdepid
+
+        )
+        setEmployeeName(response.data.data.
+          um_fullname
 
         )
         setUmId(umId);
@@ -372,6 +374,9 @@ const UserMaster = () => {
                         Sr.No
                       </th>
                       <th scope="col" style={headerCellStyle}>
+                        Employee Code
+                      </th>
+                      <th scope="col" style={headerCellStyle}>
                         Employee Name
                       </th>
                       <th scope="col" style={headerCellStyle}>
@@ -394,6 +399,7 @@ const UserMaster = () => {
                               {(currentPage - 1) * itemsPerPage + index + 1}
                             </td>
                             <td>{data.um_staffname}</td>
+                            <td>{data.um_fullname}</td>
                             <td type="button">{data.um_user_name}</td>
                             <td>{data.um_isactive}</td>
                             <td>
@@ -495,7 +501,7 @@ const UserMaster = () => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-2 mt-lg-0">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">
                   Employee Code:
@@ -512,6 +518,25 @@ const UserMaster = () => {
             <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">
+                  Employee Name:
+                </Form.Label>
+                <span className="text-danger fw-bold">*</span>
+                <Form.Control
+                  type="text"
+                  id="employeeName"
+                  name="employeeName"
+                  placeholder="Enter Employee Name"
+                  value={employeeName}
+                  onChange={(e) => setEmployeeName(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+
+          </Row>
+          <Row className="mt-4">
+            <Col xs={12} sm={12} md={12} lg={6}>
+              <Form.Group className="form-group-sm">
+                <Form.Label className="control-label fw-bold">
                   User Name:
                 </Form.Label>
                 <span className="text-danger fw-bold">*</span>
@@ -525,14 +550,12 @@ const UserMaster = () => {
                 />
               </Form.Group>
             </Col>
-          </Row>
-          <Row className=" mt-4">
-            <Col xs={12} sm={12} md={12} lg={6}>
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
               <div className="form-group form-group-sm">
                 <label className="control-label fw-bold">Designation:</label>{" "}
                 <span className="text-danger fw-bold">*</span>
                 <select
-                  className="form-select"
+                  className="form-select "
                   aria-label="Default select example"
                   value={designation}
                   onChange={handleDesignation}
@@ -548,7 +571,10 @@ const UserMaster = () => {
                 </select>
               </div>
             </Col>
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
+
+          </Row>
+          <Row className="mt-4">
+            <Col xs={12} sm={12} md={12} lg={6}>
               <div className="form-group form-group-sm">
                 <label className="control-label fw-bold">Departments:</label>{" "}
                 <span className="text-danger fw-bold">*</span>
@@ -569,8 +595,6 @@ const UserMaster = () => {
                 </select>
               </div>
             </Col>
-          </Row>
-          <Row className="mt-4">
             <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-0">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">Role:</Form.Label>
@@ -583,8 +607,10 @@ const UserMaster = () => {
                 />
               </Form.Group>
             </Col>
+          </Row>
+          <Row className="mt-4">
             <Col xs={12} sm={12} md={12} lg={6}>
-              <Form.Group className="mb-3 mt-5" controlId="isActive">
+              <Form.Group className="mb-3" controlId="isActive">
                 <Form.Check
                   type="checkbox"
                   label="Is Active"

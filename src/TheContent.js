@@ -15,6 +15,7 @@ const TheContent=()=> {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
+                  pageTitle={route.pageTitle}
                   element={<route.element username email mobile password textarea aPrimary aSuccess aInfo aWarning aDanger aSecondary aLight aDark />}
                 />
               )

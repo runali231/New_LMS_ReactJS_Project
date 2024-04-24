@@ -6,7 +6,11 @@ import axios from "axios";
 import UrlData from "../UrlData";
 import UserId from "../UserId";
 import ErrorHandler from "../ErrorHandler";
-import { useTable } from "react-table";
+import Select from "react-select";
+import {
+  GetAllDesignation,
+  getAllDepartment,
+} from "../Api/DesignationAndDepartment";
 
 const AddTrainingFeedback = () => {
   const navigate = useNavigate();
@@ -22,6 +26,7 @@ const AddTrainingFeedback = () => {
   const [feedbackDate, setFeedbackDate] = useState("");
   const [feedbackGivenBy, setFeedbackGivenBy] = useState("");
 
+  const [allEmployee, setAllEmployee] = useState([]);
   const [empCode, setEmpCode] = useState("");
   const [empName, setEmpName] = useState("");
   const [trainingNo, setTrainingNo] = useState("");
@@ -33,6 +38,9 @@ const AddTrainingFeedback = () => {
   const [trainingReqBy, setTrainingReqBy] = useState("");
   const [trainingAttended, setTrainingAttended] = useState("");
   const [designation, setDesignation] = useState("");
+  const [selectedDesignation, setSelectedDesignation] = useState([]);
+  const [department, setDepartment] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState([]);
   const [trainingFeedback, setTrainingFeedback] = useState();
   const [trainerFeedback, setTrainerFeedback] = useState();
   const [score, setScore] = useState("");
@@ -46,6 +54,9 @@ const AddTrainingFeedback = () => {
 
   useEffect(() => {
     getAllSubData();
+    getAllEmployee();
+    getAllDepartment();
+    GetAllDesignation();
   }, []);
 
   useEffect(() => {
@@ -109,7 +120,7 @@ const AddTrainingFeedback = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `Feedback/GetAllFeedback?user_id=${UserId}&fb_isactive=1&fb_id=${id}`
+        `Feedback/GetAllFeedback?user_id=${UserId}&fb_isactive=1&fb_id=${id}`
       ),
     })
       .then((response) => {
@@ -238,14 +249,148 @@ const AddTrainingFeedback = () => {
     }
   };
 
+  const handleDepartment = (selected) => {
+    // const selectedValue = e.target.value;
+    setDepartment(selected);
+    console.log(selected);
+  };
+  const getAllDepartment = () => {
+    axios({
+      method: "get",
+      url: new URL(UrlData + `DepartmentMaster/GetAll?status=1`),
+    })
+      .then((response) => {
+        console.log("response", response.data.data);
+        const department = response.data.data.map((item, index) => ({
+          value: item.d_department_name,
+          label: item.d_department_name,
+        }));
+        setSelectedDepartment(department);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleDesignation = (selectedValue) => {
+    // const selectedValue = e.target.value;
+    setDesignation(selectedValue);
+    console.log(selectedValue);
+
+  };
+  const GetAllDesignation = () => {
+    axios({
+      method: "get",
+      url: new URL(UrlData + `DesignationMaster/GetAll?status=1`),
+    })
+      .then((response) => {
+        console.log("response get all designation", response.data.data);
+        // setSelectedDesignation(response.data.data);
+        const designation = response.data.data.map((item, index) => ({
+          value: item.de_id,
+          label: item.de_designation_name,
+        }));
+        setSelectedDesignation(designation);
+        console.log(selectedDesignation, "all designation");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const deleteSubFeedback = (index) => {
     const updateFeedback = [...allSubFeedback];
     updateFeedback.splice(index, 1);
     setAllSubFeedback(updateFeedback);
     alert("Feedback deleted successfully!");
   };
+  const getAllEmployee = () => {
+    axios({
+      method: "get",
+      url: new URL(UrlData + `EmployeeMaster/GetAll?status=1`),
+    })
+      .then((response) => {
+        console.log("response all employee", response.data.data);
+        setAllEmployee(response.data.data);
+        const emp = response.data.data.map((item, index) => ({
+          value: item.emp_id,
+          label: item.emp_code,
+        }));
+        setAllEmployee(emp);
+        const desg = response.data.data.map((item, index) => ({
+          value: item.emp_des,
+        }));
+        setSelectedDesignation(desg)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
-  const resetForm=()=>{
+  const handleChangeByTrn = (e) => {
+    setTrainingNo(e.target.value);
+
+    // setUserName(selected.label);
+    axios({
+      method: "get",
+      url: new URL(UrlData + `Feedback/GetByTrn?fb_trnNo=${e.target.value}`),
+    })
+      .then((response) => {
+        console.log(response.data.data, "get training no");
+        const emp = response.data.data.map((item, index) => ({
+          value: item.emp_id,
+          label: item.EmpCode,
+        }));
+        setAllEmployee(emp);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleChangeByCode = (selected) => {
+    setEmpCode(selected);
+    console.log(selected, "selected");
+    // setUserName(selected.label);
+    axios({
+      method: "get",
+      url: new URL(UrlData + `Feedback/GetByCodeName?fb_empCode=${selected.label}&fb_trnNo=${trainingNo}`),
+    })
+      .then((response) => {
+        console.log(response.data.data, "get employee");
+        setEmpName(response.data.data.f_empName)
+        setDateTrainingFrom(response.data.data.f_dateTrnForm
+        )
+        setDateTrainingTo(response.data.data.f_dateTrnTo)
+        setTimeTrainingFrom(response.data.data.f_TimeTrnForm
+        )
+        setTimeTrainingTo(response.data.data.f_TimeTrnTo)
+        const dept = response.data.data.map((item, index) => ({
+          value: item.f_depid,
+          label: item.f_dep,
+        }));
+        setSelectedDepartment(dept);
+        const des = response.data.data.map((item, index) => ({
+          value: item.f_desId,
+          label: item.f_des,
+        }));
+        setSelectedDesignation(des);
+        // setSelectedDepartment({
+        //   value: response.data.data.f_depid,
+        //   label: response.data.data.f_dep,
+        // });
+        // setSelectedDesignation({
+        //   value: response.data.data.f_desId,
+        //   label: response.data.data.f_des,
+        // });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+
+  const resetForm = () => {
     setEmpCode("")
     setEmpName("")
     setTrainingNo("")
@@ -417,7 +562,7 @@ const AddTrainingFeedback = () => {
                             <button
                               className="btn btn-md text-light"
                               type="button"
-                              onClick={()=>{handleShow();resetForm()}}
+                              onClick={() => { handleShow(); resetForm() }}
                               style={{ backgroundColor: "#1B5A90" }}
                             >
                               <Add />
@@ -449,7 +594,7 @@ const AddTrainingFeedback = () => {
                         striped
                         hover
                         responsive
-                        className="border text-center"
+                        className="border text-start"
                       >
                         <thead>
                           <tr>
@@ -500,7 +645,7 @@ const AddTrainingFeedback = () => {
                             </th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-start">
                           {allSubFeedback && currentItems.map((data, index) => {
                             return (
                               <tr key={index}>
@@ -537,49 +682,49 @@ const AddTrainingFeedback = () => {
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
-        <div className="col-lg-4 col-12 ">
-          <h6 className="text-lg-start text-center">
-            Showing {indexOfFirstItem + 1} to{" "}
-                      {Math.min(indexOfLastItem, allSubFeedback.length)} of{" "}
-                      {allSubFeedback.length} entries
-          </h6>
-        </div>
-        <div className="col-lg-4 col-12"></div>
-        <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-          <nav aria-label="Page navigation example">
-            <ul className="pagination justify-content-lg-end justify-content-center">
-              {/* Previous button */}
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handlePageClick(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  <span aria-hidden="true">&laquo;</span>
-                </button>
-              </li>
-              {/* Page numbers */}
-              {[...Array(Math.ceil(allSubFeedback.length / itemsPerPage)).keys()].map((number) => (
-                <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                  <button className="page-link" onClick={() => handlePageClick(number + 1)}>
-                    {number + 1}
-                  </button>
-                </li>
-              ))}
-              {/* Next button */}
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handlePageClick(currentPage + 1)}
-                  disabled={currentPage === Math.ceil(allSubFeedback.length / itemsPerPage)}
-                >
-                  <span aria-hidden="true">&raquo;</span>
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
+                        <div className="col-lg-4 col-12 ">
+                          <h6 className="text-lg-start text-center">
+                            Showing {indexOfFirstItem + 1} to{" "}
+                            {Math.min(indexOfLastItem, allSubFeedback.length)} of{" "}
+                            {allSubFeedback.length} entries
+                          </h6>
+                        </div>
+                        <div className="col-lg-4 col-12"></div>
+                        <div className="col-lg-4 col-12 mt-3 mt-lg-0">
+                          <nav aria-label="Page navigation example">
+                            <ul className="pagination justify-content-lg-end justify-content-center">
+                              {/* Previous button */}
+                              <li className="page-item">
+                                <button
+                                  className="page-link"
+                                  onClick={() => handlePageClick(currentPage - 1)}
+                                  disabled={currentPage === 1}
+                                >
+                                  <span aria-hidden="true">&laquo;</span>
+                                </button>
+                              </li>
+                              {/* Page numbers */}
+                              {[...Array(Math.ceil(allSubFeedback.length / itemsPerPage)).keys()].map((number) => (
+                                <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
+                                  <button className="page-link" onClick={() => handlePageClick(number + 1)}>
+                                    {number + 1}
+                                  </button>
+                                </li>
+                              ))}
+                              {/* Next button */}
+                              <li className="page-item">
+                                <button
+                                  className="page-link"
+                                  onClick={() => handlePageClick(currentPage + 1)}
+                                  disabled={currentPage === Math.ceil(allSubFeedback.length / itemsPerPage)}
+                                >
+                                  <span aria-hidden="true">&raquo;</span>
+                                </button>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -613,19 +758,47 @@ const AddTrainingFeedback = () => {
             <Modal.Title><h5 className="fw-bold">Add Training Feedback</h5></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="row">
+            <div className="row ">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
+                <div className="form-group form-group-sm">
+                  <label className="control-label fw-bold">Training No:</label>
+                  <input
+                    type="text"
+                    id="trainingNo"
+                    className="form-control "
+                    placeholder="Enter Training No"
+                    value={trainingNo}
+                    onChange={handleChangeByTrn}
+                  />
+                </div>
+              </div>
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
+                <div className="form-group form-group-sm">
+                  <label className="control-label fw-bold">
+                    Training Type:
+                  </label>
+                  <input
+                    type="text"
+                    id="trainingType"
+                    className="form-control "
+                    placeholder="Enter Training Type"
+                    value={trainingType}
+                    onChange={(e) => setTrainingType(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="row mt-4">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Employee Code:
                   </label>
-                  <input
-                    type="text"
-                    id="empCode"
-                    className="form-control"
-                    placeholder="Enter Employee Code"
+                  <Select
+                    options={allEmployee}
                     value={empCode}
-                    onChange={(e) => setEmpCode(e.target.value)}
+                    onChange={handleChangeByCode}
+                    className="mt-2"
                   />
                 </div>
               </div>
@@ -647,32 +820,59 @@ const AddTrainingFeedback = () => {
               {/* Add other form inputs here */}
             </div>
             <div className="row mt-4">
-              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">Training No:</label>
-                  <input
-                    type="text"
-                    id="trainingNo"
-                    className="form-control "
-                    placeholder="Enter Training No"
-                    value={trainingNo}
-                    onChange={(e) => setTrainingNo(e.target.value)}
-                  />
+                  <label className="control-label fw-bold">Designation:</label>
+                  {/* <select
+                    className="form-select "
+                    aria-label="Default select example"
+                    value={designation}
+                    onChange={handleDesignation}
+                  >
+                    <option value="" disabled>
+                      Select Designation
+                    </option>
+                    {selectedDesignation.map((data, index) => (
+                      <option key={index} value={data.de_id}>
+                        {data.de_designation_name}
+                      </option>
+                    ))}
+                  </select> */}
+                  <Select
+                      options={selectedDesignation}
+                      value={designation}
+                      onChange={handleDesignation}
+                      className="mt-2"
+                    />
                 </div>
               </div>
-              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-lg-0 mt-4">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
-                    Training Type:
+                    Department:
                   </label>
-                  <input
-                    type="text"
-                    id="trainingType"
-                    className="form-control "
-                    placeholder="Enter Training Type"
-                    value={trainingType}
-                    onChange={(e) => setTrainingType(e.target.value)}
-                  />
+                  <br />
+                  {/* <select
+                    className="form-select"
+                    aria-label="Default select example"
+                    value={department}
+                    onChange={handleDepartment}
+                  >
+                    <option value="" disabled>
+                      Select Department
+                    </option>
+                    {selectedDepartment.map((data, index) => (
+                      <option key={index} value={data.d_id}>
+                        {data.d_department_name}
+                      </option>
+                    ))}
+                  </select> */}
+                  <Select
+                      options={selectedDepartment}
+                      value={department}
+                      onChange={handleDepartment}
+                      className="mt-2"
+                    />
                 </div>
               </div>
             </div>
@@ -773,19 +973,6 @@ const AddTrainingFeedback = () => {
               </div>
             </div>
             <div className="row mt-4">
-              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">Designation:</label>
-                  <input
-                    type="text"
-                    id="designation"
-                    className="form-control "
-                    placeholder="Enter Designation"
-                    value={designation}
-                    onChange={(e) => setDesignation(e.target.value)}
-                  />
-                </div>
-              </div>
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
@@ -803,8 +990,6 @@ const AddTrainingFeedback = () => {
                   />
                 </div>
               </div>
-            </div>
-            <div className="row mt-4">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
@@ -822,6 +1007,8 @@ const AddTrainingFeedback = () => {
                   />
                 </div>
               </div>
+            </div>
+            <div className="row mt-4">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">Score:</label>

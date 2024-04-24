@@ -168,7 +168,7 @@ const TrainingFeedback = () => {
                 </div>
                 <br />
 
-                <Table striped hover responsive className="border text-center">
+                <Table striped hover responsive className="border text-start">
                   <thead>
                     <tr>
                       <th scope="col" style={headerCellStyle}>

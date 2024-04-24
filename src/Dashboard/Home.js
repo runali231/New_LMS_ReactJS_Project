@@ -222,9 +222,9 @@ console.log(pageTitle, "title")
                     LMS DASHBOARD
                   </NavLink>
                 )}
-                {/* <NavLink className="navbar-brand text-white fw-bold">
+                <NavLink className="navbar-brand text-white fw-bold">
                     {pageTitle}
-                  </NavLink> */}
+                  </NavLink>
                 <button
                   id="exnavbar"
                   className="collapse d-inline-block d-lg-none d-sm-block d-block ms-auto more-button"
@@ -323,7 +323,7 @@ console.log(pageTitle, "title")
               </nav>
             </div>
           )}
-          <TheContent />
+          <TheContent pageTitle={pageTitle}/>
         </div>
       </div>
     </>

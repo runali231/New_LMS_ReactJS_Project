@@ -511,6 +511,8 @@ const AddTrainingSchedule = () => {
     alert("Deleted successfully");
   };
 
+
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     console.log(e.target.files[0], "target value");
@@ -582,6 +584,7 @@ const AddTrainingSchedule = () => {
     setTrainingCertificate("");
     setStatus1("");
     setRemark("");
+    setAction("")
   };
 
   // const indexOfLastItem = currentPage * itemsPerPage;
@@ -1307,7 +1310,7 @@ const AddTrainingSchedule = () => {
                                 console.log(selectedAction, "action");
                               }}
                             >
-                              <option>Please Select</option>
+                              <option value="" disabled>Please Select</option>
                               <option value="1">Submit</option>
                               <option value="0">Save Draft</option>
                             </select>

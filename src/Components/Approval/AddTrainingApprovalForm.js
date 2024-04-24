@@ -128,7 +128,7 @@ const AddTrainingApprovalForm = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
         )
       )
       .then((response) => {
@@ -144,7 +144,7 @@ const AddTrainingApprovalForm = () => {
       .get(
         new URL(
           UrlData +
-            `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
+          `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
         )
       )
       .then((response) => {
@@ -523,7 +523,7 @@ const AddTrainingApprovalForm = () => {
       tr_remark: remark,
       tr_id: id,
     };
-  
+
     axios({
       method: "post",
       url: new URL(UrlData + `TrainingForm/UpdateStatus`),
@@ -532,25 +532,25 @@ const AddTrainingApprovalForm = () => {
       .then((response) => {
         console.log(response, "add action");
         // if (response.data.success) { // Check if response indicates success
-          if (action === "2" || action === "4") { // Changed to || operator
-            alert("Training Approved Successfully!");
-          } 
-          if (action === "3" || action === "5") { // Changed to || operator
-            alert("Training Rejected Successfully!");
-          }
-          navigate("/trainingApprovalForm");
-        } 
+        if (action === "2" || action === "4") { // Changed to || operator
+          alert("Training Approved Successfully!");
+        }
+        if (action === "3" || action === "5") { // Changed to || operator
+          alert("Training Rejected Successfully!");
+        }
+        navigate("/trainingApprovalForm");
+      }
         // else {
         //   alert("Failed to update status: " + response.data.message);
         // }
-      // }
-    )
+        // }
+      )
       .catch((error) => {
         console.log(error);
         alert("Failed to update status. Please try again.");
       });
   };
-  
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -785,12 +785,7 @@ const AddTrainingApprovalForm = () => {
                           <Alert.Heading>Status Approved by HOD</Alert.Heading>
                         </Alert>
                       ) : null}
-                      <Table
-                        striped
-                        hover
-                        responsive
-                        className="border text-center"
-                      >
+                      <Table striped hover responsive className="border text-center">
                         <thead className="text-start">
                           <tr>
                             <th scope="col" style={headerCellStyle}>
@@ -818,52 +813,45 @@ const AddTrainingApprovalForm = () => {
                               Topic for training required
                             </th>
                             {/* <th scope="col" style={headerCellStyle}>
-                              Actions
-                            </th> */}
+        Actions
+      </th> */}
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allByDepartments.map((departmentItem, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{departmentItem.td_req_dept}</td>{" "}
-                                <td>{departmentItem.td_emp_code}</td>
-                                <td>{departmentItem.td_emp_name}</td>
-                                <td>{departmentItem.td_dept}</td>
-                                <td>{departmentItem.td_des}</td>
-                                <td>
-                                  {formatDate(departmentItem.td_date_training)}
-                                </td>
-                                <td
-                                  style={{ whiteSpace: "pre-line" }}
-                                  className="d-none"
-                                >
-                                  {departmentItem.td_topic_training &&
-                                  typeof departmentItem.td_topic_training ===
-                                    "string"
-                                    ? departmentItem.td_topic_training
-                                        .split(",")
-                                        .map((value, index) => (
-                                          <div key={index}>{value.trim()}</div>
-                                        ))
-                                    : departmentItem.td_topic_training}
-                                </td>
-                                <td>
-                                  {departmentItem.td_topic_training_name
-                                    .split(/,(?=[a-zA-Z])/)
-                                    .map((item, index) => (
-                                      <React.Fragment key={index}>
-                                        {item.trim()}
-                                        <br />
-                                      </React.Fragment>
-                                    ))}
-                                </td>
-                              </tr>
-                            );
-                          })}
+                          {allByDepartments.map((departmentItem, index) => (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{departmentItem.td_req_dept}</td>
+                              <td>{departmentItem.td_emp_code}</td>
+                              <td>{departmentItem.td_emp_name}</td>
+                              <td>{departmentItem.td_dept}</td>
+                              <td>{departmentItem.td_des}</td>
+                              <td>{formatDate(departmentItem.td_date_training)}</td>
+                              <td style={{ whiteSpace: "pre-line" }} className="d-none">
+                                {departmentItem.td_topic_training &&
+                                  typeof departmentItem.td_topic_training === "string"
+                                  ? departmentItem.td_topic_training
+                                    .split(",")
+                                    .map((value, index) => (
+                                      <div key={index}>{value.trim()}</div>
+                                    ))
+                                  : departmentItem.td_topic_training}
+                              </td>
+                              <td>
+                                {departmentItem.td_topic_training_name
+                                  .split(/,(?=[a-zA-Z])/)
+                                  .map((item, index) => (
+                                    <React.Fragment key={index}>
+                                      {item.trim()}
+                                      <br />
+                                    </React.Fragment>
+                                  ))}
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </Table>
+
 
                       {/* <div className="row">
                         <div className="col-lg-4">
@@ -1077,7 +1065,7 @@ const AddTrainingApprovalForm = () => {
                         onChange={handleEmpCodeChange}
                         isDisabled={isEmployeeNameDisabled}
                         className="mt-2"
-                        // defaultInputValue={selectedNameOption}
+                      // defaultInputValue={selectedNameOption}
                       />
                     </div>
                   </div>
