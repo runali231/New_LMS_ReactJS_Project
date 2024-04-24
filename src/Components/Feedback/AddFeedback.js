@@ -120,7 +120,7 @@ const AddTrainingFeedback = () => {
       method: "get",
       url: new URL(
         UrlData +
-        `Feedback/GetAllFeedback?user_id=${UserId}&fb_isactive=1&fb_id=${id}`
+          `Feedback/GetAllFeedback?user_id=${UserId}&fb_isactive=1&fb_id=${id}`
       ),
     })
       .then((response) => {
@@ -144,8 +144,10 @@ const AddTrainingFeedback = () => {
       f_empCode: empCode,
       f_empName: empName,
       f_trnAttend: trainingAttended,
-      f_des: designation,
-      f_desId: "",
+      f_des: designation.label, // Accessing label property of designation
+      f_desId: designation.value, // Accessing value property of designation
+      f_depid: department.value,
+      f_dep: department.label,
       // f_feedback: feedback,
       f_Trainerfeedback: trainerFeedback,
       f_Trainingfeedback: trainingFeedback,
@@ -154,20 +156,20 @@ const AddTrainingFeedback = () => {
     };
 
     // Updating state with new training entry
-
     setAllSubFeedback((prevFeedbackArray) => [
       ...prevFeedbackArray,
       newFeedback,
     ]);
-    // setFeedbackArray([...feedbackArray, newFeedback]);
+
     console.log([...allSubFeedback], "subjects");
     alert("Feedback added successfully!");
 
     // Logging the updated feedbackArray state
     console.log(allSubFeedback);
     handleClose();
-    resetForm()
+    resetForm();
   };
+
   const handleTrainingFeedbackChange = (e) => {
     const file = e.target.files[0];
     console.log(e.target.files[0], "target value");
@@ -234,8 +236,10 @@ const AddTrainingFeedback = () => {
         f_empCode: empCode,
         f_empName: empName,
         f_trnAttend: trainingAttended,
-        f_des: designation,
-        f_desId: "",
+        f_des: designation.label,
+        f_desId: designation.value,
+        f_dep: department.label,
+        f_depid: department.value,
         // f_feedback: feedback,
         f_Trainerfeedback: trainerFeedback,
         f_Trainingfeedback: trainingFeedback,
@@ -275,7 +279,6 @@ const AddTrainingFeedback = () => {
     // const selectedValue = e.target.value;
     setDesignation(selectedValue);
     console.log(selectedValue);
-
   };
   const GetAllDesignation = () => {
     axios({
@@ -319,12 +322,12 @@ const AddTrainingFeedback = () => {
         const desg = response.data.data.map((item, index) => ({
           value: item.emp_des,
         }));
-        setSelectedDesignation(desg)
+        setSelectedDesignation(desg);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   const handleChangeByTrn = (e) => {
     setTrainingNo(e.target.value);
@@ -341,7 +344,6 @@ const AddTrainingFeedback = () => {
           label: item.EmpCode,
         }));
         setAllEmployee(emp);
-
       })
       .catch((error) => {
         console.log(error);
@@ -354,58 +356,51 @@ const AddTrainingFeedback = () => {
     // setUserName(selected.label);
     axios({
       method: "get",
-      url: new URL(UrlData + `Feedback/GetByCodeName?fb_empCode=${selected.label}&fb_trnNo=${trainingNo}`),
+      url: new URL(
+        UrlData +
+          `Feedback/GetByCodeName?fb_empCode=${selected.label}&fb_trnNo=${trainingNo}`
+      ),
     })
       .then((response) => {
         console.log(response.data.data, "get employee");
-        setEmpName(response.data.data.f_empName)
-        setDateTrainingFrom(response.data.data.f_dateTrnForm
-        )
-        setDateTrainingTo(response.data.data.f_dateTrnTo)
-        setTimeTrainingFrom(response.data.data.f_TimeTrnForm
-        )
-        setTimeTrainingTo(response.data.data.f_TimeTrnTo)
-        const dept = response.data.data.map((item, index) => ({
-          value: item.f_depid,
-          label: item.f_dep,
-        }));
-        setSelectedDepartment(dept);
-        const des = response.data.data.map((item, index) => ({
-          value: item.f_desId,
-          label: item.f_des,
-        }));
-        setSelectedDesignation(des);
-        // setSelectedDepartment({
-        //   value: response.data.data.f_depid,
-        //   label: response.data.data.f_dep,
-        // });
-        // setSelectedDesignation({
-        //   value: response.data.data.f_desId,
-        //   label: response.data.data.f_des,
-        // });
+        setEmpName(response.data.data.f_empName);
+        setDateTrainingFrom(extractDate(response.data.data.f_dateTrnForm));
+        setDateTrainingTo(extractDate(response.data.data.f_dateTrnTo));
+        setTimeTrainingFrom(response.data.data.f_TimeTrnForm);
+        setTimeTrainingTo(response.data.data.f_TimeTrnTo);
+        setDepartment({
+          value: response.data.data.f_depid,
+          label: response.data.data.f_dep,
+        });
+        setDesignation({
+          value: response.data.data.f_desId,
+          label: response.data.data.f_des,
+        });
+        setTrainingAttended(response.data.data.f_trnAttend);
+        setTrainingReqBy(response.data.data.f_trnReqBy);
+        setTrainingType(response.data.data.TrainingTopic);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-
   const resetForm = () => {
-    setEmpCode("")
-    setEmpName("")
-    setTrainingNo("")
-    setTrainingType("")
-    setDateTrainingFrom("")
-    setTimeTrainingFrom("")
-    setDateTrainingTo("")
-    setTimeTrainingTo("")
-    setTrainingReqBy("")
-    setTrainingAttended("")
-    setDesignation("")
-    setTrainerFeedback("")
-    setTrainingFeedback("")
-    setScore("")
-  }
+    setEmpCode("");
+    setEmpName("");
+    setTrainingNo("");
+    setTrainingType("");
+    setDateTrainingFrom("");
+    setTimeTrainingFrom("");
+    setDateTrainingTo("");
+    setTimeTrainingTo("");
+    setTrainingReqBy("");
+    setTrainingAttended("");
+    setDesignation("");
+    setTrainerFeedback("");
+    setTrainingFeedback("");
+    setScore("");
+  };
   const extractDate = (dateTimeString) => {
     return dateTimeString.split("T")[0];
   };
@@ -562,7 +557,10 @@ const AddTrainingFeedback = () => {
                             <button
                               className="btn btn-md text-light"
                               type="button"
-                              onClick={() => { handleShow(); resetForm() }}
+                              onClick={() => {
+                                handleShow();
+                                resetForm();
+                              }}
                               style={{ backgroundColor: "#1B5A90" }}
                             >
                               <Add />
@@ -635,6 +633,9 @@ const AddTrainingFeedback = () => {
                               Designation
                             </th>
                             <th scope="col" style={headerCellStyle}>
+                              Department
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
                               Feedback
                             </th>
                             <th scope="col" style={headerCellStyle}>
@@ -646,47 +647,49 @@ const AddTrainingFeedback = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allSubFeedback && currentItems.map((data, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{data.f_trnNo}</td>
-                                <td>{data.f_trnType}</td>
-                                <td>{data.f_trnReqBy}</td>
-                                <td>{data.f_dateTrnForm}</td>
-                                <td>{data.f_TimeTrnForm}</td>
-                                <td>{data.f_dateTrnTo}</td>
-                                <td>{data.f_TimeTrnTo}</td>
-                                <td>{data.f_empCode}</td>
-                                <td>{data.f_empName}</td>
-                                <td>{data.f_trnAttend}</td>
-                                <td>{data.f_des}</td>
-                                <td>{data.f_feedback}</td>
-                                <td>{data.f_score}</td>
-                                <td>
-                                  <Edit
-                                    className="text-success mr-2"
-                                    type="button"
-                                    onClick={() => getSubFeedback(index)}
-                                  />
-                                  <Delete
-                                    className="text-danger"
-                                    type="button"
-                                    style={{ marginLeft: "0.5rem" }}
-                                    onClick={() => deleteSubFeedback(index)}
-                                  />
-                                </td>
-                              </tr>
-                            );
-                          })}
+                          {allSubFeedback &&
+                            currentItems.map((data, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>{index + 1}</td>
+                                  <td>{data.f_trnNo}</td>
+                                  <td>{data.f_trnType}</td>
+                                  <td>{data.f_trnReqBy}</td>
+                                  <td>{data.f_dateTrnForm}</td>
+                                  <td>{data.f_TimeTrnForm}</td>
+                                  <td>{data.f_dateTrnTo}</td>
+                                  <td>{data.f_TimeTrnTo}</td>
+                                  <td>{data.f_empCode}</td>
+                                  <td>{data.f_empName}</td>
+                                  <td>{data.f_trnAttend}</td>
+                                  <td>{data.f_des}</td>
+                                  <td>{data.f_dep}</td>
+                                  <td>{data.f_feedback}</td>
+                                  <td>{data.f_score}</td>
+                                  <td>
+                                    <Edit
+                                      className="text-success mr-2"
+                                      type="button"
+                                      onClick={() => getSubFeedback(index)}
+                                    />
+                                    <Delete
+                                      className="text-danger"
+                                      type="button"
+                                      style={{ marginLeft: "0.5rem" }}
+                                      onClick={() => deleteSubFeedback(index)}
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            })}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
                         <div className="col-lg-4 col-12 ">
                           <h6 className="text-lg-start text-center">
                             Showing {indexOfFirstItem + 1} to{" "}
-                            {Math.min(indexOfLastItem, allSubFeedback.length)} of{" "}
-                            {allSubFeedback.length} entries
+                            {Math.min(indexOfLastItem, allSubFeedback.length)}{" "}
+                            of {allSubFeedback.length} entries
                           </h6>
                         </div>
                         <div className="col-lg-4 col-12"></div>
@@ -697,16 +700,32 @@ const AddTrainingFeedback = () => {
                               <li className="page-item">
                                 <button
                                   className="page-link"
-                                  onClick={() => handlePageClick(currentPage - 1)}
+                                  onClick={() =>
+                                    handlePageClick(currentPage - 1)
+                                  }
                                   disabled={currentPage === 1}
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
                               {/* Page numbers */}
-                              {[...Array(Math.ceil(allSubFeedback.length / itemsPerPage)).keys()].map((number) => (
-                                <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                                  <button className="page-link" onClick={() => handlePageClick(number + 1)}>
+                              {[
+                                ...Array(
+                                  Math.ceil(
+                                    allSubFeedback.length / itemsPerPage
+                                  )
+                                ).keys(),
+                              ].map((number) => (
+                                <li
+                                  key={number}
+                                  className={`page-item ${
+                                    currentPage === number + 1 ? "active" : ""
+                                  }`}
+                                >
+                                  <button
+                                    className="page-link"
+                                    onClick={() => handlePageClick(number + 1)}
+                                  >
                                     {number + 1}
                                   </button>
                                 </li>
@@ -715,8 +734,15 @@ const AddTrainingFeedback = () => {
                               <li className="page-item">
                                 <button
                                   className="page-link"
-                                  onClick={() => handlePageClick(currentPage + 1)}
-                                  disabled={currentPage === Math.ceil(allSubFeedback.length / itemsPerPage)}
+                                  onClick={() =>
+                                    handlePageClick(currentPage + 1)
+                                  }
+                                  disabled={
+                                    currentPage ===
+                                    Math.ceil(
+                                      allSubFeedback.length / itemsPerPage
+                                    )
+                                  }
                                 >
                                   <span aria-hidden="true">&raquo;</span>
                                 </button>
@@ -755,7 +781,9 @@ const AddTrainingFeedback = () => {
           size="lg"
         >
           <Modal.Header closeButton>
-            <Modal.Title><h5 className="fw-bold">Add Training Feedback</h5></Modal.Title>
+            <Modal.Title>
+              <h5 className="fw-bold">Add Training Feedback</h5>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row ">
@@ -839,18 +867,16 @@ const AddTrainingFeedback = () => {
                     ))}
                   </select> */}
                   <Select
-                      options={selectedDesignation}
-                      value={designation}
-                      onChange={handleDesignation}
-                      className="mt-2"
-                    />
+                    options={selectedDesignation}
+                    value={designation}
+                    onChange={handleDesignation}
+                    className="mt-2"
+                  />
                 </div>
               </div>
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                 <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">
-                    Department:
-                  </label>
+                  <label className="control-label fw-bold">Department:</label>
                   <br />
                   {/* <select
                     className="form-select"
@@ -868,11 +894,11 @@ const AddTrainingFeedback = () => {
                     ))}
                   </select> */}
                   <Select
-                      options={selectedDepartment}
-                      value={department}
-                      onChange={handleDepartment}
-                      className="mt-2"
-                    />
+                    options={selectedDepartment}
+                    value={department}
+                    onChange={handleDepartment}
+                    className="mt-2"
+                  />
                 </div>
               </div>
             </div>
