@@ -105,7 +105,7 @@ const AddTrainingForm = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
         )
       )
       .then((response) => {
@@ -121,7 +121,7 @@ const AddTrainingForm = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
         )
       )
       .then((response) => {
@@ -235,10 +235,9 @@ const AddTrainingForm = () => {
     // } else if (trainingTopic === "") {
     //   alert("Please enter training topic!");
     // }
-    if(departments === "" || trainingDate === "" || trainingTopic === ""){
-      alert("Please fill the details!")
-    }
-    else {
+    if (departments === "" || trainingDate === "" || trainingTopic === "") {
+      alert("Please fill the details!");
+    } else {
       axios
         .get(
           new URL(
@@ -352,7 +351,52 @@ const AddTrainingForm = () => {
     setTrainingTopic(selectedData);
     console.log(selectedData);
   };
+  useEffect(() => {
+    console.log(trainingTopic[0], "355");
+    console.log(typeof trainingTopic, "355");
 
+    getByTime();
+  }, [trainingTopic]);
+  const getByTime = () => {
+    if (trainingTopic && Array.isArray(trainingTopic) && trainingTopic.length > 0) {
+      console.log(trainingTopic[0].value, "360");
+      axios
+        .get(
+          new URL(
+            UrlData +
+              `TrainingForm/GetByTopic?tr_topic_training=${trainingTopic[0].value}`
+          )
+        )
+        .then((response) => {
+          console.log("get time", response.data.data.tr_hours);
+          setTrainingHours(response.data.data.tr_hours);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.error("Invalid trainingTopic:", trainingTopic);
+    }
+  };
+  
+  // const getByTime = () => {
+  //   console.log(trainingTopic.value, "360");
+  //   axios
+  //     .get(
+  //       new URL(
+  //         UrlData +
+  //           `TrainingForm/GetByTopic?tr_topic_training=${trainingTopic.value}`
+            
+  //       )
+  //     )
+  //     .then((response) => {
+  //       console.log("get time", response.data.data.tr_hours);
+  //       setTrainingHours(response.data.data.tr_hours);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   const addSingleTraining = () => {
     // Logging the training topic
     // console.log(trainingTopic);
@@ -376,18 +420,17 @@ const AddTrainingForm = () => {
     // Check if any required field is empty
     // if (departments === "") {
     //   alert("Please select departments!");
-    // } else 
+    // } else
     // if (selectedOption === "") {
     //   alert("Please select employee code!");
     // } else if (trainingDate === "") {
     //   alert("Please select training date!");
     // } else if (data.length <= 0) {
     //   alert("Please select topics for training required!");
-    // } 
-    if(selectedOption === "" || trainingDate === "" || data.length <= 0){
-      alert("Please fill the details!")
-    }
-    else {
+    // }
+    if (selectedOption === "" || trainingDate === "" || data.length <= 0) {
+      alert("Please fill the details!");
+    } else {
       const newTraining = {
         td_dept: departments.value,
         td_des: designation.label,
@@ -398,7 +441,6 @@ const AddTrainingForm = () => {
         td_date_training: trainingDate,
         td_topic_training: data.map((item) => item.value).join(","),
         td_topic_training_name: data.map((item) => item.label).join(","),
-
       };
 
       // Updating state with new training entry
@@ -624,7 +666,7 @@ const AddTrainingForm = () => {
       method: "get",
       url: new URL(
         UrlData +
-        `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
+          `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
       ),
     })
       .then((response) => {
@@ -1024,8 +1066,8 @@ const AddTrainingForm = () => {
                                       getSingleTraining(index);
                                       handleShow();
                                     }}
-                                  // data-bs-toggle="modal"
-                                  // data-bs-target="#addTrainingForm"
+                                    // data-bs-toggle="modal"
+                                    // data-bs-target="#addTrainingForm"
                                   />
                                   <Delete
                                     className="text-danger"
@@ -1068,8 +1110,9 @@ const AddTrainingForm = () => {
                                 },
                                 (_, index) => (
                                   <li
-                                    className={`page-item ${currentPage === index + 1 ? "active" : ""
-                                      }`}
+                                    className={`page-item ${
+                                      currentPage === index + 1 ? "active" : ""
+                                    }`}
                                     key={index}
                                   >
                                     <button
@@ -1119,7 +1162,9 @@ const AddTrainingForm = () => {
                           console.log(selectedAction, "action");
                         }}
                       >
-                        <option value="" disabled >Please Select</option>
+                        <option value="" disabled>
+                          Please Select
+                        </option>
                         <option value="1">Submit</option>
                         <option value="0">Save Draft</option>
                       </select>

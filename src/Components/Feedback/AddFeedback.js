@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Table, Modal, Button } from "react-bootstrap";
 import { Add, ArrowBack, Delete, Edit } from "@material-ui/icons";
+import { EyeFill } from "react-bootstrap-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import UrlData from "../UrlData";
 import UserId from "../UserId";
 import ErrorHandler from "../ErrorHandler";
 import Select from "react-select";
-import {
-  GetAllDesignation,
-  getAllDepartment,
-} from "../Api/DesignationAndDepartment";
 
 const AddTrainingFeedback = () => {
   const navigate = useNavigate();
@@ -31,6 +28,7 @@ const AddTrainingFeedback = () => {
   const [empName, setEmpName] = useState("");
   const [trainingNo, setTrainingNo] = useState("");
   const [trainingType, setTrainingType] = useState("");
+  const [allTrainingType, setAllTrainingType] = useState([]);
   const [dateTrainingFrom, setDateTrainingFrom] = useState("");
   const [dateTrainingTo, setDateTrainingTo] = useState("");
   const [timeTrainingFrom, setTimeTrainingFrom] = useState("");
@@ -46,6 +44,12 @@ const AddTrainingFeedback = () => {
   const [score, setScore] = useState("");
   const [allSubFeedback, setAllSubFeedback] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const [trainingPdfFile, setTrainingPdfFile] = useState();
+  const [trainingFileName, setTrainingFileName] = useState("");
+  const [trainingFileType, setTrainingFileType] = useState("");
+  const [trainerPdfFile, setTrainerPdfFile] = useState();
+  const [trainerFileName, setTrainerFileName] = useState("");
+  const [trainerFileType, setTrainerFileType] = useState("");
 
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
@@ -57,6 +61,7 @@ const AddTrainingFeedback = () => {
     getAllEmployee();
     getAllDepartment();
     GetAllDesignation();
+    getAllTrainingType();
   }, []);
 
   useEffect(() => {
@@ -79,40 +84,85 @@ const AddTrainingFeedback = () => {
     }
   }, [id]);
 
-  const addFeedback = () => {
-    let data;
-    data = {
-      userId: UserId,
-      fb_name: facultyName,
-      fb_no: feedbackNo,
-      fb_title: title,
-      fb_date: feedbackDate,
-      fb_givenBy: feedbackGivenBy,
-      fb_isactive: "1",
-      feedback: allSubFeedback,
-    };
-    if (id !== null && id !== undefined && id !== ":id") {
-      data.fb_id = id;
+  useEffect(() => {
+    if (!id) {
+      getByOrder();
     }
-    axios({
-      method: "post",
-      url: new URL(UrlData + `Feedback`),
-      data: data,
-    })
+  }, [id]);
+
+  const getAllTrainingType = () => {
+    axios
+      .get(
+        new URL(
+          UrlData +
+            `ParameterValueMaster/GetAll?Parameterid=B019FBF2-7B14-4A0A-ADC0-F9F12FC4DB88&status=1`
+        )
+      )
       .then((response) => {
-        console.log(response);
-        if (id !== null && id !== undefined && id !== ":id") {
-          alert("Training feedback updated successfully!");
-        } else {
-          alert("Training Feedback added successfully!");
-        }
-        navigate("/trainingFeedback");
+        console.log("get all training nature", response.data.data);
+        setAllTrainingType(response.data.data);
       })
       .catch((error) => {
         console.log(error);
-        let errors = ErrorHandler(error);
-        alert(errors);
       });
+  };
+
+  const getByOrder = () => {
+    axios
+      .get(new URL(UrlData + `Feedback/GetOrder`))
+      .then((response) => {
+        console.log("get by order", response.data.data.fb_no);
+        setFeedbackNo(response.data.data.fb_no);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const addFeedback = () => {
+    let data;
+    if (facultyName === "") {
+      alert("Please enter faculty name!");
+    } else if (title === "") {
+      alert("Please enter training title!");
+    } else if (feedbackNo === "") {
+      alert("Please enter feedback no!");
+    } else if (feedbackDate === "") {
+      alert("Please enter feedback date!");
+    } else {
+      data = {
+        userId: UserId,
+        fb_name: facultyName,
+        fb_no: feedbackNo,
+        fb_title: title,
+        fb_date: feedbackDate,
+        fb_givenBy: feedbackGivenBy,
+        fb_isactive: "1",
+        feedback: allSubFeedback,
+      };
+      if (id !== null && id !== undefined && id !== ":id") {
+        data.fb_id = id;
+      }
+      axios({
+        method: "post",
+        url: new URL(UrlData + `Feedback`),
+        data: data,
+      })
+        .then((response) => {
+          console.log(response);
+          if (id !== null && id !== undefined && id !== ":id") {
+            alert("Training feedback updated successfully!");
+          } else {
+            alert("Training Feedback added successfully!");
+          }
+          navigate("/trainingFeedback");
+        })
+        .catch((error) => {
+          console.log(error);
+          let errors = ErrorHandler(error);
+          alert(errors);
+        });
+    }
   };
 
   const getAllSubData = () => {
@@ -133,78 +183,72 @@ const AddTrainingFeedback = () => {
   };
 
   const addSubFeedback = () => {
-    const newFeedback = {
-      f_trnNo: trainingNo,
-      f_trnType: trainingType,
-      f_trnReqBy: trainingReqBy,
-      f_dateTrnForm: dateTrainingFrom,
-      f_TimeTrnForm: timeTrainingFrom,
-      f_dateTrnTo: dateTrainingTo,
-      f_TimeTrnTo: timeTrainingTo,
-      f_empCode: empCode,
-      f_empName: empName,
-      f_trnAttend: trainingAttended,
-      f_des: designation.label, // Accessing label property of designation
-      f_desId: designation.value, // Accessing value property of designation
-      f_depid: department.value,
-      f_dep: department.label,
-      // f_feedback: feedback,
-      f_Trainerfeedback: trainerFeedback,
-      f_Trainingfeedback: trainingFeedback,
-      f_score: score,
-      f_fb_id: id,
-    };
-
-    // Updating state with new training entry
-    setAllSubFeedback((prevFeedbackArray) => [
-      ...prevFeedbackArray,
-      newFeedback,
-    ]);
-
-    console.log([...allSubFeedback], "subjects");
-    alert("Feedback added successfully!");
-
-    // Logging the updated feedbackArray state
-    console.log(allSubFeedback);
-    handleClose();
-    resetForm();
-  };
-
-  const handleTrainingFeedbackChange = (e) => {
-    const file = e.target.files[0];
-    console.log(e.target.files[0], "target value");
-    // console.log(file.name, "237");
-    // setFileName(file.name);
-    // setFileType(file.type);
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result.split(",")[1]; // Remove data url prefix
-        setTrainingFeedback(base64String);
-        console.log(base64String, "base64String");
-        console.log(trainingFeedback, "cerificate");
+    if (
+      trainingNo === "" ||
+      trainingType === "" ||
+      dateTrainingFrom === "" ||
+      timeTrainingFrom === "" ||
+      dateTrainingTo === "" ||
+      timeTrainingTo === "" ||
+      empCode === "" ||
+      empName === "" ||
+      trainingAttended === "" ||
+      designation === "" ||
+      department === "" ||
+      score === ""
+    ) {
+      alert("Please fill the details!");
+    } else {
+      const newFeedback = {
+        f_trnNo: trainingNo,
+        f_trnType: trainingType,
+        f_trnReqBy: trainingReqBy,
+        f_dateTrnForm: dateTrainingFrom,
+        f_TimeTrnForm: timeTrainingFrom,
+        f_dateTrnTo: dateTrainingTo,
+        f_TimeTrnTo: timeTrainingTo,
+        f_empCode: empCode.label,
+        emp_id: empCode.value,
+        f_empName: empName,
+        f_trnAttend: trainingAttended,
+        f_des: designation ? designation.label : "",
+        f_desId: designation ? designation.value : "",
+        f_depid: department ? department.value : "",
+        f_dep: department ? department.label : "",
+        // f_feedback: feedback,
+        f_Trainerfeedback: trainerFeedback,
+        f_Trainingfeedback: trainingFeedback,
+        f_score: score,
+        f_fb_id: id,
       };
-      reader.readAsDataURL(file);
-    }
-  };
-  const handleTrainerFeedbackChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file, "target value");
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result.split(",")[1]; // Remove data URL prefix
-        setTrainerFeedback(base64String);
-        console.log(base64String, "base64String");
-      };
-      reader.readAsDataURL(file);
+
+      // Updating state with new training entry
+      // setAllSubFeedback((prevFeedbackArray) => [
+      //   ...prevFeedbackArray,
+      //   newFeedback,
+      // ]);
+      setAllSubFeedback((prevFeedbackArray) => {
+        console.log("Previous Feedback Array:", prevFeedbackArray);
+        console.log("New Feedback:", newFeedback);
+        return [...prevFeedbackArray, newFeedback];
+      });
+      console.log([...allSubFeedback], "subjects");
+      alert("Feedback added successfully!");
+
+      // Logging the updated feedbackArray state
+      console.log(allSubFeedback);
+      handleClose();
+      resetForm();
     }
   };
 
   const getSubFeedback = (index) => {
     handleShow();
     const feedbackToEdit = allSubFeedback[index];
-    setEmpCode(feedbackToEdit.f_empCode);
+    setEmpCode({
+      value: feedbackToEdit.emp_id,
+      label: feedbackToEdit.f_empCode,
+    });
     setEmpName(feedbackToEdit.f_empName);
     setTrainingNo(feedbackToEdit.f_trnNo);
     setTrainingType(feedbackToEdit.f_trnType);
@@ -214,7 +258,14 @@ const AddTrainingFeedback = () => {
     setTimeTrainingTo(feedbackToEdit.f_TimeTrnTo);
     setTrainingReqBy(feedbackToEdit.f_trnReqBy);
     setTrainingAttended(feedbackToEdit.f_trnAttend);
-    setDesignation(feedbackToEdit.f_des);
+    setDepartment({
+      value: feedbackToEdit.f_desId,
+      label: feedbackToEdit.f_des,
+    });
+    setDesignation({
+      value: feedbackToEdit.f_depid,
+      label: feedbackToEdit.f_dep,
+    });
     setTrainingFeedback(feedbackToEdit.f_Trainingfeedback);
     setTrainerFeedback(feedbackToEdit.f_Trainerfeedback);
     setScore(feedbackToEdit.f_score);
@@ -223,33 +274,51 @@ const AddTrainingFeedback = () => {
   };
 
   const updateSubFeedback = () => {
-    if (editIndex !== null) {
-      const updatedFeedback = [...allSubFeedback];
-      updatedFeedback[editIndex] = {
-        f_trnNo: trainingNo,
-        f_trnType: trainingType,
-        f_trnReqBy: trainingReqBy,
-        f_dateTrnForm: dateTrainingFrom,
-        f_TimeTrnForm: timeTrainingFrom,
-        f_dateTrnTo: dateTrainingTo,
-        f_TimeTrnTo: timeTrainingTo,
-        f_empCode: empCode,
-        f_empName: empName,
-        f_trnAttend: trainingAttended,
-        f_des: designation.label,
-        f_desId: designation.value,
-        f_dep: department.label,
-        f_depid: department.value,
-        // f_feedback: feedback,
-        f_Trainerfeedback: trainerFeedback,
-        f_Trainingfeedback: trainingFeedback,
-        f_score: score,
-        f_fb_id: id,
-      };
-      setAllSubFeedback(updatedFeedback);
-      alert("Feedback updated successfully!");
-      resetForm();
-      handleClose();
+    if (
+      trainingNo === "" ||
+      trainingType === "" ||
+      dateTrainingFrom === "" ||
+      timeTrainingFrom === "" ||
+      dateTrainingTo === "" ||
+      timeTrainingTo === "" ||
+      empCode === "" ||
+      empName === "" ||
+      trainingAttended === "" ||
+      designation === "" ||
+      department === "" ||
+      score === ""
+    ) {
+      alert("Please fill the details!");
+    } else {
+      if (editIndex !== null) {
+        const updatedFeedback = [...allSubFeedback];
+        updatedFeedback[editIndex] = {
+          f_trnNo: trainingNo,
+          f_trnType: trainingType,
+          f_trnReqBy: trainingReqBy,
+          f_dateTrnForm: dateTrainingFrom,
+          f_TimeTrnForm: timeTrainingFrom,
+          f_dateTrnTo: dateTrainingTo,
+          f_TimeTrnTo: timeTrainingTo,
+          f_empCode: empCode.label,
+          emp_id: empCode.value,
+          f_empName: empName,
+          f_trnAttend: trainingAttended,
+          f_des: designation.label,
+          f_desId: designation.value,
+          f_dep: department.label,
+          f_depid: department.value,
+          // f_feedback: feedback,
+          f_Trainerfeedback: trainerFeedback,
+          f_Trainingfeedback: trainingFeedback,
+          f_score: score,
+          f_fb_id: id,
+        };
+        setAllSubFeedback(updatedFeedback);
+        alert("Feedback updated successfully!");
+        resetForm();
+        handleClose();
+      }
     }
   };
 
@@ -378,13 +447,99 @@ const AddTrainingFeedback = () => {
         });
         setTrainingAttended(response.data.data.f_trnAttend);
         setTrainingReqBy(response.data.data.f_trnReqBy);
-        setTrainingType(response.data.data.TrainingTopic);
+        setTrainingType(response.data.data.f_trnType);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const handleTrainingFeedbackChange = (e) => {
+    const file = e.target.files[0];
+    console.log(e.target.files[0], "target value");
+    console.log(file.name, "237");
+    setTrainingFileName(file.name);
+    setTrainingFileType(file.type);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result.split(",")[1]; // Remove data url prefix
+        setTrainingFeedback(base64String);
+        console.log(base64String, "base64String");
+        console.log(setTrainingFeedback, "cerificate");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const TrainingFeedbackViewModal = (file) => {
+    setTrainingPdfFile(file);
+    console.log(file, "file 265");
+    console.log(trainingPdfFile, "file 266");
+  };
+  useEffect(() => {
+    console.log(trainingPdfFile, "trainingPdfFile");
+    setTrainingPdfFile(trainingPdfFile);
+    console.log(trainingPdfFile, "trainingPdfFile1"); // This will reflect the updated value of trainingPdfFile
+  }, [trainingPdfFile]);
+
+  const handleTrainerFeedbackChange = (e) => {
+    const file = e.target.files[0];
+    console.log(e.target.files[0], "target value");
+    console.log(file.name, "237");
+    setTrainerFileName(file.name);
+    setTrainerFileType(file.type);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result.split(",")[1]; // Remove data url prefix
+        setTrainerFeedback(base64String);
+        console.log(base64String, "base64String");
+        console.log(setTrainerFeedback, "cerificate");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const TrainerFeedbackViewModal = (file) => {
+    setTrainerPdfFile(file);
+    console.log(file, "file 265");
+    console.log(trainingPdfFile, "file 266");
+  };
+  useEffect(() => {
+    console.log(trainingPdfFile, "trainingPdfFile");
+    setTrainerPdfFile(trainingPdfFile);
+    console.log(trainingPdfFile, "trainingPdfFile1"); // This will reflect the updated value of trainingPdfFile
+  }, [trainingPdfFile]);
+
+  const getBase64Type = (base64String) => {
+    // Remove metadata prefix from base64 string if present
+    if (!base64String) {
+      return "unknown"; // Return 'unknown' if base64String is undefined
+    }
+
+    // Remove metadata prefix from base64 string if present
+    const base64PrefixRemoved = base64String
+      .replace(/^data:image\/[a-z]+;base64,/, "")
+      .replace(/^data:application\/pdf;base64,/, "");
+
+    // Get the first few characters of the base64 string
+    const prefix = base64PrefixRemoved.substring(0, 10);
+
+    // Check if it matches the signature of an image or a PDF
+    if (
+      prefix.startsWith("/9j/") ||
+      prefix.startsWith("iVBORw") ||
+      prefix.startsWith("R0lGOD")
+    ) {
+      return "image";
+    } else if (prefix.startsWith("JVBERi0xLj")) {
+      return "pdf";
+    } else {
+      return "unknown";
+    }
+  };
+  const trainingFeedbackFileType = getBase64Type(trainingPdfFile);
+  const trainerFeedbackFileType = getBase64Type(trainingPdfFile);
   const resetForm = () => {
     setEmpCode("");
     setEmpName("");
@@ -397,6 +552,7 @@ const AddTrainingFeedback = () => {
     setTrainingReqBy("");
     setTrainingAttended("");
     setDesignation("");
+    setDepartment("")
     setTrainerFeedback("");
     setTrainingFeedback("");
     setScore("");
@@ -457,6 +613,7 @@ const AddTrainingFeedback = () => {
                       <label className="control-label fw-bold">
                         Faculty Name:
                       </label>
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="facultyName"
@@ -472,6 +629,7 @@ const AddTrainingFeedback = () => {
                       <label className="control-label fw-bold">
                         Training Title:
                       </label>
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="title"
@@ -489,6 +647,7 @@ const AddTrainingFeedback = () => {
                       <label className="control-label fw-bold">
                         Feedback No:
                       </label>
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="text"
                         id="feedbackNo"
@@ -496,6 +655,7 @@ const AddTrainingFeedback = () => {
                         placeholder="Feedback No"
                         value={feedbackNo}
                         onChange={(e) => setFeedbackNo(e.target.value)}
+                        disabled
                       />
                     </div>
                   </div>
@@ -504,6 +664,7 @@ const AddTrainingFeedback = () => {
                       <label className="control-label fw-bold">
                         Feedback Date:
                       </label>
+                      <span className="text-danger fw-bold">*</span>
                       <input
                         type="date"
                         id="feedbackDate"
@@ -606,28 +767,10 @@ const AddTrainingFeedback = () => {
                               Training Type
                             </th>
                             <th scope="col" style={headerCellStyle}>
-                              Training requested by
-                            </th>
-                            <th scope="col" style={headerCellStyle}>
-                              Date of training from
-                            </th>
-                            <th scope="col" style={headerCellStyle}>
-                              Time of training from
-                            </th>
-                            <th scope="col" style={headerCellStyle}>
-                              Date of training to
-                            </th>
-                            <th scope="col" style={headerCellStyle}>
-                              Time of training to
-                            </th>
-                            <th scope="col" style={headerCellStyle}>
                               Employee Code
                             </th>
                             <th scope="col" style={headerCellStyle}>
                               Employee Name
-                            </th>
-                            <th scope="col" style={headerCellStyle}>
-                              Training attended
                             </th>
                             <th scope="col" style={headerCellStyle}>
                               Designation
@@ -636,7 +779,28 @@ const AddTrainingFeedback = () => {
                               Department
                             </th>
                             <th scope="col" style={headerCellStyle}>
-                              Feedback
+                              Date of training from
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Date of training to
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Time of training from
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Time of training to
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Training requested by
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Training attended
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Training Feedback
+                            </th>
+                            <th scope="col" style={headerCellStyle}>
+                              Trainer Feedback
                             </th>
                             <th scope="col" style={headerCellStyle}>
                               Score
@@ -654,17 +818,88 @@ const AddTrainingFeedback = () => {
                                   <td>{index + 1}</td>
                                   <td>{data.f_trnNo}</td>
                                   <td>{data.f_trnType}</td>
-                                  <td>{data.f_trnReqBy}</td>
-                                  <td>{data.f_dateTrnForm}</td>
-                                  <td>{data.f_TimeTrnForm}</td>
-                                  <td>{data.f_dateTrnTo}</td>
-                                  <td>{data.f_TimeTrnTo}</td>
                                   <td>{data.f_empCode}</td>
                                   <td>{data.f_empName}</td>
-                                  <td>{data.f_trnAttend}</td>
                                   <td>{data.f_des}</td>
                                   <td>{data.f_dep}</td>
-                                  <td>{data.f_feedback}</td>
+                                  <td>{data.f_dateTrnForm}</td>
+                                  <td>{data.f_dateTrnTo}</td>
+                                  <td>{data.f_TimeTrnForm}</td>
+                                  <td>{data.f_TimeTrnTo}</td>
+                                  <td>{data.f_trnReqBy}</td>
+                                  <td>{data.f_trnAttend}</td>
+                                  <td>
+                                    {data.f_Trainingfeedback !== null &&
+                                      data.f_fb_id && (
+                                        <span
+                                          type="button"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#viewModal"
+                                          onClick={() =>
+                                            TrainingFeedbackViewModal(
+                                              data.f_Trainingfeedback
+                                            )
+                                          }
+                                        >
+                                          {trainingFileName ===
+                                          data.f_Trainingfeedback ? (
+                                            trainingFileName
+                                          ) : (
+                                            // `File uploaded`
+                                            // {trainingFileName}
+                                            <EyeFill
+                                              className="text-success"
+                                              style={{ fontSize: "23px" }}
+                                            />
+                                          )}
+                                        </span>
+                                      )}
+                                    {!data.f_Trainingfeedback && (
+                                      <span
+                                        type="button"
+                                        // data-bs-toggle="modal"
+                                        // data-bs-target="#viewModal"
+                                      >
+                                        File not uploaded
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {data.f_Trainerfeedback !== null &&
+                                      data.f_fb_id && (
+                                        <span
+                                          type="button"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#trainerViewModal"
+                                          onClick={() =>
+                                            TrainerFeedbackViewModal(
+                                              data.f_Trainerfeedback
+                                            )
+                                          }
+                                        >
+                                          {trainingFileName ===
+                                          data.f_Trainerfeedback ? (
+                                            trainingFileName
+                                          ) : (
+                                            // `File uploaded`
+                                            // {trainingFileName}
+                                            <EyeFill
+                                              className="text-success"
+                                              style={{ fontSize: "23px" }}
+                                            />
+                                          )}
+                                        </span>
+                                      )}
+                                    {!data.f_Trainerfeedback && (
+                                      <span
+                                        type="button"
+                                        // data-bs-toggle="modal"
+                                        // data-bs-target="#viewModal"
+                                      >
+                                        File not uploaded
+                                      </span>
+                                    )}
+                                  </td>
                                   <td>{data.f_score}</td>
                                   <td>
                                     <Edit
@@ -789,7 +1024,8 @@ const AddTrainingFeedback = () => {
             <div className="row ">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                 <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">Training No:</label>
+                  <label className="control-label fw-bold">Training No:</label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="text"
                     id="trainingNo"
@@ -804,15 +1040,22 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Training Type:
-                  </label>
-                  <input
-                    type="text"
-                    id="trainingType"
-                    className="form-control "
-                    placeholder="Enter Training Type"
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
+                  <select
+                    className="form-select"
                     value={trainingType}
                     onChange={(e) => setTrainingType(e.target.value)}
-                  />
+                  >
+                    <option value="" disabled>
+                      Select Training Type
+                    </option>
+                    {allTrainingType.map((data, index) => (
+                      <option key={index} value={data.pv_parametervalue}>
+                        {data.pv_parametervalue}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -821,7 +1064,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Employee Code:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <Select
                     options={allEmployee}
                     value={empCode}
@@ -834,7 +1078,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Employee Name:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="text"
                     id="empName"
@@ -845,27 +1090,12 @@ const AddTrainingFeedback = () => {
                   />
                 </div>
               </div>
-              {/* Add other form inputs here */}
             </div>
             <div className="row mt-4">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">Designation:</label>
-                  {/* <select
-                    className="form-select "
-                    aria-label="Default select example"
-                    value={designation}
-                    onChange={handleDesignation}
-                  >
-                    <option value="" disabled>
-                      Select Designation
-                    </option>
-                    {selectedDesignation.map((data, index) => (
-                      <option key={index} value={data.de_id}>
-                        {data.de_designation_name}
-                      </option>
-                    ))}
-                  </select> */}
+                  <label className="control-label fw-bold">Designation:</label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <Select
                     options={selectedDesignation}
                     value={designation}
@@ -876,23 +1106,9 @@ const AddTrainingFeedback = () => {
               </div>
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                 <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">Department:</label>
+                  <label className="control-label fw-bold">Department:</label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <br />
-                  {/* <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={department}
-                    onChange={handleDepartment}
-                  >
-                    <option value="" disabled>
-                      Select Department
-                    </option>
-                    {selectedDepartment.map((data, index) => (
-                      <option key={index} value={data.d_id}>
-                        {data.d_department_name}
-                      </option>
-                    ))}
-                  </select> */}
                   <Select
                     options={selectedDepartment}
                     value={department}
@@ -907,7 +1123,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Date of Training From:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="date"
                     id="dateTrainingFrom"
@@ -922,7 +1139,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Date of Training To:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="date"
                     id="dateTrainingTo"
@@ -939,7 +1157,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Time of Training From:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="time"
                     id="timeTrainingFrom"
@@ -954,7 +1173,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Time of Training To:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="time"
                     id="timeTrainingTo"
@@ -986,7 +1206,8 @@ const AddTrainingFeedback = () => {
                 <div className="form-group form-group-sm">
                   <label className="control-label fw-bold">
                     Training Attended:
-                  </label>
+                  </label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="text"
                     id="trainingAttended"
@@ -1005,13 +1226,10 @@ const AddTrainingFeedback = () => {
                     Training Feedback:
                   </label>
                   <br />
+
                   <input
                     type="file"
-                    id="trainingFeedback"
-                    className="mt-3"
-                    placeholder="Feedback No"
-                    // value={trainingFeedback}
-                    // onChange={(e) => setTrainingFeedback(e.target.value)}
+                    className="form-control" // Apply any necessary class if required
                     onChange={(e) => handleTrainingFeedbackChange(e)}
                   />
                 </div>
@@ -1022,13 +1240,17 @@ const AddTrainingFeedback = () => {
                     Trainer Feedback:
                   </label>
                   <br />
-                  <input
+                  {/* <input
                     type="file"
                     id="trainerFeedback"
                     className="mt-3"
                     placeholder="Search"
-                    // value={trainerFeedback}
-                    // onChange={(e) => setTrainerFeedback(e.target.value)}
+                    
+                    onChange={(e) => handleTrainerFeedbackChange(e)}
+                  /> */}
+                  <input
+                    type="file"
+                    className="form-control" // Apply any necessary class if required
                     onChange={(e) => handleTrainerFeedbackChange(e)}
                   />
                 </div>
@@ -1037,7 +1259,8 @@ const AddTrainingFeedback = () => {
             <div className="row mt-4">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                 <div className="form-group form-group-sm">
-                  <label className="control-label fw-bold">Score:</label>
+                  <label className="control-label fw-bold">Score:</label>{" "}
+                  <span className="text-danger fw-bold">*</span>
                   <input
                     type="text"
                     id="score"
@@ -1071,6 +1294,136 @@ const AddTrainingFeedback = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+        <div
+          className="modal fade"
+          id="viewModal"
+          tabIndex="-1"
+          aria-labelledby="viewModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" id="viewModalLabel">
+                  Training Feedback
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                    {trainingPdfFile ? (
+                      trainingFeedbackFileType === "pdf" ? (
+                        <embed
+                          src={`data:application/pdf;base64,${trainingPdfFile}`}
+                          type="application/pdf"
+                          width="200%"
+                          height="550px"
+                        />
+                      ) : (
+                        <img
+                          src={`data:image/png;base64,${trainingPdfFile}`}
+                          type="image/png"
+                          className="img-fluid"
+                          width="auto"
+                          height="auto"
+                          alt=""
+                        />
+                      )
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+              {/* <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn text-white"
+                  style={{ backgroundColor: "#1B5A90" }}
+                  data-bs-dismiss="modal"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div> */}
+            </div>
+          </div>
+        </div>
+        <div
+          className="modal fade"
+          id="trainerViewModal"
+          tabIndex="-1"
+          aria-labelledby="trainerViewModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fw-bold" id="trainerViewModalLabel">
+                  Trainer Feedback
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                    {trainerPdfFile ? (
+                      trainerFeedbackFileType === "pdf" ? (
+                        <embed
+                          src={`data:application/pdf;base64,${trainerPdfFile}`}
+                          type="application/pdf"
+                          width="200%"
+                          height="550px"
+                        />
+                      ) : (
+                        <img
+                          src={`data:image/png;base64,${trainerPdfFile}`}
+                          type="image/png"
+                          className="img-fluid"
+                          width="auto"
+                          height="auto"
+                          alt=""
+                        />
+                      )
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+              {/* <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn text-white"
+                  style={{ backgroundColor: "#1B5A90" }}
+                  data-bs-dismiss="modal"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div> */}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
