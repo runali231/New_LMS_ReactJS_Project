@@ -61,8 +61,9 @@ const UserMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-        `UserMaster/GetAll?status=${toggleActive ? "1" : "0"
-        }&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          `UserMaster/GetAll?status=${
+            toggleActive ? "1" : "0"
+          }&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ),
     })
       .then((response) => {
@@ -108,7 +109,7 @@ const UserMaster = () => {
         const desg = response.data.data.map((item, index) => ({
           value: item.emp_des,
         }));
-        setSelectedDesignation(desg)
+        setSelectedDesignation(desg);
       })
       .catch((error) => {
         console.log(error);
@@ -121,14 +122,25 @@ const UserMaster = () => {
     // setUserName(selected.label);
     axios({
       method: "get",
-      url: new URL(UrlData + `EmployeeMaster/Get?status=1&emp_id=${selected.value}`),
+      url: new URL(
+        UrlData + `EmployeeMaster/Get?status=1&emp_id=${selected.value}`
+      ),
     })
       .then((response) => {
         console.log(response.data.data, "get employee");
-        setUserName(response.data.data.emp_fname);
+        var fullName = response.data.data.emp_fname;
+
+        // Split the full name into parts based on spaces
+        var parts = fullName.split(" ");
+
+        // Extract the first part (first name)
+        var firstName = parts[0];
+
+        console.log(firstName);
+        setUserName(firstName);
         setDesignation(response.data.data.emp_des);
         setDepartment(response.data.data.emp_dep);
-        setEmployeeName(response.data.data.emp_fname + response.data.data.emp_mname + response.data.data.emp_lname)
+        setEmployeeName(response.data.data.emp_fname);
       })
       .catch((error) => {
         console.log(error);
@@ -157,13 +169,13 @@ const UserMaster = () => {
         userId: UserId,
         um_user_name: userName,
         um_password: "",
-        um_staffdepid: department,
-        um_staffdesid: designation,
-        um_staffname: employee.label,
-        um_fullname: employeeName,
-        um_staffid: employee.value,
+        um_staffdepid: department.toString(),
+        um_staffdesid: designation.toString(),
+        um_staffname: (employee.label).toString(),
+        um_fullname: employeeName.toString(),
+        um_staffid: employee.value.toString(),
         um_isactive: active === true ? "1" : "0",
-        um_roleid: role.value,
+        um_roleid: role.value.toString(),
         um_rolename: role.label,
       };
       if (umId) {
@@ -210,18 +222,9 @@ const UserMaster = () => {
           value: response.data.data.um_roleid,
           label: response.data.data.um_rolename,
         });
-        setDesignation(response.data.data.
-          um_staffdesid
-
-        )
-        setDepartment(response.data.data.
-          um_staffdepid
-
-        )
-        setEmployeeName(response.data.data.
-          um_fullname
-
-        )
+        setDesignation(response.data.data.um_staffdesid);
+        setDepartment(response.data.data.um_staffdepid);
+        setEmployeeName(response.data.data.um_fullname);
         setUmId(umId);
       })
       .catch((error) => {
@@ -293,7 +296,7 @@ const UserMaster = () => {
     setUserName("");
     setUmId("");
     setDesignation("");
-    setDepartment("")
+    setDepartment("");
   };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -451,8 +454,9 @@ const UserMaster = () => {
                         ).map((number) => (
                           <li
                             key={number}
-                            className={`page-item ${currentPage === number ? "active" : ""
-                              }`}
+                            className={`page-item ${
+                              currentPage === number ? "active" : ""
+                            }`}
                           >
                             <button
                               className="page-link"
@@ -531,7 +535,6 @@ const UserMaster = () => {
                 />
               </Form.Group>
             </Col>
-
           </Row>
           <Row className="mt-4">
             <Col xs={12} sm={12} md={12} lg={6}>
@@ -571,7 +574,6 @@ const UserMaster = () => {
                 </select>
               </div>
             </Col>
-
           </Row>
           <Row className="mt-4">
             <Col xs={12} sm={12} md={12} lg={6}>

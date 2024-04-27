@@ -168,48 +168,6 @@ const AddTrainingSchedule = () => {
     console.log(selected);
   };
 
-  const addTrainingScheduleForm = () => {
-    console.log(allSubTrainingSchedule, "trainingArray");
-    console.log(trainingFrom, "training from");
-    console.log(trainingTo, "training to");
-    let data = {
-      userId: UserId,
-      ts_training_no: trainingNo,
-      ts_trainer_name: trainerName,
-      ts_training_dept: trainingDept,
-      ts_req_by: trainingReqBy,
-      ts_topic: trainingTopics.value,
-      ts_no_que: noOfQues,
-      ts_training_agency: trainingAgency,
-      ts_training_type: trainingType,
-      ts_reoccurence: reoccurrence,
-      ts_dt_tm_fromtraining: (trainingFrom + ":00").replace(" ", "T"),
-      ts_dt_tm_totraining: (trainingTo + ":00").replace(" ", "T"),
-      ts_status: status,
-      ts_isactive: "1",
-      ts_action: action,
-      trainingsubschedule: allSubTrainingSchedule,
-      // training: allByDepartments,
-    };
-    if (id !== null && id !== undefined && id !== ":id") {
-      data.ts_id = id;
-    }
-    axios({
-      method: "post",
-      url: new URL(UrlData + `TrainingSchedule`),
-      data: data,
-    })
-      .then((response) => {
-        console.log(response, "add training need Schedule");
-        console.log(response.data.data.OutcomeDetail);
-        // localStorage.setItem("outcomedetailsId", response.data.data.OutcomeDetail);
-        // getAllTraining();
-        navigate("/trainingSchedule");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   const getAllTrainingScheduleTypes = () => {
     axios
       .get(
@@ -294,10 +252,14 @@ const AddTrainingSchedule = () => {
     console.log(action, "selectedAction");
     console.log(id, "id");
     let data;
+    if (action === "") {
+      alert("Please select action!");
+      return; // Added return to exit function
+    }
     if (action === "7") {
       if (!remark1) {
         alert("Please enter the remark!");
-        return;
+        return; // Added return to exit function
       }
     }
     data = {
@@ -314,9 +276,10 @@ const AddTrainingSchedule = () => {
         console.log(response, "add action");
         if (action === "6") {
           alert("Training Scheduled Approved Successfully!");
-        } else {
+        } 
+        if (action === "7") {
           alert("Training Scheduled Rejected Successfully!");
-        }
+        } 
         navigate("/trainingScheduleApproval");
       })
       .catch((error) => {
@@ -961,6 +924,7 @@ const AddTrainingSchedule = () => {
                             <label className="control-label fw-bold">
                               Action:
                             </label>
+                            <span className="text-danger fw-bold">*</span>
                             <select
                               className="form-select"
                               aria-label="Default select example"

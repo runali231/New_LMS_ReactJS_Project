@@ -190,9 +190,9 @@ const EmployeeMaster = () => {
                       <th scope="col" style={headerCellStyle}>
                         Joining Date
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      {/* <th scope="col" style={headerCellStyle}>
                         Status
-                      </th>
+                      </th> */}
                       <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
@@ -206,16 +206,17 @@ const EmployeeMaster = () => {
                             {(currentPage - 1) * itemsPerPage + index + 1}
                           </td>
                           <td>{data.emp_code}</td>
-                          <td>
+                          {/* <td>
                             {data.emp_fname +
                               " " +
                               data.emp_mname +
                               " " +
                               data.emp_lname}
-                          </td>
+                          </td> */}
+                          <td>{data.emp_fname}</td>
                           {/* <td>{data.emp_job_title}</td> */}
-                          <td>{data.emp_des}</td>
-                          <td>{data.emp_dep}</td>
+                          <td>{data.emp_des_id}</td>
+                          <td>{data.emp_dep_id}</td>
                           <td>{data.emp_city}</td>
                           <td>{data.emp_mob_no}</td>
                           <td>{data.emp_off_no}</td>
@@ -225,7 +226,7 @@ const EmployeeMaster = () => {
                               ? data.emp_joiningDate.split("T")[0]
                               : null}
                           </td>
-                          <td>{data.emp_isactive}</td>
+                          {/* <td>{data.emp_isactive}</td> */}
                           <td>
                             <Edit
                               className="text-success mr-2"

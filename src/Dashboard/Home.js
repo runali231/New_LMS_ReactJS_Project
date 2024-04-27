@@ -62,6 +62,11 @@ console.log(pageTitle, "title")
       .then((response) => {
         console.log("response get sidebar menu", response.data.data);
         setSidebarData(response.data.data);
+        console.log(response.data.data[0].RoleId)
+        const RoleId = response.data.data[0].RoleId;
+        localStorage.setItem('RoleId', RoleId);
+
+
       })
       .catch((error) => {
         console.log(error);

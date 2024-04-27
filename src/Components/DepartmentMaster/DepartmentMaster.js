@@ -213,7 +213,7 @@ const DepartmentMaster = () => {
                   <div className="col">
                     <h4 className="card-title fw-bold">Department Master</h4>
                   </div>
-                  <div className="col-auto d-flex flex-wrap">
+                  <div className="col-auto d-flex flex-wrap d-none">
                     <div className="form-check form-switch mt-2 pt-1">
                       <input
                         className="form-check-input"
@@ -280,7 +280,7 @@ const DepartmentMaster = () => {
                       <th scope="col" style={headerCellStyle}>
                         Sr.No
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      <th scope="col" style={headerCellStyle} className="d-none">
                         Department Code
                       </th>
                       <th scope="col" style={headerCellStyle}>
@@ -289,10 +289,10 @@ const DepartmentMaster = () => {
                       {/* <th scope="col" style={headerCellStyle}>
                         Department Head
                       </th> */}
-                      <th scope="col" style={headerCellStyle}>
+                      <th scope="col" style={headerCellStyle} className="d-none">
                         Status
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      <th scope="col" style={headerCellStyle} className="d-none">
                         Action
                       </th>
                     </tr>
@@ -305,11 +305,11 @@ const DepartmentMaster = () => {
                             <td>
                               {(currentPage - 1) * itemsPerPage + index + 1}
                             </td>
-                            <td>{data.d_department_code}</td>
+                            <td className="d-none">{data.d_department_code}</td>
                             <td>{data.d_department_name}</td>
                             {/* <td>{data.d_head}</td> */}
-                            <td>{data.d_isactive}</td>
-                            <td>
+                            <td className="d-none">{data.d_isactive}</td>
+                            <td className="d-none">
                               <Edit
                                 className="text-success mr-2"
                                 type="button"

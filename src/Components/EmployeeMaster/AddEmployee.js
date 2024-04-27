@@ -55,10 +55,21 @@ const AddEmployee = () => {
       })
         .then((response) => {
           console.log(response.data.data, "get employee");
+          const fullName = response.data.data.emp_fname;
+          const nameParts = fullName.split(" ");
+          const firstName = nameParts[0]; // First word as first name
+          const middleName =
+            nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : ""; // All words between first and last as middle name, if available
+          const lastName = nameParts[nameParts.length - 1]; // Last word as last name
+  
+          // Set individual name parts
+          setFirstName(firstName);
+          setMiddleName(middleName);
+          setLastName(lastName);
           setEmpCode(response.data.data.emp_code);
-          setFirstName(response.data.data.emp_fname);
-          setMiddleName(response.data.data.emp_mname);
-          setLastName(response.data.data.emp_lname);
+          // setFirstName(response.data.data.emp_fname);
+          // setMiddleName(response.data.data.emp_mname);
+          // setLastName(response.data.data.emp_lname);
           setJobTitle(response.data.data.emp_job_title);
           setDesignation(response.data.data.emp_des);
           setDepartments(response.data.data.emp_dep);
@@ -66,10 +77,11 @@ const AddEmployee = () => {
           setHodToEmployee(response.data.data.emp_hodToEmp);
           setAddress1(response.data.data.emp_add1);
           setAddress2(response.data.data.emp_add2);
-          setCity({
-            value: response.data.data.emp_city,
-            label: response.data.data.emp_city_name,
-          });
+          // setCity({
+          //   value: response.data.data.emp_city,
+          //   label: response.data.data.emp_city_name,
+          // });
+          setCity(response.data.data.emp_city);
           setState(response.data.data.emp_state);
           setCountry(response.data.data.emp_country);
           setPinCode(response.data.data.emp_pincode);
@@ -251,7 +263,7 @@ const AddEmployee = () => {
     })
       .then((response) => {
         console.log(response.data.data, "by code");
-  
+
         if (response.data.data === null || newEmpCode === undefined) {
           // If response data is null, set all fields to null
           setFirstName("");
@@ -272,7 +284,7 @@ const AddEmployee = () => {
           setEmailId("");
           return;
         }
-  
+
         // Split full name to get parts
         const fullName = response.data.data.emp_fname;
         const nameParts = fullName.split(" ");
@@ -280,7 +292,7 @@ const AddEmployee = () => {
         const middleName =
           nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : ""; // All words between first and last as middle name, if available
         const lastName = nameParts[nameParts.length - 1]; // Last word as last name
-  
+
         // Set individual name parts
         setFirstName(firstName);
         setMiddleName(middleName);
@@ -288,14 +300,17 @@ const AddEmployee = () => {
         // Set other data
         setDepartments(response.data.data.emp_dep);
         setDesignation(response.data.data.emp_des);
-        setJoiningDate(response.data.data.emp_joiningdate.split("T")[0]);
+        const joiningDate = response.data.data.emp_joiningDate ? response.data.data.emp_joiningDate.split("T")[0] : "";
+        setJoiningDate(joiningDate);
+        // setJoiningDate(response.data.data.emp_joiningDate.split("T")[0]);
         setHodToEmployee(response.data.data.emp_hodToEmp);
         setAddress1(response.data.data.emp_add1);
         setAddress2(response.data.data.emp_add2);
-        setCity({
-          value: response.data.data.emp_city,
-          label: response.data.data.emp_city_name,
-        });
+        // setCity({
+        //   value: response.data.data.emp_city,
+        //   label: response.data.data.emp_city_name,
+        // });
+        setCity(response.data.data.emp_city);
         setState(response.data.data.emp_state);
         setCountry(response.data.data.emp_country);
         setPinCode(response.data.data.emp_pincode);
@@ -323,7 +338,7 @@ const AddEmployee = () => {
         setEmailId("");
       });
   };
-  
+
   const getAllData = async () => {
     const designationData = await GetAllDesignation();
     const departmentData = await getAllDepartment();
@@ -632,7 +647,7 @@ const AddEmployee = () => {
                           </option>
                         ))}
                       </select> */}
-                      <Select
+                      {/* <Select
                         options={allCity.map((data) => ({
                           value: data.ci_id,
                           label: data.ci_city_name,
@@ -640,6 +655,12 @@ const AddEmployee = () => {
                         value={city}
                         onChange={CityHandleChange}
                         className="mt-2"
+                      /> */}
+                      <input
+                        className="form-control"
+                        value={city}
+                        onChange={CityHandleChange}
+                        placeholder="Enter City"
                       />
                     </div>
                   </div>
@@ -649,7 +670,7 @@ const AddEmployee = () => {
                       <span className="text-danger fw-bold">*</span>
                       {/* <input className="form-control" value={state} onChange={(e) => setState(e.target.value)}
                       /> */}
-                      <select
+                      {/* <select
                         className="form-select"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
@@ -662,7 +683,13 @@ const AddEmployee = () => {
                             {data.s_state_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
+                      <input
+                        className="form-control"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        placeholder="Enter State"
+                      />
                       {/* <Select
                         options={allCountry.map((data) => ({
                           value: data.co_id,
@@ -678,9 +705,9 @@ const AddEmployee = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-0 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">Country:</label>{" "}
+                      <label className="control-label fw-bold">District:</label>{" "}
                       <span className="text-danger fw-bold">*</span>
-                      <select
+                      {/* <select
                         className="form-select"
                         onChange={(e) => setCountry(e.target.value)}
                         value={country}
@@ -693,7 +720,13 @@ const AddEmployee = () => {
                             {data.co_country_name}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
+                      <input
+                        className="form-control"
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        placeholder="Enter District"
+                      />
                     </div>
                   </div>
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-4 mt-lg-0">
@@ -792,7 +825,7 @@ const AddEmployee = () => {
                 <div className="row mt-4"></div>
                 <br />
               </div>
-              <div className="card-footer">
+              <div className="card-footer d-none">
                 <div className="row">
                   <div className="col-lg-12 text-end">
                     <button

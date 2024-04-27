@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../assets1/css/style.css";
 import "../assets1/plugins/morris/morris.css";
 import "../assets1/css/font-awesome.min.css";
@@ -11,7 +11,31 @@ import { NavLink } from "react-bootstrap";
 // import "../assets1/js/app.js"
 // import "../assets1/js/jquery-3.5.1.min.js"
 
-function HomePage() {
+const HomePage = () => {
+  // const [roleId, setRoleId] = useState("");
+  // const storedRoleId = localStorage.getItem("RoleId");
+  // console.log(storedRoleId, "StoredId");
+  // useEffect(() => {
+  //   const storedRoleId = localStorage.getItem("RoleId");
+  //   console.log(storedRoleId, "StoredId1");
+  //   if (storedRoleId) {
+  //     setRoleId(storedRoleId);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("Role ID:", roleId);
+  // }, [roleId]);
+  const [roleId, setRoleId] = useState("");
+  
+  useEffect(() => {
+    const storedRoleId = localStorage.getItem("RoleId");
+    if (storedRoleId) {
+      setRoleId(storedRoleId);
+    }
+    console.log("roleId", roleId);
+    
+  }, [roleId]);
   return (
     <div className="content container-fluid">
       {/* <div className="page-header">
@@ -24,146 +48,6 @@ function HomePage() {
                         </div>
                     </div>
                 </div> */}
-      <div className="page-header">
-        <div className="row">
-          <div className="col-sm-12 mt-5">
-            <h3 className="page-title text-dark">User</h3>
-            {/* <ul className="breadcrumb">
-                            <li className="breadcrumb-item active">User</li>
-                        </ul> */}
-          </div>
-        </div>
-      </div>
-      {/* Project, Clients, Tasks, and Employees Widgets */}
-      <div className="row">
-        {/* Project Widget */}
-        <Widget icon="fa fa-cubes" value="112" label="Attended Training" />
-        {/* Clients Widget */}
-        <Widget icon="fa fa-usd" value="44" label="Not Attend Training" />
-        {/* Tasks Widget */}
-        <Widget icon="fa fa-diamond" value="37" label="Passes Training" />
-        {/* Employees Widget */}
-        <Widget icon="fa fa-user" value="218" label="Failed Training" />
-        <Widget1 icon="fa fa-diamond" value="37" label="Need Training" />
-        {/* Employees Widget */}
-        <Widget1 icon="fa fa-user" value="218" label="Scheduled Training" />
-      </div>
-
-      {/* Total Revenue and Sales Overview Cards */}
-      <div className="row">
-        {/* Total Revenue Card */}
-        <DashboardCard title="Total Attended Training" chartId="bar-charts" />
-
-        {/* Sales Overview Card */}
-        <DashboardCard title="Total Scheduled Training" chartId="line-charts" />
-      </div>
-
-      {/* New Employees, Earnings, Expenses, and Profit Cards */}
-
-      <div className="page-header">
-        <div className="row">
-          <div className="col-sm-12 mt-5">
-            <h3 className="page-title text-dark">HOD</h3>
-            {/* <ul className="breadcrumb">
-                            <li className="breadcrumb-item active">User</li>
-                        </ul> */}
-          </div>
-        </div>
-      </div>
-
-      <div className="row">
-        {/* New Employees Card */}
-        <DashboardInfoCard
-          title="Training Attended"
-          value="10%"
-          progress="70%"
-        />
-        {/* Earnings Card */}
-        <DashboardInfoCard
-          title="Training Not Attended"
-          value="1,42,300"
-          progress="70%"
-          previousValue="1,15,852"
-        />
-        {/* Expenses Card */}
-        <DashboardInfoCard
-          title="Dept Wise Training Passed"
-          value="8,500"
-          progress="70%"
-          previousValue="7,500"
-        />
-        {/* Profit Card */}
-        <DashboardInfoCard
-          title="Dept Wise Training Failed"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-
-        <DashboardInfoCard
-          title="Employee Wise Training Passed"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-        <DashboardInfoCard
-          title="Employee Wise Training Failed"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-        <DashboardInfoCard
-          title="Dept Wise Pending Approval"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-        <DashboardInfoCard
-          title="User Wise Pending Approval"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-        <DashboardInfoCard
-          title="Dept Wise Training Approved"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-        <DashboardInfoCard
-          title="User Wise Training Approved"
-          value="1,12,000"
-          progress="70%"
-          previousValue="1,42,000"
-        />
-      </div>
-      <div className="page-header">
-        <div className="row">
-          <div className="col-sm-12 mt-3">
-            <h3 className="page-title text-dark">HR</h3>
-            {/* <ul className="breadcrumb">
-                            <li className="breadcrumb-item active">User</li>
-                        </ul> */}
-          </div>
-        </div>
-      </div>
-      {/* Statistics, Task Statistics, and Today Absent Sections */}
-      <div className="row">
-        {/* Statistics Section */}
-        <StatisticsSection />
-        {/* Task Statistics Section */}
-        <TaskStatisticsSection />
-        {/* Today Absent Section */}
-        {/* <TodayAbsentSection /> */}
-      </div>
-
-      {/* Invoices and Payments Tables */}
-      <div className="row">
-        {/* Invoices Table */}
-        {/* <TableCard title="Invoices" tableId="invoice-table" /> */}
-        {/* Payments Table */}
-        {/* <TableCard title="Payments" tableId="payment-table" /> */}
-      </div>
 
       {/* Clients and Recent Projects Tables */}
       <div className="row">
@@ -172,9 +56,353 @@ function HomePage() {
         {/* Recent Projects Table */}
         {/* <TableCard title="Recent Projects" tableId="project-table" /> */}
       </div>
+
+      {roleId === "6504BCFE-CF2F-44E6-ADD2-85651E13EBE1" ? (
+        <>
+          <div className="user-section">
+            <div className="page-header">
+              <div className="row">
+                <div className="col-sm-12 mt-5">
+                  <h3 className="page-title text-dark">User</h3>
+                  {/* <ul className="breadcrumb">
+                           <li className="breadcrumb-item active">User</li>
+                       </ul> */}
+                </div>
+              </div>
+            </div>
+            {/* Project, Clients, Tasks, and Employees Widgets */}
+            <div className="row">
+              {/* Project Widget */}
+              <Widget
+                icon="fa fa-cubes"
+                value="112"
+                label="Attended Training"
+              />
+              {/* Clients Widget */}
+              <Widget icon="fa fa-usd" value="44" label="Not Attend Training" />
+              {/* Tasks Widget */}
+              <Widget icon="fa fa-diamond" value="37" label="Passes Training" />
+              {/* Employees Widget */}
+              <Widget icon="fa fa-user" value="218" label="Failed Training" />
+              <Widget1 icon="fa fa-diamond" value="37" label="Need Training" />
+              {/* Employees Widget */}
+              <Widget1
+                icon="fa fa-user"
+                value="218"
+                label="Scheduled Training"
+              />
+            </div>
+
+            {/* Total Revenue and Sales Overview Cards */}
+            <div className="row">
+              {/* Total Revenue Card */}
+              <DashboardCard
+                title="Total Attended Training"
+                chartId="bar-charts"
+              />
+
+              {/* Sales Overview Card */}
+              <DashboardCard
+                title="Total Scheduled Training"
+                chartId="line-charts"
+              />
+            </div>
+          </div>
+        </>
+      ) : roleId === "ED90063A-8C7F-48D0-8E78-CB411AC26C28" ? (
+        <>
+          <div className="hr-section">
+            <div className="page-header">
+              <div className="row">
+                <div className="col-sm-12 mt-3">
+                  <h3 className="page-title text-dark">HR</h3>
+                  {/* <ul className="breadcrumb">
+                        <li className="breadcrumb-item active">User</li>
+                    </ul> */}
+                </div>
+              </div>
+            </div>
+
+            {/* Statistics, Task Statistics, and Today Absent Sections */}
+            <div className="row">
+              {/* Statistics Section */}
+              <StatisticsSection />
+              {/* Task Statistics Section */}
+              <TaskStatisticsSection />
+              {/* Today Absent Section */}
+              {/* <TodayAbsentSection /> */}
+            </div>
+
+            {/* Invoices and Payments Tables */}
+            <div className="row">
+              {/* Invoices Table */}
+              {/* <TableCard title="Invoices" tableId="invoice-table" /> */}
+              {/* Payments Table */}
+              {/* <TableCard title="Payments" tableId="payment-table" /> */}
+            </div>
+          </div>
+        </>
+      ) : roleId === "44E0B6F7-52B8-4DF5-9B0E-9F87F486298B" ? (
+        <>
+          <div className="hod-section">
+            <div className="page-header">
+              <div className="row">
+                <div className="col-sm-12 mt-5">
+                  <h3 className="page-title text-dark">HOD</h3>
+                  {/* <ul className="breadcrumb">
+                        <li className="breadcrumb-item active">User</li>
+                    </ul> */}
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              {/* New Employees Card */}
+              <DashboardInfoCard
+                title="Training Attended"
+                value="10%"
+                progress="70%"
+              />
+              {/* Earnings Card */}
+              <DashboardInfoCard
+                title="Training Not Attended"
+                value="1,42,300"
+                progress="70%"
+                previousValue="1,15,852"
+              />
+              {/* Expenses Card */}
+              <DashboardInfoCard
+                title="Dept Wise Training Passed"
+                value="8,500"
+                progress="70%"
+                previousValue="7,500"
+              />
+              {/* Profit Card */}
+              <DashboardInfoCard
+                title="Dept Wise Training Failed"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+
+              <DashboardInfoCard
+                title="Employee Wise Training Passed"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+              <DashboardInfoCard
+                title="Employee Wise Training Failed"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+              <DashboardInfoCard
+                title="Dept Wise Pending Approval"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+              <DashboardInfoCard
+                title="User Wise Pending Approval"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+              <DashboardInfoCard
+                title="Dept Wise Training Approved"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+              <DashboardInfoCard
+                title="User Wise Training Approved"
+                value="1,12,000"
+                progress="70%"
+                previousValue="1,42,000"
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="content container-fluid">
+            <div className="user-section">
+              <div className="page-header">
+                <div className="row">
+                  <div className="col-sm-12 mt-5">
+                    <h3 className="page-title text-dark">User</h3>
+                    {/* <ul className="breadcrumb">
+                      <li className="breadcrumb-item active">User</li>
+                  </ul> */}
+                  </div>
+                </div>
+              </div>
+              {/* Project, Clients, Tasks, and Employees Widgets */}
+              <div className="row">
+                {/* Project Widget */}
+                <Widget
+                  icon="fa fa-cubes"
+                  value="112"
+                  label="Attended Training"
+                />
+                {/* Clients Widget */}
+                <Widget
+                  icon="fa fa-usd"
+                  value="44"
+                  label="Not Attend Training"
+                />
+                {/* Tasks Widget */}
+                <Widget
+                  icon="fa fa-diamond"
+                  value="37"
+                  label="Passes Training"
+                />
+                {/* Employees Widget */}
+                <Widget icon="fa fa-user" value="218" label="Failed Training" />
+                <Widget1
+                  icon="fa fa-diamond"
+                  value="37"
+                  label="Need Training"
+                />
+                {/* Employees Widget */}
+                <Widget1
+                  icon="fa fa-user"
+                  value="218"
+                  label="Scheduled Training"
+                />
+              </div>
+
+              {/* Total Revenue and Sales Overview Cards */}
+              <div className="row">
+                {/* Total Revenue Card */}
+                <DashboardCard
+                  title="Total Attended Training"
+                  chartId="bar-charts"
+                />
+
+                {/* Sales Overview Card */}
+                <DashboardCard
+                  title="Total Scheduled Training"
+                  chartId="line-charts"
+                />
+              </div>
+            </div>
+            <div className="hod-section">
+              <div className="page-header">
+                <div className="row">
+                  <div className="col-sm-12 mt-5">
+                    <h3 className="page-title text-dark">HOD</h3>
+                    {/* <ul className="breadcrumb">
+                            <li className="breadcrumb-item active">User</li>
+                        </ul> */}
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                {/* New Employees Card */}
+                <DashboardInfoCard
+                  title="Training Attended"
+                  value="10%"
+                  progress="70%"
+                />
+                {/* Earnings Card */}
+                <DashboardInfoCard
+                  title="Training Not Attended"
+                  value="1,42,300"
+                  progress="70%"
+                  previousValue="1,15,852"
+                />
+                {/* Expenses Card */}
+                <DashboardInfoCard
+                  title="Dept Wise Training Passed"
+                  value="8,500"
+                  progress="70%"
+                  previousValue="7,500"
+                />
+                {/* Profit Card */}
+                <DashboardInfoCard
+                  title="Dept Wise Training Failed"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+
+                <DashboardInfoCard
+                  title="Employee Wise Training Passed"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+                <DashboardInfoCard
+                  title="Employee Wise Training Failed"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+                <DashboardInfoCard
+                  title="Dept Wise Pending Approval"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+                <DashboardInfoCard
+                  title="User Wise Pending Approval"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+                <DashboardInfoCard
+                  title="Dept Wise Training Approved"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+                <DashboardInfoCard
+                  title="User Wise Training Approved"
+                  value="1,12,000"
+                  progress="70%"
+                  previousValue="1,42,000"
+                />
+              </div>
+            </div>
+            <div className="hr-section">
+              <div className="page-header">
+                <div className="row">
+                  <div className="col-sm-12 mt-3">
+                    <h3 className="page-title text-dark">HR</h3>
+                    {/* <ul className="breadcrumb">
+                            <li className="breadcrumb-item active">User</li>
+                        </ul> */}
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistics, Task Statistics, and Today Absent Sections */}
+              <div className="row">
+                {/* Statistics Section */}
+                <StatisticsSection />
+                {/* Task Statistics Section */}
+                <TaskStatisticsSection />
+                {/* Today Absent Section */}
+                {/* <TodayAbsentSection /> */}
+              </div>
+
+              {/* Invoices and Payments Tables */}
+              <div className="row">
+                {/* Invoices Table */}
+                {/* <TableCard title="Invoices" tableId="invoice-table" /> */}
+                {/* Payments Table */}
+                {/* <TableCard title="Payments" tableId="payment-table" /> */}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
-}
+};
 
 function Widget({ icon, value, label }) {
   return (
@@ -578,7 +806,9 @@ function TodayAbsentSection() {
           <div className="leave-info-box">{/* Today Absent Info Box */}</div>
           <div className="leave-info-box">{/* Today Absent Info Box */}</div>
           <div className="load-more text-center">
-            <NavLink to="" className="text-dark">Load More</NavLink>
+            <NavLink to="" className="text-dark">
+              Load More
+            </NavLink>
           </div>
         </div>
       </div>

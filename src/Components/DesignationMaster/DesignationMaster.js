@@ -207,7 +207,7 @@ const DesignationMaster = () => {
                       placeholder="Search"
                     />
                   </div>
-                  <div className="col-auto d-flex flex-wrap">
+                  <div className="col-auto d-flex flex-wrap d-none">
                   <div className="form-check form-switch mt-2 pt-1">
                       <input
                         className="form-check-input"
@@ -268,16 +268,16 @@ const DesignationMaster = () => {
                       <th scope="col" style={headerCellStyle}>
                         Sr.No
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      <th scope="col" style={headerCellStyle} className="d-none">
                         Designation Code
                       </th>
                       <th scope="col" style={headerCellStyle}>
                         Designation Name
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      <th scope="col" style={headerCellStyle} className="d-none">
                         Status
                       </th>
-                      <th scope="col" style={headerCellStyle}>
+                      <th scope="col" style={headerCellStyle} className="d-none">
                         Action
                       </th>
                     </tr>
@@ -290,10 +290,10 @@ const DesignationMaster = () => {
                             <td>
                               {(currentPage - 1) * itemsPerPage + index + 1}
                             </td>
-                            <td>{data.de_designation_code}</td>
+                            <td className="d-none">{data.de_designation_code}</td>
                             <td>{data.de_designation_name}</td>
-                            <td>{data.de_isactive}</td>
-                            <td>
+                            <td className="d-none">{data.de_isactive}</td>
+                            <td className="d-none">
                               <Edit
                                 className="text-success mr-2"
                                 type="button"

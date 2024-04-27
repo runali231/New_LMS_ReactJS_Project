@@ -197,7 +197,7 @@ const AddTrainingFeedback = () => {
       department === "" ||
       score === ""
     ) {
-      alert("Please fill the details!");
+      alert("Please fill in all the details!");
     } else {
       const newFeedback = {
         f_trnNo: trainingNo,
@@ -208,12 +208,12 @@ const AddTrainingFeedback = () => {
         f_dateTrnTo: dateTrainingTo,
         f_TimeTrnTo: timeTrainingTo,
         f_empCode: empCode.label,
-        emp_id: empCode.value,
+        emp_id: (empCode.value).toString(),
         f_empName: empName,
         f_trnAttend: trainingAttended,
         f_des: designation ? designation.label : "",
-        f_desId: designation ? designation.value : "",
-        f_depid: department ? department.value : "",
+        f_desId: designation ? (designation.value).toString() : "",
+        f_depid: department ? (department.value).toString() : "",
         f_dep: department ? department.label : "",
         // f_feedback: feedback,
         f_Trainerfeedback: trainerFeedback,
@@ -223,20 +223,18 @@ const AddTrainingFeedback = () => {
       };
 
       // Updating state with new training entry
-      // setAllSubFeedback((prevFeedbackArray) => [
-      //   ...prevFeedbackArray,
-      //   newFeedback,
-      // ]);
-      setAllSubFeedback((prevFeedbackArray) => {
-        console.log("Previous Feedback Array:", prevFeedbackArray);
-        console.log("New Feedback:", newFeedback);
-        return [...prevFeedbackArray, newFeedback];
-      });
-      console.log([...allSubFeedback], "subjects");
+      setAllSubFeedback((prevFeedbackArray) => [
+        ...prevFeedbackArray,
+        newFeedback,
+      ]);
+
+      // Log the updated state inside the callback of setAllSubFeedback
+      // This ensures that you are logging the state after it has been updated
+      console.log("New Feedback added:", newFeedback);
+      console.log("All Sub Feedback after update:", allSubFeedback);
+
       alert("Feedback added successfully!");
 
-      // Logging the updated feedbackArray state
-      console.log(allSubFeedback);
       handleClose();
       resetForm();
     }
@@ -305,9 +303,9 @@ const AddTrainingFeedback = () => {
           f_empName: empName,
           f_trnAttend: trainingAttended,
           f_des: designation.label,
-          f_desId: designation.value,
+          f_desId: (designation.value).toString(),
           f_dep: department.label,
-          f_depid: department.value,
+          f_depid: (department.value).toString(),
           // f_feedback: feedback,
           f_Trainerfeedback: trainerFeedback,
           f_Trainingfeedback: trainingFeedback,
@@ -539,7 +537,7 @@ const AddTrainingFeedback = () => {
     }
   };
   const trainingFeedbackFileType = getBase64Type(trainingPdfFile);
-  const trainerFeedbackFileType = getBase64Type(trainingPdfFile);
+  const trainerFeedbackFileType = getBase64Type(trainerPdfFile);
   const resetForm = () => {
     setEmpCode("");
     setEmpName("");
@@ -552,7 +550,7 @@ const AddTrainingFeedback = () => {
     setTrainingReqBy("");
     setTrainingAttended("");
     setDesignation("");
-    setDepartment("")
+    setDepartment("");
     setTrainerFeedback("");
     setTrainingFeedback("");
     setScore("");
@@ -829,31 +827,30 @@ const AddTrainingFeedback = () => {
                                   <td>{data.f_trnReqBy}</td>
                                   <td>{data.f_trnAttend}</td>
                                   <td>
-                                    {data.f_Trainingfeedback !== null &&
-                                      data.f_fb_id && (
-                                        <span
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#viewModal"
-                                          onClick={() =>
-                                            TrainingFeedbackViewModal(
-                                              data.f_Trainingfeedback
-                                            )
-                                          }
-                                        >
-                                          {trainingFileName ===
-                                          data.f_Trainingfeedback ? (
-                                            trainingFileName
-                                          ) : (
-                                            // `File uploaded`
-                                            // {trainingFileName}
-                                            <EyeFill
-                                              className="text-success"
-                                              style={{ fontSize: "23px" }}
-                                            />
-                                          )}
-                                        </span>
-                                      )}
+                                    {data.f_Trainingfeedback !== null && (
+                                      <span
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#viewModal"
+                                        onClick={() =>
+                                          TrainingFeedbackViewModal(
+                                            data.f_Trainingfeedback
+                                          )
+                                        }
+                                      >
+                                        {trainingFileName ===
+                                        data.f_Trainingfeedback ? (
+                                          trainingFileName
+                                        ) : (
+                                          // `File uploaded`
+                                          // {trainingFileName}
+                                          <EyeFill
+                                            className="text-success"
+                                            style={{ fontSize: "23px" }}
+                                          />
+                                        )}
+                                      </span>
+                                    )}
                                     {!data.f_Trainingfeedback && (
                                       <span
                                         type="button"
@@ -865,31 +862,30 @@ const AddTrainingFeedback = () => {
                                     )}
                                   </td>
                                   <td>
-                                    {data.f_Trainerfeedback !== null &&
-                                      data.f_fb_id && (
-                                        <span
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#trainerViewModal"
-                                          onClick={() =>
-                                            TrainerFeedbackViewModal(
-                                              data.f_Trainerfeedback
-                                            )
-                                          }
-                                        >
-                                          {trainingFileName ===
-                                          data.f_Trainerfeedback ? (
-                                            trainingFileName
-                                          ) : (
-                                            // `File uploaded`
-                                            // {trainingFileName}
-                                            <EyeFill
-                                              className="text-success"
-                                              style={{ fontSize: "23px" }}
-                                            />
-                                          )}
-                                        </span>
-                                      )}
+                                    {data.f_Trainerfeedback !== null && (
+                                      <span
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#trainerViewModal"
+                                        onClick={() =>
+                                          TrainerFeedbackViewModal(
+                                            data.f_Trainerfeedback
+                                          )
+                                        }
+                                      >
+                                        {trainingFileName ===
+                                        data.f_Trainerfeedback ? (
+                                          trainingFileName
+                                        ) : (
+                                          // `File uploaded`
+                                          // {trainingFileName}
+                                          <EyeFill
+                                            className="text-success"
+                                            style={{ fontSize: "23px" }}
+                                          />
+                                        )}
+                                      </span>
+                                    )}
                                     {!data.f_Trainerfeedback && (
                                       <span
                                         type="button"
@@ -1069,6 +1065,7 @@ const AddTrainingFeedback = () => {
                   <Select
                     options={allEmployee}
                     value={empCode}
+                    // value={empCode || ""}
                     onChange={handleChangeByCode}
                     className="mt-2"
                   />
@@ -1404,23 +1401,7 @@ const AddTrainingFeedback = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn text-white"
-                  style={{ backgroundColor: "#1B5A90" }}
-                  data-bs-dismiss="modal"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-              </div> */}
+
             </div>
           </div>
         </div>

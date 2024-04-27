@@ -37,6 +37,7 @@ const ParameterMaster = () => {
   }, [currentPage, itemsPerPage, toggleActive]);
 
   const getAllData = () => {
+    console.log(UserId, "userID")
     axios({
       method: "get",
       url: new URL(

@@ -56,17 +56,26 @@ const AddKPI = () => {
   const handleEmpCodeChange = (e) => {
     const code = e.target.value;
     setEmpCode(code);
+    if (!code) {
+      // If empCode is null, set all fields to blank
+      setEmpName('');
+      setDesignation('');
+      setDepartment('');
+      // You can similarly update other state values for KPI fields
+      return; // Exit the function early since there's no need to make the API call
+    }
     axios({
       method: "get",
       url: new URL(UrlData + `EmployeeMaster/GetByCode?emp_code=${code}`),
     })
       .then((response) => {
         setEmpName(
-          response.data.data.emp_fname +
-            " " +
-            response.data.data.emp_mname +
-            " " +
-            response.data.data.emp_lname
+          response.data.data.emp_fname
+          //  +
+          //   " " +
+          //   response.data.data.emp_mname +
+          //   " " +
+          //   response.data.data.emp_lname
         );
         setDesignation(response.data.data.emp_des);
         setDepartment(response.data.data.emp_dep);
@@ -121,8 +130,8 @@ const AddKPI = () => {
         k_emp_name: empName,
         k_kpi_code: kpiCode,
         k_kpi_des: kpiDescription,
-        k_department: department,
-        k_designation: designation,
+        k_department: department.toString(),
+        k_designation: designation.toString(),
         k_uom: uom,
         k_occurance: occurrence,
         k_isactive: "1",

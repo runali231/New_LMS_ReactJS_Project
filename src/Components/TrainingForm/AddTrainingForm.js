@@ -246,6 +246,11 @@ const AddTrainingForm = () => {
         )
         .then((response) => {
           console.log("response", response.data.data);
+          let data = response.data.data;
+          if (data.length === 0) {
+            alert("Employee not available in this department!");
+          }
+          else{
           const modifiedData = response.data.data.map((item) => ({
             ...item,
             td_req_dept: trainingDept,
@@ -258,13 +263,16 @@ const AddTrainingForm = () => {
               .map((item) => item.label)
               .join(",")
               .toString(),
+            td_emp_code: item.td_emp_code.toString(),
           }));
           setAllByDepartments([...allByDepartments, ...modifiedData]);
           console.log([...allByDepartments, ...modifiedData], "309");
           alert("Training added  successfully!");
+        }
           // addSingleTraining()
           resetForm();
           handleClose();
+        
         })
         .catch((error) => {
           console.log(error);
@@ -357,8 +365,13 @@ const AddTrainingForm = () => {
 
     getByTime();
   }, [trainingTopic]);
+
   const getByTime = () => {
-    if (trainingTopic && Array.isArray(trainingTopic) && trainingTopic.length > 0) {
+    if (
+      trainingTopic &&
+      Array.isArray(trainingTopic) &&
+      trainingTopic.length > 0
+    ) {
       console.log(trainingTopic[0].value, "360");
       axios
         .get(
@@ -378,7 +391,7 @@ const AddTrainingForm = () => {
       console.error("Invalid trainingTopic:", trainingTopic);
     }
   };
-  
+
   // const getByTime = () => {
   //   console.log(trainingTopic.value, "360");
   //   axios
@@ -386,7 +399,7 @@ const AddTrainingForm = () => {
   //       new URL(
   //         UrlData +
   //           `TrainingForm/GetByTopic?tr_topic_training=${trainingTopic.value}`
-            
+
   //       )
   //     )
   //     .then((response) => {
@@ -432,11 +445,11 @@ const AddTrainingForm = () => {
       alert("Please fill the details!");
     } else {
       const newTraining = {
-        td_dept: departments.value,
+        td_dept: departments.value.toString(),
         td_des: designation.label,
-        td_emp_des: designation.value,
-        td_emp_code: selectedOption.value,
-        td_emp_name: selectedNameOption.value,
+        td_emp_des: designation.value.toString(),
+        td_emp_code: selectedOption.value.toString(),
+        td_emp_name: selectedNameOption.value.toString(),
         td_req_dept: trainingDept,
         td_date_training: trainingDate,
         td_topic_training: data.map((item) => item.value).join(","),
@@ -465,7 +478,7 @@ const AddTrainingForm = () => {
 
   const getSingleTraining = (index) => {
     console.log("Received index:", index);
-
+    getAllTrainingTopic();
     // Update editIndex state synchronously with the provided index
     // setEditIndex(() => {
     //   console.log("current update editIndex1:", index);
@@ -549,11 +562,11 @@ const AddTrainingForm = () => {
       const updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
       updatedTrainings[editIndex] = {
         // Update the training item at editIndex
-        td_dept: departments.value,
+        td_dept: departments.value.toString(),
         td_des: designation.label,
-        td_emp_des: designation.value,
-        td_emp_code: selectedOption.value,
-        td_emp_name: selectedNameOption.value,
+        td_emp_des: designation.value.toString(),
+        td_emp_code: selectedOption.value.toString(),
+        td_emp_name: selectedNameOption.value.toString(),
         td_req_dept: trainingDept,
         td_date_training: trainingDate,
         td_topic_training: trainingTopic
@@ -592,6 +605,8 @@ const AddTrainingForm = () => {
     setTrainingTopic("");
     setIsEmployeeNameDisabled(false);
     setEditIndex(null);
+    setCode("");
+    setName("");
   };
   const handleEmpCodeChange = (selected) => {
     setSelectedOption(selected);
@@ -662,6 +677,8 @@ const AddTrainingForm = () => {
   };
 
   const GetAllTopicsDes = () => {
+    console.log(designation, "designation 666");
+    console.log(designation.value, "designation 667");
     axios({
       method: "get",
       url: new URL(
@@ -1376,6 +1393,7 @@ const AddTrainingForm = () => {
             >
               Update Training
             </Button> */}
+
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>

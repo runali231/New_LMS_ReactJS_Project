@@ -101,7 +101,7 @@ const AddCompetency = () => {
       url: new URL(UrlData + `CompentencyMaster`),
       data: {
         userId: UserId,
-        cp_designation: designation.value,
+        cp_designation: (designation.value).toString(),
         cp_qualification: qualification,
         cp_experiance: experience,
         cp_skillreq: skillRequirement,
