@@ -554,6 +554,7 @@ const AddTrainingFeedback = () => {
     setTrainerFeedback("");
     setTrainingFeedback("");
     setScore("");
+    setEditIndex(null)
   };
   const extractDate = (dateTimeString) => {
     return dateTimeString.split("T")[0];

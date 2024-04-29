@@ -201,7 +201,7 @@ const AddTrainingSchedule = () => {
     } else if (status === null) {
       alert("Please enter status!");
     } else if (action === null) {
-      alert("Please enter action!");
+      alert("Please select action!");
     } else {
       let data = {
         userId: UserId,
