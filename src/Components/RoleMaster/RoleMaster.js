@@ -35,9 +35,8 @@ const RoleMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-          // `RoleMaster/GetAll?status=1&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
           `RoleMaster/GetAll?status=${active ? "1" : "0"}`
-      ), // Include pageSize and pageNumber in the URL
+      ),
     })
       .then((response) => {
         console.log("response", response.data.data);
@@ -49,9 +48,9 @@ const RoleMaster = () => {
   };
 
   const handleChange = (e) => {
-    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
-    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
-    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
   };
 
   const GetRoleMaster = (rId) => {
@@ -83,10 +82,8 @@ const RoleMaster = () => {
     setSearchData(searchDataValue);
 
     if (searchDataValue.trim() === "") {
-      // If search input is empty, fetch all data
       getAllData();
     } else {
-      // Filter data based on search input value
       const filteredData = allRoleMaster.filter(
         (role) =>
           role.r_rolename.toLowerCase().includes(searchDataValue) ||
@@ -114,21 +111,13 @@ const RoleMaster = () => {
                   <div className="col">
                     <h4 className="card-title fw-bold">Role Master</h4>
                   </div>
-                  <div className="col-md-2 justify-content-end d-none">
-                    <input
-                      type="text"
-                      id="custom-search"
-                      className="form-control d-none"
-                      placeholder="Search"
-                    />
-                  </div>
                   <div className="col-auto d-flex flex-wrap">
                     <div className="form-check form-switch mt-2 pt-1">
                       <input
                         className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckDefault"
-                        checked={active} // Bind the checked state to the state variable
+                        checked={active}
                         onChange={() => setActive(!active)}
                       />
                     </div>
@@ -137,10 +126,7 @@ const RoleMaster = () => {
                         className="btn btn-md text-light"
                         type="button"
                         style={{ backgroundColor: "#1B5A90" }}
-                        onClick={() => {
-                          // navigate("/addDesignation/:d_id");
-                          navigate("/addRoleMaster");
-                        }}
+                        onClick={() => navigate("/addRoleMaster")}
                       >
                         <Add />
                       </button>
@@ -156,12 +142,12 @@ const RoleMaster = () => {
                       style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
-                      value={selectedItemsPerPage} // Set value to selectedItemsPerPage
-                      onChange={handleChange} // Handle change event
+                      value={selectedItemsPerPage}
+                      onChange={handleChange}
                     >
                       <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
@@ -204,25 +190,15 @@ const RoleMaster = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {allRoleMaster.map((data, index) => (
+                    {currentItems.map((data, index) => (
                       <tr key={data.r_id}>
                         <td>{index + 1}</td>
                         <td>{data.r_rolename}</td>
                         <td>{data.r_description}</td>
                         <td>{data.r_module}</td>
                         <td>{data.m_menuname}</td>
+                        <td>{data.r_isactive}</td>
                         <td>
-                          {/* <div className="form-check form-switch">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="flexSwitchCheckDefault"
-                            />
-                          </div> */}
-                          {data.r_isactive}
-                        </td>
-                        <td>
-                          {" "}
                           <Edit
                             className="text-success mr-2"
                             type="button"

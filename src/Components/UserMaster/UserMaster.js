@@ -254,13 +254,25 @@ const UserMaster = () => {
       });
   };
 
-  const getData = async () => {
-    const designationData = await GetAllDesignation();
-    const departmentData = await getAllDepartment();
+  // const getData = async () => {
+  //   const designationData = await GetAllDesignation();
+  //   const departmentData = await getAllDepartment();
 
-    setSelectedDesignation(designationData);
-    setSelectedDepartment(departmentData);
-  };
+  //   setSelectedDesignation(designationData);
+  //   setSelectedDepartment(departmentData);
+  // };
+
+  const getData = async () => {
+    try {
+        const designationData = await GetAllDesignation();
+        const departmentData = await getAllDepartment();
+
+        setSelectedDesignation(designationData);
+        setSelectedDepartment(departmentData);
+    } catch (error) {
+        console.log(error);
+    }
+};
 
   const handleDesignation = (e) => {
     const selectedValue = e.target.value;
@@ -353,8 +365,8 @@ const UserMaster = () => {
                       onChange={handleChange}
                     >
                       <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
@@ -556,9 +568,9 @@ const UserMaster = () => {
             <Col xs={12} sm={12} md={12} lg={6} className="mt-4 mt-lg-0">
               <div className="form-group form-group-sm">
                 <label className="control-label fw-bold">Designation:</label>{" "}
-                <span className="text-danger fw-bold">*</span>
+                {/* <span className="text-danger fw-bold">*</span> */}
                 <select
-                  className="form-select "
+                  className="form-select mt-3"
                   aria-label="Default select example"
                   value={designation}
                   onChange={handleDesignation}
@@ -579,7 +591,7 @@ const UserMaster = () => {
             <Col xs={12} sm={12} md={12} lg={6}>
               <div className="form-group form-group-sm">
                 <label className="control-label fw-bold">Departments:</label>{" "}
-                <span className="text-danger fw-bold">*</span>
+                {/* <span className="text-danger fw-bold">*</span> */}
                 <select
                   className="form-select"
                   aria-label="Default select example"
@@ -597,7 +609,7 @@ const UserMaster = () => {
                 </select>
               </div>
             </Col>
-            <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-0">
+            <Col xs={12} sm={12} md={12} lg={6} className="mt-lg-0 mt-3">
               <Form.Group className="form-group-sm">
                 <Form.Label className="control-label fw-bold">Role:</Form.Label>
                 <span className="text-danger fw-bold">*</span>
@@ -605,7 +617,7 @@ const UserMaster = () => {
                   options={allRole}
                   value={role}
                   onChange={handleRole}
-                  className="mt-2"
+                  className=""
                 />
               </Form.Group>
             </Col>

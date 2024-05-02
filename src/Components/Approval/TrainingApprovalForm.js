@@ -18,6 +18,8 @@ const TrainingApprovalForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchData, setSearchData] = useState("");
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
+  
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -76,6 +78,12 @@ const TrainingApprovalForm = () => {
       );
       setAllTrainingApproval(filteredData);
     }
+  };
+
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -137,11 +145,8 @@ const TrainingApprovalForm = () => {
                       style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
-                      onChange={(e) => {
-                        setItemsPerPage(parseInt(e.target.value));
-                        setCurrentPage(1);
-                      }}
-                      value={itemsPerPage}
+                      value={selectedItemsPerPage}
+                      onChange={handleChange}
                     >
                       <option value={10}>10</option>
                       <option value={50}>50</option>

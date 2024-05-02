@@ -23,7 +23,8 @@ const CompetencyChart = () => {
   const [report, setReport] = useState([]);
   const [pdfResponse, setPdfResponse] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(50);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
   const tableRef = useRef(null);
   const [tableLoaded, setTableLoaded] = useState(false);
 
@@ -95,6 +96,12 @@ const CompetencyChart = () => {
     });
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = report.slice(indexOfFirstItem, indexOfLastItem);
@@ -152,11 +159,15 @@ const CompetencyChart = () => {
                     <select
                       className="form-select w-auto"
                       aria-label="Default select example"
+                      value={selectedItemsPerPage}
+                      onChange={handleChange}
                     >
-                      <option defaultValue>10</option>
-                      <option value="1">10</option>
-                      <option value="2">50</option>
-                      <option value="3">100</option>
+                     
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="150">150</option>
+                      <option value="200">200</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>

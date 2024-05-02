@@ -37,6 +37,7 @@ const AddEmployee = () => {
   const [joiningDate, setJoiningDate] = useState([]);
   const [selectedDesignation, setSelectedDesignation] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState([]);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const { id } = useParams();
 
   useEffect(() => {

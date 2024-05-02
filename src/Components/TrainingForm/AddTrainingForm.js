@@ -38,7 +38,7 @@ const AddTrainingForm = () => {
   const [trId, setTrId] = useState("");
   const [allTraining, setAllTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [allByDepartments, setAllByDepartments] = useState([]);
   const [empCodeOptions, setEmpCodeOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -46,6 +46,8 @@ const AddTrainingForm = () => {
   const [selectedNameOption, setSelectedNameOption] = useState("");
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
+
   const handleShow = () => {
     setShowModal(true);
   };
@@ -249,30 +251,28 @@ const AddTrainingForm = () => {
           let data = response.data.data;
           if (data.length === 0) {
             alert("Employee not available in this department!");
+          } else {
+            const modifiedData = response.data.data.map((item) => ({
+              ...item,
+              td_req_dept: trainingDept,
+              td_date_training: trainingDate,
+              td_topic_training: trainingTopic
+                .map((item) => item.value)
+                .join(",")
+                .toString(),
+              td_topic_training_name: trainingTopic
+                .map((item) => item.label)
+                .join(",")
+                .toString(),
+              td_emp_code: item.td_emp_code.toString(),
+            }));
+            setAllByDepartments([...allByDepartments, ...modifiedData]);
+            console.log([...allByDepartments, ...modifiedData], "309");
+            alert("Training added  successfully!");
           }
-          else{
-          const modifiedData = response.data.data.map((item) => ({
-            ...item,
-            td_req_dept: trainingDept,
-            td_date_training: trainingDate,
-            td_topic_training: trainingTopic
-              .map((item) => item.value)
-              .join(",")
-              .toString(),
-            td_topic_training_name: trainingTopic
-              .map((item) => item.label)
-              .join(",")
-              .toString(),
-            td_emp_code: item.td_emp_code.toString(),
-          }));
-          setAllByDepartments([...allByDepartments, ...modifiedData]);
-          console.log([...allByDepartments, ...modifiedData], "309");
-          alert("Training added  successfully!");
-        }
           // addSingleTraining()
           resetForm();
           handleClose();
-        
         })
         .catch((error) => {
           console.log(error);
@@ -728,9 +728,15 @@ const AddTrainingForm = () => {
       });
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
+    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
+    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allTraining.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allByDepartments.slice(indexOfFirstItem, indexOfLastItem);
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -948,11 +954,13 @@ const AddTrainingForm = () => {
                           <select
                             className="form-select w-auto"
                             aria-label="Default select example"
+                            value={selectedItemsPerPage}
+                            onChange={handleChange}
                           >
-                            <option defaultValue>10</option>
-                            <option value="1">10</option>
-                            <option value="2">50</option>
-                            <option value="3">100</option>
+                           
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
@@ -1014,7 +1022,7 @@ const AddTrainingForm = () => {
                         </thead>
 
                         <tbody className="text-start">
-                          {allByDepartments.map((departmentItem, index) => {
+                          {allByDepartments && currentItems.map((departmentItem, index) => {
                             return (
                               <tr key={index}>
                                 <td>{index + 1}</td>

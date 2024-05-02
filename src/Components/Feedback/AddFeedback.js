@@ -12,7 +12,8 @@ import Select from "react-select";
 const AddTrainingFeedback = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
   const [modalOpen, setModalOpen] = useState(false);
   const handleClose = () => setModalOpen(false);
   const handleShow = () => setModalOpen(true);
@@ -560,6 +561,12 @@ const AddTrainingFeedback = () => {
     return dateTimeString.split("T")[0];
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
+    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
+    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allSubFeedback.slice(indexOfFirstItem, indexOfLastItem);
@@ -736,11 +743,13 @@ const AddTrainingFeedback = () => {
                           <select
                             className="form-select w-auto"
                             aria-label="Default select example"
+                            value={selectedItemsPerPage} // Set value to selectedItemsPerPage
+                            onChange={handleChange} 
                           >
-                            <option defaultValue>10</option>
-                            <option value="1">10</option>
-                            <option value="2">50</option>
-                            <option value="3">100</option>
+                           
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>

@@ -16,8 +16,9 @@ const KPIMaster = () => {
   const navigate = useNavigate();
   const [allKpi, setAllKpi] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchData, setSearchData] = useState("");
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)",
     color: "#fff",
@@ -78,6 +79,12 @@ const KPIMaster = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
+    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
+    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allKpi.slice(indexOfFirstItem, indexOfLastItem);
@@ -131,11 +138,13 @@ const KPIMaster = () => {
                       style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
+                      value={selectedItemsPerPage} // Set value to selectedItemsPerPage
+                      onChange={handleChange} 
                     >
-                      <option defaultValue>10</option>
-                      <option value="1">10</option>
-                      <option value="2">50</option>
-                      <option value="3">100</option>
+                     
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>

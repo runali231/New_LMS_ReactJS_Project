@@ -18,6 +18,7 @@ const TrainingForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchData, setSearchData] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
 
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
@@ -85,6 +86,12 @@ const TrainingForm = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
+    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
+    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allTrainingNeed.slice(indexOfFirstItem, indexOfLastItem);
@@ -139,11 +146,8 @@ const TrainingForm = () => {
                       style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
-                      onChange={(e) => {
-                        setItemsPerPage(parseInt(e.target.value));
-                        setCurrentPage(1);
-                      }}
-                      value={itemsPerPage}
+                     value={selectedItemsPerPage}
+                            onChange={handleChange}
                     >
                       <option value={10}>10</option>
                       <option value={50}>50</option>

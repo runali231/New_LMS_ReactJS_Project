@@ -54,7 +54,8 @@ const AddTrainingSchedule = () => {
   const [allTrainingRequestedBy, setAllTrainingRequestedBy] = useState([]);
   const [allTrainingReoccurrence, setAllTrainingReoccurrence] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const [editIndex, setEditIndex] = useState(null);
   const [firstModal, setFirstModal] = useState(false);
   const [secondModal, setSecondModal] = useState(false);
@@ -63,6 +64,7 @@ const AddTrainingSchedule = () => {
   const SecondHandleShow = () => setSecondModal(true);
   const SecondHandleClose = () => setSecondModal(false);
   const [isAddingTraining, setIsAddingTraining] = useState(false);
+
   const location = useLocation();
   const { action1 } = location.state || {};
   // const { action1 } = location.state?.action1 || {};
@@ -587,9 +589,20 @@ const AddTrainingSchedule = () => {
     setAction("")
   };
 
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = allTraining.slice(indexOfFirstItem, indexOfLastItem);
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = allSubTrainingSchedule.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+
 
   return (
     <>
@@ -891,11 +904,13 @@ const AddTrainingSchedule = () => {
                           <select
                             className="form-select w-auto"
                             aria-label="Default select example"
+                            value={selectedItemsPerPage}
+                            onChange={handleChange}
                           >
-                            <option defaultValue>10</option>
-                            <option value="1">10</option>
-                            <option value="2">50</option>
-                            <option value="3">100</option>
+                            
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
@@ -969,7 +984,7 @@ const AddTrainingSchedule = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allSubTrainingSchedule.map((data, index) => (
+                          {allSubTrainingSchedule && currentItems.map((data, index) => (
                             <tr key={index}>
                               <td>{index + 1}</td>
                               <td>{data.tss_emp_code}</td>

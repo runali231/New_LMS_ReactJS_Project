@@ -18,7 +18,7 @@ const DepartmentMaster = () => {
   const navigate = useNavigate();
   const [allDepartment, setAllDepartment] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchData, setSearchData] = useState("");
   const [deptName, setDeptName] = useState("");
   const [deptCode, setDeptCode] = useState("");
@@ -27,6 +27,7 @@ const DepartmentMaster = () => {
   const [selectedDeptHead, setSelectedDeptHead] = useState([]);
   const [active, setActive] = useState(true);
   const [toggleActive, setToggleActive] = useState(true);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => setShowModal(false);
   const handleShow = () => {
@@ -189,6 +190,12 @@ const DepartmentMaster = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
   const ResetForm = () => {
     setDeptCode("");
     setDeptName("");
@@ -249,12 +256,12 @@ const DepartmentMaster = () => {
                       style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
-                      // value={selectedItemsPerPage}
-                      // onChange={handleChange}
+                      value={selectedItemsPerPage}
+                      onChange={handleChange}
                     >
                       <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>

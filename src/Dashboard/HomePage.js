@@ -32,10 +32,12 @@ const HomePage = () => {
     const storedRoleId = localStorage.getItem("RoleId");
     if (storedRoleId) {
       setRoleId(storedRoleId);
+    
     }
     console.log("roleId", roleId);
-    
+   
   }, [roleId]);
+
   return (
     <div className="content container-fluid">
       {/* <div className="page-header">

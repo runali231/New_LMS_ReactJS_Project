@@ -221,8 +221,8 @@ const CountryMaster = () => {
                       onChange={handleChange}
                     >
                       <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>

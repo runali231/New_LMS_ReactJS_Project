@@ -15,9 +15,10 @@ const TopicMaster = () => {
   const navigate = useNavigate();
   const [allTopics, setAllTopics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchData, setSearchData] = useState("");
   const [toggleActive, setToggleActive] = useState(true);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with your desired background color
     color: "#fff", // Optional: Set the text color to contrast with the background
@@ -82,6 +83,12 @@ const TopicMaster = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
+    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
+    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allTopics.slice(indexOfFirstItem, indexOfLastItem);
@@ -136,12 +143,12 @@ const TopicMaster = () => {
                       style={{ height: "35px" }}
                       className="form-select w-auto"
                       aria-label="Default select example"
-                      // value={selectedItemsPerPage}
-                      // onChange={handleChange}
+                      value={selectedItemsPerPage}
+                      onChange={handleChange}
                     >
                       <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
                     </select>
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
