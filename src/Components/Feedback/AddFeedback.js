@@ -209,12 +209,12 @@ const AddTrainingFeedback = () => {
         f_dateTrnTo: dateTrainingTo,
         f_TimeTrnTo: timeTrainingTo,
         f_empCode: empCode.label,
-        emp_id: (empCode.value).toString(),
+        emp_id: empCode.value,
         f_empName: empName,
         f_trnAttend: trainingAttended,
         f_des: designation ? designation.label : "",
-        f_desId: designation ? (designation.value).toString() : "",
-        f_depid: department ? (department.value).toString() : "",
+        f_desId: designation ? designation.value : "",
+        f_depid: department ? (department.value).toString : "",
         f_dep: department ? department.label : "",
         // f_feedback: feedback,
         f_Trainerfeedback: trainerFeedback,
@@ -304,9 +304,9 @@ const AddTrainingFeedback = () => {
           f_empName: empName,
           f_trnAttend: trainingAttended,
           f_des: designation.label,
-          f_desId: (designation.value).toString(),
+          f_desId: designation.value,
           f_dep: department.label,
-          f_depid: (department.value).toString(),
+          f_depid: department.value,
           // f_feedback: feedback,
           f_Trainerfeedback: trainerFeedback,
           f_Trainingfeedback: trainingFeedback,
@@ -355,18 +355,18 @@ const AddTrainingFeedback = () => {
     })
       .then((response) => {
         console.log("response get all designation", response.data.data);
-        // setSelectedDesignation(response.data.data);
         const designation = response.data.data.map((item, index) => ({
           value: item.de_id,
           label: item.de_designation_name,
         }));
+        console.log(designation, "all designation");
         setSelectedDesignation(designation);
-        console.log(selectedDesignation, "all designation");
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  
 
   const deleteSubFeedback = (index) => {
     const updateFeedback = [...allSubFeedback];

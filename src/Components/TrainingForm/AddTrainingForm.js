@@ -718,7 +718,7 @@ const AddTrainingForm = () => {
         const emp1 = response.data.data.map((item, index) => ({
           // value: item.emp_fname,
           value: item.emp_fname,
-          label: item.emp_fname ,
+          label: item.emp_fname,
         }));
         setEmpNameOptions(emp1);
         console.log(empNameOptions, "422");
@@ -736,7 +736,10 @@ const AddTrainingForm = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allByDepartments.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allByDepartments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -957,10 +960,10 @@ const AddTrainingForm = () => {
                             value={selectedItemsPerPage}
                             onChange={handleChange}
                           >
-                           
                             <option value="10">10</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
+                            <option value="200">200</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
@@ -1022,24 +1025,25 @@ const AddTrainingForm = () => {
                         </thead>
 
                         <tbody className="text-start">
-                          {allByDepartments && currentItems.map((departmentItem, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{departmentItem.td_req_dept}</td>
-                                <td>{departmentItem.td_emp_code}</td>
-                                <td>{departmentItem.td_emp_name}</td>
-                                <td>{departmentItem.td_dept}</td>
-                                <td>{departmentItem.td_des}</td>
-                                {/* <td>
+                          {allByDepartments &&
+                            currentItems.map((departmentItem, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>{indexOfFirstItem + index + 1}</td>
+                                  <td>{departmentItem.td_req_dept}</td>
+                                  <td>{departmentItem.td_emp_code}</td>
+                                  <td>{departmentItem.td_emp_name}</td>
+                                  <td>{departmentItem.td_dept}</td>
+                                  <td>{departmentItem.td_des}</td>
+                                  {/* <td>
                                   {formatDate(departmentItem.td_date_training)}
                                 </td> */}
-                                <td>{departmentItem.td_date_training}</td>
-                                <td
-                                  style={{ whiteSpace: "pre-line" }}
-                                  className="d-none"
-                                >
-                                  {/* {departmentItem.td_topic_training &&
+                                  <td>{departmentItem.td_date_training}</td>
+                                  <td
+                                    style={{ whiteSpace: "pre-line" }}
+                                    className="d-none"
+                                  >
+                                    {/* {departmentItem.td_topic_training &&
                                   typeof departmentItem.td_topic_training ===
                                     "string"
                                     ? departmentItem.td_topic_training
@@ -1048,15 +1052,15 @@ const AddTrainingForm = () => {
                                           <div key={index}>{value.trim()}</div>
                                         ))
                                     : departmentItem.td_topic_training} */}
-                                  {departmentItem.td_topic_training
-                                    .split(/,(?=[a-zA-Z])/)
-                                    .map((item, index) => (
-                                      <React.Fragment key={index}>
-                                        {item.trim()}
-                                        <br />
-                                      </React.Fragment>
-                                    ))}
-                                  {/* {departmentItem.td_topic_training
+                                    {departmentItem.td_topic_training
+                                      .split(/,(?=[a-zA-Z])/)
+                                      .map((item, index) => (
+                                        <React.Fragment key={index}>
+                                          {item.trim()}
+                                          <br />
+                                        </React.Fragment>
+                                      ))}
+                                    {/* {departmentItem.td_topic_training
                                     .split(",")
                                     .map((item, index) => (
                                       <React.Fragment key={index}>
@@ -1064,17 +1068,17 @@ const AddTrainingForm = () => {
                                         <br />
                                       </React.Fragment>
                                     ))} */}
-                                </td>
-                                <td className="text-start">
-                                  {departmentItem.td_topic_training_name
-                                    .split(/,(?=[a-zA-Z])/)
-                                    .map((item, index) => (
-                                      <React.Fragment key={index}>
-                                        {item.trim()}
-                                        <br />
-                                      </React.Fragment>
-                                    ))}
-                                  {/* {departmentItem.td_topic_training_name
+                                  </td>
+                                  <td className="text-start">
+                                    {departmentItem.td_topic_training_name
+                                      .split(/,(?=[a-zA-Z])/)
+                                      .map((item, index) => (
+                                        <React.Fragment key={index}>
+                                          {item.trim()}
+                                          <br />
+                                        </React.Fragment>
+                                      ))}
+                                    {/* {departmentItem.td_topic_training_name
                                     .split(",")
                                     .map((item, index) => (
                                       <React.Fragment key={index}>
@@ -1082,28 +1086,28 @@ const AddTrainingForm = () => {
                                         <br />
                                       </React.Fragment>
                                     ))} */}
-                                </td>
-                                <td>
-                                  <Edit
-                                    className="text-success mr-2"
-                                    type="button"
-                                    onClick={() => {
-                                      getSingleTraining(index);
-                                      handleShow();
-                                    }}
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#addTrainingForm"
-                                  />
-                                  <Delete
-                                    className="text-danger"
-                                    type="button"
-                                    style={{ marginLeft: "0.5rem" }}
-                                    onClick={() => deleteTraining(index)}
-                                  />
-                                </td>
-                              </tr>
-                            );
-                          })}
+                                  </td>
+                                  <td>
+                                    <Edit
+                                      className="text-success mr-2"
+                                      type="button"
+                                      onClick={() => {
+                                        getSingleTraining(index);
+                                        handleShow();
+                                      }}
+                                      // data-bs-toggle="modal"
+                                      // data-bs-target="#addTrainingForm"
+                                    />
+                                    <Delete
+                                      className="text-danger"
+                                      type="button"
+                                      style={{ marginLeft: "0.5rem" }}
+                                      onClick={() => deleteTraining(index)}
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            })}
                         </tbody>
                       </Table>
 
@@ -1113,7 +1117,7 @@ const AddTrainingForm = () => {
                         </div>
                         <div className="col-lg-4"></div>
                         <div className="col-lg-4 mt-3">
-                          <nav aria-label="Page navigation example ">
+                          <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -1128,26 +1132,37 @@ const AddTrainingForm = () => {
                                 </button>
                               </li>
                               {Array.from(
-                                {
-                                  length: Math.ceil(
-                                    allByDepartments.length / itemsPerPage
-                                  ),
-                                },
-                                (_, index) => (
-                                  <li
-                                    className={`page-item ${
-                                      currentPage === index + 1 ? "active" : ""
-                                    }`}
-                                    key={index}
-                                  >
-                                    <button
-                                      className="page-link"
-                                      onClick={() => setCurrentPage(index + 1)}
+                                { length: 3 }, // Display only four page number buttons
+                                (_, index) => {
+                                  const pageNumber = currentPage + index - 1;
+                                  const isLastPage =
+                                    pageNumber ===
+                                    Math.ceil(
+                                      allByDepartments.length / itemsPerPage
+                                    );
+                                  const shouldDisplayPage =
+                                    pageNumber >= 1 && !isLastPage;
+                                  const isCurrentPage =
+                                    currentPage === pageNumber;
+
+                                  return shouldDisplayPage ? (
+                                    <li
+                                      className={`page-item ${
+                                        isCurrentPage ? "active" : ""
+                                      }`}
+                                      key={index}
                                     >
-                                      {index + 1}
-                                    </button>
-                                  </li>
-                                )
+                                      <button
+                                        className="page-link"
+                                        onClick={() =>
+                                          setCurrentPage(pageNumber)
+                                        }
+                                      >
+                                        {pageNumber}
+                                      </button>
+                                    </li>
+                                  ) : null;
+                                }
                               )}
                               <li className="page-item">
                                 <button
@@ -1213,7 +1228,10 @@ const AddTrainingForm = () => {
                     >
                       Save
                     </button>
-                    <button type="button" className="btn btn-success me-lg-2 d-none">
+                    <button
+                      type="button"
+                      className="btn btn-success me-lg-2 d-none"
+                    >
                       Copy to Training Schedule
                     </button>
                     <button type="button" className="btn btn-secondary me-lg-2">

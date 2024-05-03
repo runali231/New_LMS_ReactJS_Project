@@ -170,12 +170,12 @@ const UserMaster = () => {
         um_user_name: userName,
         um_password: "",
         um_staffdepid: department.toString(),
-        um_staffdesid: designation.toString(),
-        um_staffname: (employee.label).toString(),
-        um_fullname: employeeName.toString(),
-        um_staffid: employee.value.toString(),
+        um_staffdesid: designation,
+        um_staffname: employee.label,
+        um_fullname: employeeName,
+        um_staffid: (employee.value).toString(),
         um_isactive: active === true ? "1" : "0",
-        um_roleid: role.value.toString(),
+        um_roleid: role.value,
         um_rolename: role.label,
       };
       if (umId) {
@@ -304,6 +304,7 @@ const UserMaster = () => {
 
   const ResetForm = () => {
     setEmployee("");
+    setEmployeeName("");
     setRole("");
     setUserName("");
     setUmId("");

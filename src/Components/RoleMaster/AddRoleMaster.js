@@ -192,8 +192,8 @@ const AddRoleMaster = () => {
       }
       axios({
         method: "post",
-        // url: new URL(UrlData + `RoleMaster`),
-        url: `https://localhost:44355/api/RoleMaster`,
+        url: new URL(UrlData + `RoleMaster`),
+        // url: `https://localhost:44355/api/RoleMaster`,
         data: data, // Make sure to stringify the data object
       })
         .then((response) => {

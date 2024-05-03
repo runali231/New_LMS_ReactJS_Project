@@ -36,7 +36,7 @@ const AddTrainingApprovalForm = () => {
   const [trId, setTrId] = useState("");
   const [allTraining, setAllTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [editingIndex, setEditingIndex] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editIndex1, setEditIndex1] = useState();
@@ -49,6 +49,7 @@ const AddTrainingApprovalForm = () => {
   const [selectedNameOption, setSelectedNameOption] = useState("");
   const [allTrainingNature, setAllTrainingNature] = useState([]);
   const [allTrainingType, setAllTrainingType] = useState([]);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const [code, setCode] = useState("");
   const [remark, setRemark] = useState("");
   // const [action, setAction] = useState([])
@@ -128,7 +129,7 @@ const AddTrainingApprovalForm = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=548F0539-D785-4221-A241-D259BB9B3E15&status=1`
         )
       )
       .then((response) => {
@@ -144,7 +145,7 @@ const AddTrainingApprovalForm = () => {
       .get(
         new URL(
           UrlData +
-          `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
+            `ParameterValueMaster/GetAll?Parameterid=BD289F00-EF2B-42AD-A7CB-9A3179E2AC31&status=1`
         )
       )
       .then((response) => {
@@ -529,17 +530,20 @@ const AddTrainingApprovalForm = () => {
       url: new URL(UrlData + `TrainingForm/UpdateStatus`),
       data: data, // Make sure to stringify the data object
     })
-      .then((response) => {
-        console.log(response, "add action");
-        // if (response.data.success) { // Check if response indicates success
-        if (action === "2" || action === "4") { // Changed to || operator
-          alert("Training Approved Successfully!");
+      .then(
+        (response) => {
+          console.log(response, "add action");
+          // if (response.data.success) { // Check if response indicates success
+          if (action === "2" || action === "4") {
+            // Changed to || operator
+            alert("Training Approved Successfully!");
+          }
+          if (action === "3" || action === "5") {
+            // Changed to || operator
+            alert("Training Rejected Successfully!");
+          }
+          navigate("/trainingApprovalForm");
         }
-        if (action === "3" || action === "5") { // Changed to || operator
-          alert("Training Rejected Successfully!");
-        }
-        navigate("/trainingApprovalForm");
-      }
         // else {
         //   alert("Failed to update status: " + response.data.message);
         // }
@@ -551,10 +555,15 @@ const AddTrainingApprovalForm = () => {
       });
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allTraining.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allByDepartments.slice(indexOfFirstItem, indexOfLastItem);
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -760,20 +769,22 @@ const AddTrainingApprovalForm = () => {
                     </div>
                     <div className="card-body pt-3">
                       <div className="row ">
-                        {/* <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
+                        <div className="col-lg-3 d-flex justify-content-center justify-content-lg-start">
                           <h6 className="mt-3">Show</h6>&nbsp;&nbsp;
                           <select
                             className="form-select w-auto"
                             aria-label="Default select example"
+                            value={selectedItemsPerPage}
+                            onChange={handleChange}
                           >
-                            <option defaultValue>10</option>
-                            <option value="1">10</option>
-                            <option value="2">50</option>
-                            <option value="3">100</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
-                        </div> */}
+                        </div>
                       </div>
                       <br />
                       {show ? (
@@ -785,7 +796,12 @@ const AddTrainingApprovalForm = () => {
                           <Alert.Heading>Status Approved by HOD</Alert.Heading>
                         </Alert>
                       ) : null}
-                      <Table striped hover responsive className="border text-center">
+                      <Table
+                        striped
+                        hover
+                        responsive
+                        className="border text-center"
+                      >
                         <thead className="text-start">
                           <tr>
                             <th scope="col" style={headerCellStyle}>
@@ -818,81 +834,106 @@ const AddTrainingApprovalForm = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allByDepartments.map((departmentItem, index) => (
-                            <tr key={index}>
-                              <td>{index + 1}</td>
-                              <td>{departmentItem.td_req_dept}</td>
-                              <td>{departmentItem.td_emp_code}</td>
-                              <td>{departmentItem.td_emp_name}</td>
-                              <td>{departmentItem.td_dept}</td>
-                              <td>{departmentItem.td_des}</td>
-                              <td>{formatDate(departmentItem.td_date_training)}</td>
-                              <td style={{ whiteSpace: "pre-line" }} className="d-none">
-                                {departmentItem.td_topic_training &&
-                                  typeof departmentItem.td_topic_training === "string"
-                                  ? departmentItem.td_topic_training
-                                    .split(",")
-                                    .map((value, index) => (
-                                      <div key={index}>{value.trim()}</div>
-                                    ))
-                                  : departmentItem.td_topic_training}
-                              </td>
-                              <td>
-                                {departmentItem.td_topic_training_name
-                                  .split(/,(?=[a-zA-Z])/)
-                                  .map((item, index) => (
-                                    <React.Fragment key={index}>
-                                      {item.trim()}
-                                      <br />
-                                    </React.Fragment>
-                                  ))}
-                              </td>
-                            </tr>
-                          ))}
+                          {allByDepartments &&
+                            currentItems.map((departmentItem, index) => (
+                              <tr key={index}>
+                                <td>{indexOfFirstItem + index + 1}</td>
+                                <td>{departmentItem.td_req_dept}</td>
+                                <td>{departmentItem.td_emp_code}</td>
+                                <td>{departmentItem.td_emp_name}</td>
+                                <td>{departmentItem.td_dept}</td>
+                                <td>{departmentItem.td_des}</td>
+                                <td>
+                                  {formatDate(departmentItem.td_date_training)}
+                                </td>
+                                <td
+                                  style={{ whiteSpace: "pre-line" }}
+                                  className="d-none"
+                                >
+                                  {departmentItem.td_topic_training &&
+                                  typeof departmentItem.td_topic_training ===
+                                    "string"
+                                    ? departmentItem.td_topic_training
+                                        .split(",")
+                                        .map((value, index) => (
+                                          <div key={index}>{value.trim()}</div>
+                                        ))
+                                    : departmentItem.td_topic_training}
+                                </td>
+                                <td>
+                                  {departmentItem.td_topic_training_name
+                                    .split(/,(?=[a-zA-Z])/)
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))}
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </Table>
-
-
-                      {/* <div className="row">
-                        <div className="col-lg-4">
-                          <h6>Showing 1 to 3 of 3 entries</h6>
-                        </div>
-                        <div className="col-lg-4"></div>
-                        <div className="col-lg-4">
-                          <nav aria-label="Page navigation example">
+<br/>
+                      <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
                                   className="page-link"
+                                  onClick={() =>
+                                    setCurrentPage(currentPage - 1)
+                                  }
+                                  disabled={currentPage === 1}
                                   aria-label="Previous"
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
-                              <li className="page-item active">
-                                <button
-                                  className="page-link" 
-                                >
-                                  1
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button
-                                  className="page-link" 
-                                >
-                                  2
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button
-                                  className="page-link" 
-                                >
-                                  3
-                                </button>
-                              </li>
+                              {Array.from(
+                                { length: 3 }, // Display only four page number buttons
+                                (_, index) => {
+                                  const pageNumber = currentPage + index - 1;
+                                  const isLastPage =
+                                    pageNumber ===
+                                    Math.ceil(
+                                      allByDepartments.length / itemsPerPage
+                                    );
+                                  const shouldDisplayPage =
+                                    pageNumber >= 1 && !isLastPage;
+                                  const isCurrentPage =
+                                    currentPage === pageNumber;
+
+                                  return shouldDisplayPage ? (
+                                    <li
+                                      className={`page-item ${
+                                        isCurrentPage ? "active" : ""
+                                      }`}
+                                      key={index}
+                                    >
+                                      <button
+                                        className="page-link"
+                                        onClick={() =>
+                                          setCurrentPage(pageNumber)
+                                        }
+                                      >
+                                        {pageNumber}
+                                      </button>
+                                    </li>
+                                  ) : null;
+                                }
+                              )}
                               <li className="page-item">
                                 <button
                                   className="page-link"
+                                  onClick={() =>
+                                    setCurrentPage(currentPage + 1)
+                                  }
+                                  disabled={
+                                    currentPage ===
+                                    Math.ceil(
+                                      allByDepartments.length / itemsPerPage
+                                    )
+                                  }
                                   aria-label="Next"
                                 >
                                   <span aria-hidden="true">&raquo;</span>
@@ -900,8 +941,6 @@ const AddTrainingApprovalForm = () => {
                               </li>
                             </ul>
                           </nav>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -1065,7 +1104,7 @@ const AddTrainingApprovalForm = () => {
                         onChange={handleEmpCodeChange}
                         isDisabled={isEmployeeNameDisabled}
                         className="mt-2"
-                      // defaultInputValue={selectedNameOption}
+                        // defaultInputValue={selectedNameOption}
                       />
                     </div>
                   </div>

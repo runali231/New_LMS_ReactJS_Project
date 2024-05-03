@@ -223,7 +223,7 @@ const AddTrainingSchedule = () => {
         ts_action: action1 === "Approved By Manager" ? "6" : action,
         trainingsubschedule: allSubTrainingSchedule,
 
-        // training: allByDepartments,
+        // training: allSubTrainingSchedule,
       };
       if (id !== null && id !== undefined && id !== ":id") {
         data.ts_id = id;
@@ -916,6 +916,7 @@ const AddTrainingSchedule = () => {
                             <option value="10">10</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
+                            <option value="200">200</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
@@ -992,7 +993,7 @@ const AddTrainingSchedule = () => {
                           {allSubTrainingSchedule &&
                             currentItems.map((data, index) => (
                               <tr key={index}>
-                                <td>{index + 1}</td>
+                                <td>{indexOfFirstItem + index + 1}</td>
                                 <td>{data.tss_emp_code}</td>
                                 <td>{data.tss_emp_name}</td>
                                 <td>
@@ -1233,7 +1234,7 @@ const AddTrainingSchedule = () => {
                         </div>
                         <div className="col-lg-4 col-12"></div>
                         <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                          <nav aria-label="Page navigation example ">
+                        <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -1248,26 +1249,37 @@ const AddTrainingSchedule = () => {
                                 </button>
                               </li>
                               {Array.from(
-                                {
-                                  length: Math.ceil(
-                                    allSubTrainingSchedule.length / itemsPerPage
-                                  ),
-                                },
-                                (_, index) => (
-                                  <li
-                                    className={`page-item ${
-                                      currentPage === index + 1 ? "active" : ""
-                                    }`}
-                                    key={index}
-                                  >
-                                    <button
-                                      className="page-link"
-                                      onClick={() => setCurrentPage(index + 1)}
+                                { length: 3 }, // Display only four page number buttons
+                                (_, index) => {
+                                  const pageNumber = currentPage + index - 1;
+                                  const isLastPage =
+                                    pageNumber ===
+                                    Math.ceil(
+                                      allSubTrainingSchedule.length / itemsPerPage
+                                    );
+                                  const shouldDisplayPage =
+                                    pageNumber >= 1 && !isLastPage;
+                                  const isCurrentPage =
+                                    currentPage === pageNumber;
+
+                                  return shouldDisplayPage ? (
+                                    <li
+                                      className={`page-item ${
+                                        isCurrentPage ? "active" : ""
+                                      }`}
+                                      key={index}
                                     >
-                                      {index + 1}
-                                    </button>
-                                  </li>
-                                )
+                                      <button
+                                        className="page-link"
+                                        onClick={() =>
+                                          setCurrentPage(pageNumber)
+                                        }
+                                      >
+                                        {pageNumber}
+                                      </button>
+                                    </li>
+                                  ) : null;
+                                }
                               )}
                               <li className="page-item">
                                 <button
@@ -1278,8 +1290,7 @@ const AddTrainingSchedule = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allSubTrainingSchedule.length /
-                                        itemsPerPage
+                                      allSubTrainingSchedule.length / itemsPerPage
                                     )
                                   }
                                   aria-label="Next"

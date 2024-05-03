@@ -55,7 +55,8 @@ const AddTrainingSchedule = () => {
   const [allTrainingRequestedBy, setAllTrainingRequestedBy] = useState([]);
   const [allTrainingReoccurrence, setAllTrainingReoccurrence] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const [selectedAction, setSelectedAction] = useState([]);
   const getLoginId = localStorage.getItem("loginId");
   const headerCellStyle = {
@@ -276,10 +277,10 @@ const AddTrainingSchedule = () => {
         console.log(response, "add action");
         if (action === "6") {
           alert("Training Scheduled Approved Successfully!");
-        } 
+        }
         if (action === "7") {
           alert("Training Scheduled Rejected Successfully!");
-        } 
+        }
         navigate("/trainingScheduleApproval");
       })
       .catch((error) => {
@@ -287,7 +288,6 @@ const AddTrainingSchedule = () => {
         // alert("Something went wrong")
       });
   };
-
 
   const addSingleHrTraining = () => {
     // Create a new array by mapping over the existing sub-training schedules
@@ -415,9 +415,18 @@ const AddTrainingSchedule = () => {
     setRemark("");
   };
 
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = allTraining.slice(indexOfFirstItem, indexOfLastItem);
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value));
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = allSubTrainingSchedule.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <>
@@ -721,11 +730,14 @@ const AddTrainingSchedule = () => {
                           <select
                             className="form-select w-auto"
                             aria-label="Default select example"
+                            value={selectedItemsPerPage}
+                            onChange={handleChange}
                           >
-                            <option defaultValue>10</option>
-                            <option value="1">10</option>
-                            <option value="2">50</option>
-                            <option value="3">100</option>
+                           
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
@@ -792,64 +804,65 @@ const AddTrainingSchedule = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allSubTrainingSchedule.map((data, index) => (
-                            <tr>
-                              <td>{index + 1}</td>
-                              <td>{data.tss_emp_code}</td>
-                              <td>{data.tss_emp_name}</td>
-                              <td>
-                                {data.tss_topic
-                                  .split(/,(?=[a-zA-Z])/)
-                                  .map((item, index) => (
-                                    <React.Fragment key={index}>
-                                      {item.trim()}
-                                      <br />
-                                    </React.Fragment>
-                                  ))}
-                              </td>
-                              <td>{data.tss_traning_attend}</td>
-                              <td>{data.tss_traning_des}</td>
-                              <td>{data.tss_sch_hour}</td>
-                              <td>{data.tss_actual_attend}</td>
-                              <td>{data.tss_com_status}</td>
-                              <td>{data.tss_to_marks}</td>
-                              <td>{data.tss_marks_obt}</td>
-                              <td>{data.tss_traning_status}</td>
-                              <td>{data.tss_re_traning_req}</td>
+                          {allSubTrainingSchedule &&
+                            currentItems.map((data, index) => (
+                              <tr>
+                                <td>{indexOfFirstItem + index + 1}</td>
+                                <td>{data.tss_emp_code}</td>
+                                <td>{data.tss_emp_name}</td>
+                                <td>
+                                  {data.tss_topic
+                                    .split(/,(?=[a-zA-Z])/)
+                                    .map((item, index) => (
+                                      <React.Fragment key={index}>
+                                        {item.trim()}
+                                        <br />
+                                      </React.Fragment>
+                                    ))}
+                                </td>
+                                <td>{data.tss_traning_attend}</td>
+                                <td>{data.tss_traning_des}</td>
+                                <td>{data.tss_sch_hour}</td>
+                                <td>{data.tss_actual_attend}</td>
+                                <td>{data.tss_com_status}</td>
+                                <td>{data.tss_to_marks}</td>
+                                <td>{data.tss_marks_obt}</td>
+                                <td>{data.tss_traning_status}</td>
+                                <td>{data.tss_re_traning_req}</td>
 
-                              <td>
-                                {data.tss_traning_cert !== null &&
-                                  data.tss_id && (
+                                <td>
+                                  {data.tss_traning_cert !== null &&
+                                    data.tss_id && (
+                                      <span
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#viewModal"
+                                        onClick={() =>
+                                          ViewModal(data.tss_traning_cert)
+                                        }
+                                      >
+                                        {
+                                          fileName === data.tss_traning_cert
+                                            ? fileName
+                                            : `File uploaded`
+                                          // {fileName}
+                                        }
+                                      </span>
+                                    )}
+                                  {!data.tss_traning_cert && (
                                     <span
                                       type="button"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#viewModal"
-                                      onClick={() =>
-                                        ViewModal(data.tss_traning_cert)
-                                      }
+                                      // data-bs-toggle="modal"
+                                      // data-bs-target="#viewModal"
                                     >
-                                      {
-                                        fileName === data.tss_traning_cert
-                                          ? fileName
-                                          : `File uploaded`
-                                        // {fileName}
-                                      }
+                                      File not uploaded
                                     </span>
                                   )}
-                                {!data.tss_traning_cert && (
-                                  <span
-                                    type="button"
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#viewModal"
-                                  >
-                                    File not uploaded
-                                  </span>
-                                )}
-                              </td>
-                              <td>{data.tss_status}</td>
-                              <td>{data.tss_remark}</td>
-                            </tr>
-                          ))}
+                                </td>
+                                <td>{data.tss_status}</td>
+                                <td>{data.tss_remark}</td>
+                              </tr>
+                            ))}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
@@ -860,7 +873,7 @@ const AddTrainingSchedule = () => {
                         </div>
                         <div className="col-lg-4 col-12"></div>
                         <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                          <nav aria-label="Page navigation example ">
+                          <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -875,26 +888,38 @@ const AddTrainingSchedule = () => {
                                 </button>
                               </li>
                               {Array.from(
-                                {
-                                  length: Math.ceil(
-                                    allSubTrainingSchedule.length / itemsPerPage
-                                  ),
-                                },
-                                (_, index) => (
-                                  <li
-                                    className={`page-item ${
-                                      currentPage === index + 1 ? "active" : ""
-                                    }`}
-                                    key={index}
-                                  >
-                                    <button
-                                      className="page-link"
-                                      onClick={() => setCurrentPage(index + 1)}
+                                { length: 3 }, // Display only four page number buttons
+                                (_, index) => {
+                                  const pageNumber = currentPage + index - 1;
+                                  const isLastPage =
+                                    pageNumber ===
+                                    Math.ceil(
+                                      allSubTrainingSchedule.length /
+                                        itemsPerPage
+                                    );
+                                  const shouldDisplayPage =
+                                    pageNumber >= 1 && !isLastPage;
+                                  const isCurrentPage =
+                                    currentPage === pageNumber;
+
+                                  return shouldDisplayPage ? (
+                                    <li
+                                      className={`page-item ${
+                                        isCurrentPage ? "active" : ""
+                                      }`}
+                                      key={index}
                                     >
-                                      {index + 1}
-                                    </button>
-                                  </li>
-                                )
+                                      <button
+                                        className="page-link"
+                                        onClick={() =>
+                                          setCurrentPage(pageNumber)
+                                        }
+                                      >
+                                        {pageNumber}
+                                      </button>
+                                    </li>
+                                  ) : null;
+                                }
                               )}
                               <li className="page-item">
                                 <button
