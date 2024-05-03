@@ -183,8 +183,7 @@ const DepartmentMaster = () => {
         (department) =>
           department.d_department_name
             .toLowerCase()
-            .includes(searchDataValue) ||
-          department.d_department_code.toLowerCase().includes(searchDataValue)
+            .includes(searchDataValue)
       );
       setAllDepartment(filteredData);
     }

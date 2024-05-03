@@ -114,7 +114,7 @@ const AddTrainingSchedule = () => {
               .replace("T", " ")
               .substring(0, 16)
           );
-          setAction(response.data.data.ts_action)
+          setAction(response.data.data.ts_action);
           setStatus(response.data.data.ts_status);
           setTsId(id);
           console.log(response.data.data.ts_id, "tsId");
@@ -371,16 +371,19 @@ const AddTrainingSchedule = () => {
     //   actualHoursAttended === null
     // ) {
     //   alert("Please fill all the details");
-    // } 
-    // if (trainingAttended === null || (!scheduledHours || !actualHoursAttended)) {
-    //   alert('Please fill all the details');   
     // }
-    if ((trainingAttended === 'Yes' || trainingAttended === null) && (!scheduledHours || !actualHoursAttended)) {
-      alert('Please fill all the details');   
+    // if (trainingAttended === null || (!scheduledHours || !actualHoursAttended)) {
+    //   alert('Please fill all the details');
+    // }
+    if (
+      (trainingAttended === "Yes" || trainingAttended === null) &&
+      (!scheduledHours || !actualHoursAttended)
+    ) {
+      alert("Please fill all the details");
     }
     // if (trainingAttended === 'No' && (!scheduledHours || !actualHoursAttended)) {
     //   alert('Please fill all the details');
-      
+
     // }
     else {
       const updatedAllSubTrainingSchedule = allSubTrainingSchedule.map(
@@ -431,6 +434,13 @@ const AddTrainingSchedule = () => {
       resetForm(); // Reset the form fields
       setIsAddingTraining(false);
     }
+  };
+
+  const isTrainingAlreadyAdded = () => {
+    // Check if the training with the specific tss_id already exists in the allSubTrainingSchedule array
+    return allSubTrainingSchedule.some(
+      (training) => training.tss_id === tss_id
+    );
   };
 
   const addSingleHodTraining = () => {
@@ -513,8 +523,6 @@ const AddTrainingSchedule = () => {
     alert("Deleted successfully");
   };
 
-
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     console.log(e.target.files[0], "target value");
@@ -586,7 +594,7 @@ const AddTrainingSchedule = () => {
     setTrainingCertificate("");
     setStatus1("");
     setRemark("");
-    setAction("")
+    setAction("");
   };
 
   const handleChange = (e) => {
@@ -601,8 +609,6 @@ const AddTrainingSchedule = () => {
     indexOfFirstItem,
     indexOfLastItem
   );
-
-
 
   return (
     <>
@@ -907,7 +913,6 @@ const AddTrainingSchedule = () => {
                             value={selectedItemsPerPage}
                             onChange={handleChange}
                           >
-                            
                             <option value="10">10</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
@@ -984,13 +989,14 @@ const AddTrainingSchedule = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allSubTrainingSchedule && currentItems.map((data, index) => (
-                            <tr key={index}>
-                              <td>{index + 1}</td>
-                              <td>{data.tss_emp_code}</td>
-                              <td>{data.tss_emp_name}</td>
-                              <td>
-                              {data.tss_topic
+                          {allSubTrainingSchedule &&
+                            currentItems.map((data, index) => (
+                              <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{data.tss_emp_code}</td>
+                                <td>{data.tss_emp_name}</td>
+                                <td>
+                                  {data.tss_topic
                                     .split(/,(?=[a-zA-Z])/)
                                     .map((item, index) => (
                                       <React.Fragment key={index}>
@@ -998,52 +1004,52 @@ const AddTrainingSchedule = () => {
                                         <br />
                                       </React.Fragment>
                                     ))}
-                              </td>
-                              <td>{data.tss_traning_attend}</td>
-                              <td>{data.tss_traning_des}</td>
-                              <td>{data.tss_sch_hour}</td>
-                              <td>{data.tss_actual_attend}</td>
-                              <td>{data.tss_com_status}</td>
-                              <td>{data.tss_to_marks}</td>
-                              <td>{data.tss_marks_obt}</td>
-                              <td>{data.tss_traning_status}</td>
-                              <td>{data.tss_re_traning_req}</td>
-                              <td>
-                                {data.tss_traning_cert !== null &&
-                                  data.tss_id && (
+                                </td>
+                                <td>{data.tss_traning_attend}</td>
+                                <td>{data.tss_traning_des}</td>
+                                <td>{data.tss_sch_hour}</td>
+                                <td>{data.tss_actual_attend}</td>
+                                <td>{data.tss_com_status}</td>
+                                <td>{data.tss_to_marks}</td>
+                                <td>{data.tss_marks_obt}</td>
+                                <td>{data.tss_traning_status}</td>
+                                <td>{data.tss_re_traning_req}</td>
+                                <td>
+                                  {data.tss_traning_cert !== null &&
+                                    data.tss_id && (
+                                      <span
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#viewModal"
+                                        onClick={() =>
+                                          ViewModal(data.tss_traning_cert)
+                                        }
+                                      >
+                                        {fileName === data.tss_traning_cert ? (
+                                          fileName
+                                        ) : (
+                                          // `File uploaded`
+                                          // {fileName}
+                                          <EyeFill
+                                            className="text-success"
+                                            style={{ fontSize: "23px" }}
+                                          />
+                                        )}
+                                      </span>
+                                    )}
+                                  {!data.tss_traning_cert && (
                                     <span
                                       type="button"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#viewModal"
-                                      onClick={() =>
-                                        ViewModal(data.tss_traning_cert)
-                                      }
+                                      // data-bs-toggle="modal"
+                                      // data-bs-target="#viewModal"
                                     >
-                                      {fileName === data.tss_traning_cert ? (
-                                        fileName
-                                      ) : (
-                                        // `File uploaded`
-                                        // {fileName}
-                                        <EyeFill
-                                          className="text-success"
-                                          style={{ fontSize: "23px" }}
-                                        />
-                                      )}
+                                      File not uploaded
                                     </span>
                                   )}
-                                {!data.tss_traning_cert && (
-                                  <span
-                                    type="button"
-                                    // data-bs-toggle="modal"
-                                    // data-bs-target="#viewModal"
-                                  >
-                                    File not uploaded
-                                  </span>
-                                )}
-                              </td>
-                              <td>{data.tss_status}</td>
-                              <td>{data.tss_remark}</td>
-                              {/* <td>
+                                </td>
+                                <td>{data.tss_status}</td>
+                                <td>{data.tss_remark}</td>
+                                {/* <td>
                                 {action1 === "Approved By Manager" ? (
                                   <>
                                     <Edit
@@ -1109,7 +1115,7 @@ const AddTrainingSchedule = () => {
                                   }
                                 />
                               </td> */}
-                              {/* <td>
+                                {/* <td>
                                 <Edit
                                 className={
                                   action1 === "Approved By Manager"
@@ -1143,74 +1149,80 @@ const AddTrainingSchedule = () => {
                                 }
                               />
                               </td> */}
-                              <td>
-                                {action1 === "Approved By Manager" ? (
-                                  <>
-                                    <Edit
-                                      className="text-success mr-2"
-                                      type="button"
-                                      onClick={() => {
-                                        getSingleHrTraining(index, data.tss_id);
-                                        FirstHandleShow();
-                                      }}
-                                    />
-                                    <Edit
-                                      className="text-primary mr-2"
-                                      type="button"
-                                      onClick={() => {
-                                        getSingleHodTraining(
-                                          index,
-                                          data.tss_id
-                                        );
-                                        SecondHandleShow();
-                                      }}
-                                      disabled={isAddingTraining}
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <Edit
-                                      className="text-success mr-2"
-                                      style={{
-                                        opacity: 0.5,
-                                        pointerEvents: "none",
-                                      }}
-                                      type="button"
-                                      onClick={() => {
-                                        getSingleHrTraining(index, data.tss_id);
-                                        FirstHandleShow();
-                                      }}
-                                      disabled={true}
-                                    />
-                                    <Edit
-                                      className="text-primary mr-2"
-                                      type="button"
-                                      style={{
-                                        opacity: 0.5,
-                                        pointerEvents: "none",
-                                      }}
-                                      onClick={() => {
-                                        getSingleHodTraining(
-                                          index,
-                                          data.tss_id
-                                        );
-                                        SecondHandleShow();
-                                      }}
-                                      disabled={true}
-                                    />
-                                  </>
-                                )}
-                                <Delete
-                                  className="text-danger"
-                                  type="button"
-                                  style={{ marginLeft: "0.5rem" }}
-                                  onClick={() =>
-                                    deleteTrainingSchedule(data.tss_id)
-                                  }
-                                />
-                              </td>
-                            </tr>
-                          ))}
+                                <td>
+                                  {action1 === "Approved By Manager" ? (
+                                    <>
+                                      <Edit
+                                        className="text-success mr-2"
+                                        type="button"
+                                        onClick={() => {
+                                          getSingleHrTraining(
+                                            index,
+                                            data.tss_id
+                                          );
+                                          FirstHandleShow();
+                                        }}
+                                      />
+                                      <Edit
+                                        className="text-primary mr-2"
+                                        type="button"
+                                        onClick={() => {
+                                          getSingleHodTraining(
+                                            index,
+                                            data.tss_id
+                                          );
+                                          SecondHandleShow();
+                                        }}
+                                        disabled={isAddingTraining}
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Edit
+                                        className="text-success mr-2"
+                                        style={{
+                                          opacity: 0.5,
+                                          pointerEvents: "none",
+                                        }}
+                                        type="button"
+                                        onClick={() => {
+                                          getSingleHrTraining(
+                                            index,
+                                            data.tss_id
+                                          );
+                                          FirstHandleShow();
+                                        }}
+                                        disabled={true}
+                                      />
+                                      <Edit
+                                        className="text-primary mr-2"
+                                        type="button"
+                                        style={{
+                                          opacity: 0.5,
+                                          pointerEvents: "none",
+                                        }}
+                                        onClick={() => {
+                                          getSingleHodTraining(
+                                            index,
+                                            data.tss_id
+                                          );
+                                          SecondHandleShow();
+                                        }}
+                                        disabled={true}
+                                      />
+                                    </>
+                                  )}
+                                  <Delete
+                                    className="text-danger"
+                                    type="button"
+                                    style={{ marginLeft: "0.5rem" }}
+                                    onClick={() =>
+                                      deleteTrainingSchedule(data.tss_id)
+                                    }
+                                  />
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
@@ -1325,7 +1337,9 @@ const AddTrainingSchedule = () => {
                                 console.log(selectedAction, "action");
                               }}
                             >
-                              <option value="" disabled>Please Select</option>
+                              <option value="" disabled>
+                                Please Select
+                              </option>
                               <option value="1">Submit</option>
                               <option value="0">Save Draft</option>
                             </select>
@@ -1455,9 +1469,10 @@ const AddTrainingSchedule = () => {
                 <Col sm={6}>
                   <Form.Group className="mb-3" controlId="formScheduledHours">
                     <Form.Label className="control-label fw-bold">
-                      Scheduled Hours: 
-                      {trainingAttended === "Yes" ? <span className="text-danger fw-bold">*</span> : null}
-                      
+                      Scheduled Hours:
+                      {trainingAttended === "Yes" ? (
+                        <span className="text-danger fw-bold">*</span>
+                      ) : null}
                     </Form.Label>
                     <Form.Control
                       type="text"
@@ -1476,7 +1491,9 @@ const AddTrainingSchedule = () => {
                   >
                     <Form.Label className="control-label fw-bold">
                       Actual Hours Attended:
-                      {trainingAttended === "Yes" ? <span className="text-danger fw-bold">*</span> : null}
+                      {trainingAttended === "Yes" ? (
+                        <span className="text-danger fw-bold">*</span>
+                      ) : null}
                       {/* <span className="text-danger fw-bold">*</span> */}
                     </Form.Label>
                     <Form.Control
@@ -1506,6 +1523,42 @@ const AddTrainingSchedule = () => {
                 Save
               </Button>
             )} */}
+
+            {/* <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={() => addSingleHrTraining()}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={() => updateSingleHrTraining()}
+            >
+              Update
+            </Button> */}
+            {/* {
+  editIndex !== null &&
+  editIndex >= 0 &&
+  editIndex < allSubTrainingSchedule.length ? (
+    <div>
+      <Button
+        style={{ backgroundColor: "#1B5A90" }}
+        onClick={() => updateSingleHrTraining()}
+      >
+        Update
+      </Button>
+    </div>
+  ) : (
+    <div>
+      <Button
+        style={{ backgroundColor: "#1B5A90" }}
+        onClick={() => addSingleHrTraining()}
+      >
+        Save
+      </Button>
+    </div>
+  )
+} */}
             <Button
               style={{ backgroundColor: "#1B5A90" }}
               onClick={() => addSingleHrTraining()}
@@ -1518,6 +1571,17 @@ const AddTrainingSchedule = () => {
             >
               Update
             </Button>
+            {/* <Button
+              style={{ backgroundColor: "#1B5A90" }}
+              onClick={
+                isTrainingAlreadyAdded()
+                  ? updateSingleHrTraining
+                  : addSingleHrTraining
+              }
+            >
+              {isTrainingAlreadyAdded() ? "Update" : "Save"}
+            </Button> */}
+
             <Button variant="secondary" onClick={FirstHandleClose}>
               Close
             </Button>

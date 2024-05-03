@@ -79,9 +79,9 @@ const TrainingSchedule = () => {
       // Filter data based on search input value
       const filteredData = allTrainingSchedule.filter(
         (schedule) =>
-          schedule.ts_training_no.toLowerCase().includes(searchDataValue)
-        // ||
-        // schedule.ts_trainer_name.toLowerCase().includes(searchDataValue)
+          schedule.ts_training_no.toLowerCase().includes(searchDataValue) ||
+          schedule.ts_trainer_name.toLowerCase().includes(searchDataValue) ||
+          schedule.ts_training_dept.toLowerCase().includes(searchDataValue) 
       );
       setAllTrainingSchedule(filteredData);
     }
@@ -153,7 +153,6 @@ const TrainingSchedule = () => {
                       value={selectedItemsPerPage}
                       onChange={handleChange}
                     >
-                     
                       <option value="10">10</option>
                       <option value="50">50</option>
                       <option value="100">100</option>

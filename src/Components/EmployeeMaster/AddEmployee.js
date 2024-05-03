@@ -706,7 +706,7 @@ const AddEmployee = () => {
                 <div className="row mt-4">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-0 mt-lg-0">
                     <div className="form-group form-group-sm">
-                      <label className="control-label fw-bold">District:</label>{" "}
+                      <label className="control-label fw-bold">Country:</label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       {/* <select
                         className="form-select"
@@ -726,7 +726,7 @@ const AddEmployee = () => {
                         className="form-control"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
-                        placeholder="Enter District"
+                        placeholder="Enter Country"
                       />
                     </div>
                   </div>

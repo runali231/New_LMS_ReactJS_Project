@@ -717,8 +717,8 @@ const AddTrainingForm = () => {
         // setEmpCodeOptions(response.data.data);
         const emp1 = response.data.data.map((item, index) => ({
           // value: item.emp_fname,
-          value: item.emp_fname + "" + item.emp_mname + "" + item.emp_lname,
-          label: item.emp_fname + "" + item.emp_mname + "" + item.emp_lname,
+          value: item.emp_fname,
+          label: item.emp_fname ,
         }));
         setEmpNameOptions(emp1);
         console.log(empNameOptions, "422");
@@ -1016,7 +1016,7 @@ const AddTrainingForm = () => {
                               Topic for training required
                             </th>
                             <th scope="col" style={headerCellStyle}>
-                              Actions
+                              Action
                             </th>
                           </tr>
                         </thead>
@@ -1213,7 +1213,7 @@ const AddTrainingForm = () => {
                     >
                       Save
                     </button>
-                    <button type="button" className="btn btn-success me-lg-2">
+                    <button type="button" className="btn btn-success me-lg-2 d-none">
                       Copy to Training Schedule
                     </button>
                     <button type="button" className="btn btn-secondary me-lg-2">

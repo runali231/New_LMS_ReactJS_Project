@@ -169,8 +169,7 @@ const DesignationMaster = () => {
       // Filter data based on search input value
       const filteredData = allDesignation.filter(
         (designation) =>
-        designation.de_designation_name.toLowerCase().includes(searchDataValue) ||
-        designation.de_designation_code.toLowerCase().includes(searchDataValue)
+        designation.de_designation_name.toLowerCase().includes(searchDataValue)
       );
       setAllDesignation(filteredData);
     }

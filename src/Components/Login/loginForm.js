@@ -5,6 +5,7 @@ import { loginUser } from "./loginApi";
 import './Login.css'
 import UrlData from "../UrlData";
 import axios from "axios";
+import ErrorHandler from "../ErrorHandler";
 
 const LoginForm = () => {
 
@@ -31,9 +32,9 @@ const LoginForm = () => {
       .then((response) => {
         console.log("response", response.data.data);
         // setAllDesignation(response.data.data);
-        if(response.data.data === null){
-          alert("Something went wrong!")
-        }
+        // if(response.data.data === null){
+        //   alert("Something went wrong!")
+        // }
         localStorage.setItem("loginId", response.data.data.RoleId);
         localStorage.setItem("UserId", response.data.data.UserId)
         localStorage.setItem("username", response.data.data.username)
@@ -43,6 +44,9 @@ const LoginForm = () => {
       })
       .catch((error) => {
         console.log(error);
+        // let errors = ErrorHandler(error);
+        //   alert(errors);
+        alert("Something went wrong,Please try again!")
       });
     }
   };

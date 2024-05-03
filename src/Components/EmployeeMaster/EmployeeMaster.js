@@ -64,20 +64,25 @@ const EmployeeMaster = () => {
   const handleSearch = (e) => {
     const searchDataValue = e.target.value.toLowerCase();
     setSearchData(searchDataValue);
-
+  
     if (searchDataValue.trim() === "") {
       // If search input is empty, fetch all data
       getAllData();
     } else {
       // Filter data based on search input value
-      const filteredData = allEmployee.filter(
-        (employee) =>
-          employee.emp_code.toLowerCase().includes(searchDataValue) ||
-          employee.emp_fname.toLowerCase().includes(searchDataValue)
-      );
+      // const filteredData = allEmployee.filter((employee) =>
+      //   (typeof employee.emp_code === 'string' && employee.emp_code.toLowerCase().includes(searchDataValue)) ||
+      //   (typeof employee.emp_fname === 'string' && employee.emp_fname.toLowerCase().includes(searchDataValue))
+      // );
+      const filteredData = allEmployee.filter((employee) =>
+    (employee.emp_code && employee.emp_code.toString().toLowerCase().includes(searchDataValue)) ||
+    (employee.emp_fname && employee.emp_fname.toLowerCase().includes(searchDataValue))
+);
+
       setAllEmployee(filteredData);
     }
   };
+  
 
   const handleChange = (e) => {
     setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
