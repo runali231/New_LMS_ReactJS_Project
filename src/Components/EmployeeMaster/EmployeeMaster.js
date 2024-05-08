@@ -15,6 +15,7 @@ import UserId from "../UserId";
 const EmployeeMaster = () => {
   const navigate = useNavigate();
   const [allEmployee, setAllEmployee] = useState([]);
+  const [originalAllEmployee, setOriginalAllEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchData, setSearchData] = useState("");
@@ -34,6 +35,7 @@ const EmployeeMaster = () => {
       .then((response) => {
         console.log("response", response.data.data);
         setAllEmployee(response.data.data);
+        setOriginalAllEmployee(response.data.data); 
       })
       .catch((error) => {
         console.log(error);
@@ -80,6 +82,7 @@ const EmployeeMaster = () => {
 );
 
       setAllEmployee(filteredData);
+      setCurrentPage(1);
     }
   };
   

@@ -299,6 +299,7 @@ const UserMaster = () => {
           users.um_user_name.toLowerCase().includes(searchDataValue)
       );
       setAllUsers(filteredData);
+      setCurrentPage(1);
     }
   };
 

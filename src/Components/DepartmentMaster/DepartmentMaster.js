@@ -186,6 +186,7 @@ const DepartmentMaster = () => {
             .includes(searchDataValue)
       );
       setAllDepartment(filteredData);
+      setCurrentPage(1);
     }
   };
 

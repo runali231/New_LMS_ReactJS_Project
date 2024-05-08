@@ -162,6 +162,7 @@ const ParameterMaster = () => {
         parameter.p_parametername.toLowerCase().includes(searchDataValue)
       );
       setAllParameter(filteredData);
+      setCurrentPage(1);
     }
   };
 

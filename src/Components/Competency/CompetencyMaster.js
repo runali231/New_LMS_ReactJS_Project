@@ -37,8 +37,8 @@ const CompetencyMaster = () => {
         setAllCompetency(response.data.data);
       })
       .catch((error) => {
-        let errors = ErrorHandler(error)
-        alert(errors)
+        let errors = ErrorHandler(error);
+        alert(errors);
       });
   };
 
@@ -63,15 +63,15 @@ const CompetencyMaster = () => {
         getAllData();
       })
       .catch((error) => {
-        let errors = ErrorHandler(error)
-        alert(errors)
+        let errors = ErrorHandler(error);
+        alert(errors);
       });
   };
 
   const handleSearch = (e) => {
     const searchDataValue = e.target.value.toLowerCase();
     setSearchData(searchDataValue);
-  
+
     if (searchDataValue.trim() === "") {
       // If search input is empty, fetch all data
       getAllData();
@@ -92,13 +92,13 @@ const CompetencyMaster = () => {
       setCurrentPage(1); // Reset pagination to first page
     }
   };
-  
+
   const handleChange = (e) => {
     setSelectedItemsPerPage(parseInt(e.target.value));
     setItemsPerPage(parseInt(e.target.value));
     setCurrentPage(1);
   };
-  
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = allCompetency.slice(indexOfFirstItem, indexOfLastItem);
@@ -154,7 +154,7 @@ const CompetencyMaster = () => {
                       className="form-select w-auto"
                       aria-label="Default select example"
                       value={selectedItemsPerPage} // Set value to selectedItemsPerPage
-                      onChange={handleChange} 
+                      onChange={handleChange}
                     >
                       <option value="10">10</option>
                       <option value="50">50</option>
@@ -179,67 +179,35 @@ const CompetencyMaster = () => {
                   striped
                   hover
                   responsive
-                  className="table-bordered table text-left"
+                  className="table text-left"
                   id="dataTable"
                   width="100%"
                   cellSpacing="0"
                 >
                   <thead className="text-left">
                     <tr>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Sr.No
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Designation
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Minimum Educational Qualification
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Minimum Experience
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Skill Requirement
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Training
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Status
                       </th>
-                      <th
-                        scope="col"
-                        className="fw-bold"
-                        style={headerCellStyle}
-                      >
+                      <th scope="col" style={headerCellStyle}>
                         Action
                       </th>
                     </tr>

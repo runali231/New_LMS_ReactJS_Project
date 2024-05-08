@@ -563,7 +563,10 @@ const AddTrainingApprovalForm = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allByDepartments.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allByDepartments.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -828,13 +831,17 @@ const AddTrainingApprovalForm = () => {
                             <th scope="col" style={headerCellStyle}>
                               Topic for training required
                             </th>
-                            {/* <th scope="col" style={headerCellStyle}>
-        Actions
-      </th> */}
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allByDepartments &&
+                          {allByDepartments.length === 0 ? (
+                            <tr>
+                              <td colSpan="9" className="text-center">
+                                Data not available
+                              </td>
+                            </tr>
+                          ) : (
+                            allByDepartments &&
                             currentItems.map((departmentItem, index) => (
                               <tr key={index}>
                                 <td>{indexOfFirstItem + index + 1}</td>
@@ -871,10 +878,11 @@ const AddTrainingApprovalForm = () => {
                                     ))}
                                 </td>
                               </tr>
-                            ))}
+                            ))
+                          )}
                         </tbody>
                       </Table>
-<br/>
+                      <br />
                       <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
@@ -883,23 +891,29 @@ const AddTrainingApprovalForm = () => {
                                   onClick={() =>
                                     setCurrentPage(currentPage - 1)
                                   }
-                                  disabled={currentPage === 1}
                                   aria-label="Previous"
+                                  disabled={currentPage === 1}
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
                               {Array.from(
-                                { length: 3 }, // Display only four page number buttons
+                                { length: 5 }, // Display only five page number buttons
                                 (_, index) => {
-                                  const pageNumber = currentPage + index - 1;
+                                  const pageNumber = currentPage + index - 2;
                                   const isLastPage =
                                     pageNumber ===
                                     Math.ceil(
-                                      allByDepartments.length / itemsPerPage
+                                      allByDepartments.length /
+                                        itemsPerPage
                                     );
                                   const shouldDisplayPage =
-                                    pageNumber >= 1 && !isLastPage;
+                                    pageNumber >= 1 &&
+                                    pageNumber <=
+                                      Math.ceil(
+                                        allByDepartments.length /
+                                          itemsPerPage
+                                      );
                                   const isCurrentPage =
                                     currentPage === pageNumber;
 
@@ -931,7 +945,8 @@ const AddTrainingApprovalForm = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allByDepartments.length / itemsPerPage
+                                      allByDepartments.length /
+                                        itemsPerPage
                                     )
                                   }
                                   aria-label="Next"

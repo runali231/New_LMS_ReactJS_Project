@@ -1025,7 +1025,14 @@ const AddTrainingForm = () => {
                         </thead>
 
                         <tbody className="text-start">
-                          {allByDepartments &&
+                          {allByDepartments.length === 0 ? (
+                            <tr>
+                              <td colSpan="9" className="text-center">
+                                Data not available
+                              </td>
+                            </tr>
+                          ) : (
+                            allByDepartments &&
                             currentItems.map((departmentItem, index) => {
                               return (
                                 <tr key={index}>
@@ -1107,7 +1114,8 @@ const AddTrainingForm = () => {
                                   </td>
                                 </tr>
                               );
-                            })}
+                            })
+                          )}
                         </tbody>
                       </Table>
 
@@ -1117,7 +1125,7 @@ const AddTrainingForm = () => {
                         </div>
                         <div className="col-lg-4"></div>
                         <div className="col-lg-4 mt-3">
-                          <nav aria-label="Page navigation example">
+                        <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -1125,23 +1133,29 @@ const AddTrainingForm = () => {
                                   onClick={() =>
                                     setCurrentPage(currentPage - 1)
                                   }
-                                  disabled={currentPage === 1}
                                   aria-label="Previous"
+                                  disabled={currentPage === 1}
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
                               {Array.from(
-                                { length: 3 }, // Display only four page number buttons
+                                { length: 5 }, // Display only five page number buttons
                                 (_, index) => {
-                                  const pageNumber = currentPage + index - 1;
+                                  const pageNumber = currentPage + index - 2;
                                   const isLastPage =
                                     pageNumber ===
                                     Math.ceil(
-                                      allByDepartments.length / itemsPerPage
+                                      allByDepartments.length /
+                                        itemsPerPage
                                     );
                                   const shouldDisplayPage =
-                                    pageNumber >= 1 && !isLastPage;
+                                    pageNumber >= 1 &&
+                                    pageNumber <=
+                                      Math.ceil(
+                                        allByDepartments.length /
+                                          itemsPerPage
+                                      );
                                   const isCurrentPage =
                                     currentPage === pageNumber;
 
@@ -1173,7 +1187,8 @@ const AddTrainingForm = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allByDepartments.length / itemsPerPage
+                                      allByDepartments.length /
+                                        itemsPerPage
                                     )
                                   }
                                   aria-label="Next"

@@ -81,6 +81,7 @@ const TrainingFeedback = () => {
           feedback.fb_title.toLowerCase().includes(searchDataValue)   
       );
       setAllFeedback(filteredData);
+      setCurrentPage(1);
     }
   };
 

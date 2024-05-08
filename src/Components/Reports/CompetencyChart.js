@@ -21,12 +21,17 @@ import fontkit from "@pdf-lib/fontkit";
 const CompetencyChart = () => {
   const pdfContentRef = useRef(null);
   const [report, setReport] = useState([]);
-  const [pdfResponse, setPdfResponse] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10); 
   const tableRef = useRef(null);
+  const [searchData, setSearchData] = useState("");
   const [tableLoaded, setTableLoaded] = useState(false);
+
+  const headerCellStyle = {
+    backgroundColor: "rgb(27, 90, 144)",
+    color: "#fff",
+  };
 
   useEffect(() => {
     // Check if the table element is loaded
@@ -96,6 +101,25 @@ const CompetencyChart = () => {
     });
   };
 
+  const handleSearch = (e) => {
+    const searchDataValue = e.target.value.toLowerCase();
+    setSearchData(searchDataValue);
+
+    if (searchDataValue.trim() === "") {
+      // If search input is empty, fetch all data
+      getAllData();
+    } else {
+      // Filter data based on search input value
+      const filteredData = report.filter(
+        (report) =>
+          report.EmpCode.toLowerCase().includes(searchDataValue) ||
+        report.NameOfEmp.toLowerCase().includes(searchDataValue)
+      );
+      setReport(filteredData);
+      setCurrentPage(1);
+    }
+  };
+
   const handleChange = (e) => {
     setSelectedItemsPerPage(parseInt(e.target.value));
     setItemsPerPage(parseInt(e.target.value));
@@ -129,7 +153,7 @@ const CompetencyChart = () => {
                     </h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                    <div className="btn btn-add" title="Add New">
+                    <div className="btn btn-add" title="Export Pdf">
                       <button
                         className="btn btn-md text-light"
                         type="button"
@@ -139,7 +163,7 @@ const CompetencyChart = () => {
                         <PictureAsPdf/>
                       </button>
                     </div>
-                    <div className="btn btn-add" title="Add New">
+                    <div className="btn btn-add" title="Export Excel">
                       <button
                         className="btn btn-md text-light"
                         type="button"
@@ -172,6 +196,15 @@ const CompetencyChart = () => {
                     &nbsp;&nbsp;
                     <h6 className="mt-3">entries</h6>
                   </div>
+                  <div className="col-lg-6 d-flex justify-content-center justify-content-lg-end"></div>
+                  <div className="col-lg-3 d-flex justify-content-center justify-content-lg-end">
+                    <input
+                      className="form-control"
+                      placeholder="Search here"
+                      value={searchData}
+                      onChange={handleSearch}
+                    />
+                  </div>
                 </div>
                 <br />
                 <div ref={tableRef}>
@@ -186,75 +219,75 @@ const CompetencyChart = () => {
                   >
                     <thead className="text-start">
                       <tr>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Sr.No
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Training need assessment date
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Date of training
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Training start
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Training end
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Training hours
                         </th>
-                        <th scope="col" className="fw-bold text-center">
+                        <th scope="col"  style={headerCellStyle}>
                           Awareness, CH, Annex, WI & FT WI/
                           <br />
                           SOP, DPR/FM & SAP, Special Training
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Title
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Issue No
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Rev No.
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Rev Date
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Other
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Training Topic
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Training Given By
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Emp Code
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Name of Employees
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Designation
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Department
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Number Question in Training Evaluation
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Marks Obtained in Training Evaluation
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Result
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Hard Copy Location
                         </th>
-                        <th scope="col" className="fw-bold">
+                        <th scope="col"  style={headerCellStyle}>
                           Soft Copy Location
                         </th>
                       </tr>

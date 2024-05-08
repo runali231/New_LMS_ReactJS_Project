@@ -172,6 +172,7 @@ const DesignationMaster = () => {
         designation.de_designation_name.toLowerCase().includes(searchDataValue)
       );
       setAllDesignation(filteredData);
+      setCurrentPage(1);
     }
   };
 

@@ -170,6 +170,7 @@ const ParameterValueMaster = () => {
           
       );
       setAllParameterValue(filteredData);
+      setCurrentPage(1);
     }
   };
 

@@ -41,7 +41,9 @@ const CountryMaster = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `CountryMaster/GetAll?status=${toggleActive ? "1" : "0"}&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
+          `CountryMaster/GetAll?status=${
+            toggleActive ? "1" : "0"
+          }&pageSize=${itemsPerPage}&pageNumber=${currentPage}`
       ),
     })
       .then((response) => {
@@ -156,6 +158,7 @@ const CountryMaster = () => {
           country.co_country_code.toLowerCase().includes(searchDataValue)
       );
       setAllCountry(filteredData);
+      setCurrentPage(1);
     }
   };
 
@@ -189,7 +192,7 @@ const CountryMaster = () => {
                         type="checkbox"
                         id="flexSwitchCheckDefault"
                         checked={toggleActive} // Bind the checked state to the state variable
-                        onChange={()=>setToggleActive(!toggleActive)}
+                        onChange={() => setToggleActive(!toggleActive)}
                       />
                     </div>
                     <div className="btn btn-add" title="Add New">
@@ -259,7 +262,14 @@ const CountryMaster = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {allCountry &&
+                    {allCountry.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="text-center">
+                          Data not available
+                        </td>
+                      </tr>
+                    ) : (
+                      allCountry &&
                       currentItems.map((data, index) => {
                         return (
                           <tr key={data.co_id}>
@@ -301,7 +311,8 @@ const CountryMaster = () => {
                             </td>
                           </tr>
                         );
-                      })}
+                      })
+                    )}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">

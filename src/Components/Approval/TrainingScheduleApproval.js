@@ -99,6 +99,7 @@ const TrainingScheduleApproval = () => {
             .includes(searchDataValue)
       );
       setAllTrainingSchedule(filteredData);
+      setCurrentPage(1);
     }
   };
 

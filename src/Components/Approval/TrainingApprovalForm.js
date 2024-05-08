@@ -77,6 +77,7 @@ const TrainingApprovalForm = () => {
           (training.tr_nature || "").toLowerCase().includes(searchDataValue)
       );
       setAllTrainingApproval(filteredData);
+      setCurrentPage(1);
     }
   };
 

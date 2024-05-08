@@ -520,7 +520,7 @@ const AddTrainingSchedule = () => {
 
     // Update the state with the filtered array
     setAllSubTrainingSchedule(updatedTraining);
-    alert("Deleted successfully");
+    alert("Deleted Successfully!!");
   };
 
   const handleFileChange = (e) => {
@@ -990,7 +990,14 @@ const AddTrainingSchedule = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allSubTrainingSchedule &&
+                          {allSubTrainingSchedule.length === 0 ? (
+                            <tr>
+                              <td colSpan="17" className="text-center">
+                                Data not available
+                              </td>
+                            </tr>
+                          ) : (
+                            allSubTrainingSchedule &&
                             currentItems.map((data, index) => (
                               <tr key={index}>
                                 <td>{indexOfFirstItem + index + 1}</td>
@@ -1050,106 +1057,7 @@ const AddTrainingSchedule = () => {
                                 </td>
                                 <td>{data.tss_status}</td>
                                 <td>{data.tss_remark}</td>
-                                {/* <td>
-                                {action1 === "Approved By Manager" ? (
-                                  <>
-                                    <Edit
-                                      className="text-success mr-2"
-                                      type="button"
-                                      onClick={() => {
-                                        getSingleHrTraining(index, data.tss_id);
-                                        FirstHandleShow();
-                                      }}
-                                    />
-                                    <Edit
-                                      className="text-primary mr-2"
-                                      type="button"
-                                      onClick={() => {
-                                        getSingleHodTraining(
-                                          index,
-                                          data.tss_id
-                                        );
-                                        SecondHandleShow();
-                                      }}
-                                      disabled={isAddingTraining}
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <Edit
-                                      className="text-success mr-2"
-                                      style={{
-                                        opacity: 0.5,
-                                        pointerEvents: "none",
-                                      }}
-                                      type="button"
-                                      onClick={() => {
-                                        getSingleHrTraining(index, data.tss_id);
-                                        FirstHandleShow();
-                                      }}
-                                    />
-                                    <Edit
-                                      className="text-primary mr-2"
-                                      type="button"
-                                      style={{
-                                        opacity: 0.5,
-                                        pointerEvents: "none",
-                                      }}
-                                      onClick={() => {
-                                        getSingleHodTraining(
-                                          index,
-                                          data.tss_id
-                                        );
-                                        SecondHandleShow();
-                                      }}
-                                      
-                                    />
-                                  </>
-                                )}
 
-                                <Delete
-                                  className="text-danger"
-                                  type="button"
-                                  style={{ marginLeft: "0.5rem" }}
-                                  onClick={() =>
-                                    deleteTrainingSchedule(data.tss_id)
-                                  }
-                                />
-                              </td> */}
-                                {/* <td>
-                                <Edit
-                                className={
-                                  action1 === "Approved By Manager"
-                                    ? "text-success mr-2"
-                                    : "text-success mr-2 disabled"
-                                }
-                                type="button"
-                                onClick={() => {
-                                  getSingleHrTraining(index, data.tss_id);
-                                  FirstHandleShow();
-                                }}
-                                disabled={
-                                  !isAddingTraining &&
-                                  action1 !== "Approved By Manager"
-                                }
-                              />
-                              <Edit
-                                className={
-                                  action1 === "Approved By Manager"
-                                    ? "text-primary mr-2"
-                                    : "text-primary mr-2 disabled"
-                                }
-                                type="button"
-                                onClick={() => {
-                                  getSingleHodTraining(index, data.tss_id);
-                                  SecondHandleShow();
-                                }}
-                                disabled={
-                                  !isAddingTraining &&
-                                  action1 !== "Approved By Manager"
-                                }
-                              />
-                              </td> */}
                                 <td>
                                   {action1 === "Approved By Manager" ? (
                                     <>
@@ -1223,7 +1131,8 @@ const AddTrainingSchedule = () => {
                                   />
                                 </td>
                               </tr>
-                            ))}
+                            ))
+                          )}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
@@ -1234,7 +1143,7 @@ const AddTrainingSchedule = () => {
                         </div>
                         <div className="col-lg-4 col-12"></div>
                         <div className="col-lg-4 col-12 mt-3 mt-lg-0">
-                        <nav aria-label="Page navigation example">
+                          <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -1242,23 +1151,29 @@ const AddTrainingSchedule = () => {
                                   onClick={() =>
                                     setCurrentPage(currentPage - 1)
                                   }
-                                  disabled={currentPage === 1}
                                   aria-label="Previous"
+                                  disabled={currentPage === 1}
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
                               {Array.from(
-                                { length: 3 }, // Display only four page number buttons
+                                { length: 5 }, // Display only five page number buttons
                                 (_, index) => {
-                                  const pageNumber = currentPage + index - 1;
+                                  const pageNumber = currentPage + index - 2;
                                   const isLastPage =
                                     pageNumber ===
                                     Math.ceil(
-                                      allSubTrainingSchedule.length / itemsPerPage
+                                      allSubTrainingSchedule.length /
+                                        itemsPerPage
                                     );
                                   const shouldDisplayPage =
-                                    pageNumber >= 1 && !isLastPage;
+                                    pageNumber >= 1 &&
+                                    pageNumber <=
+                                      Math.ceil(
+                                        allSubTrainingSchedule.length /
+                                          itemsPerPage
+                                      );
                                   const isCurrentPage =
                                     currentPage === pageNumber;
 
@@ -1290,7 +1205,8 @@ const AddTrainingSchedule = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allSubTrainingSchedule.length / itemsPerPage
+                                      allSubTrainingSchedule.length /
+                                        itemsPerPage
                                     )
                                   }
                                   aria-label="Next"

@@ -76,6 +76,7 @@ const KPIMaster = () => {
           kpi.k_emp_name.toLowerCase().includes(searchDataValue)
       );
       setAllKpi(filteredData);
+      setCurrentPage(1);
     }
   };
 

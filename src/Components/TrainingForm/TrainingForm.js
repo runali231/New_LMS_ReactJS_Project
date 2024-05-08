@@ -83,6 +83,7 @@ const TrainingForm = () => {
           (training.tr_nature || "").toLowerCase().includes(searchDataValue)
       );
       setAllTrainingNeed(filteredData);
+      setCurrentPage(1);
     }
   };
 

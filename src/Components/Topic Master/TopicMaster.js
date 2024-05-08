@@ -80,6 +80,7 @@ const TopicMaster = () => {
           topics.t_description.toLowerCase().includes(searchDataValue)
       );
       setAllTopics(filteredData);
+      setCurrentPage(1);
     }
   };
 

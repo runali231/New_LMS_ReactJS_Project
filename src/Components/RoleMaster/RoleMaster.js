@@ -90,6 +90,7 @@ const RoleMaster = () => {
           role.r_description.toLowerCase().includes(searchDataValue)
       );
       setAllRoleMaster(filteredData);
+      setCurrentPage(1);
     }
   };
 

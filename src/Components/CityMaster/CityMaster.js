@@ -142,6 +142,7 @@ const CityMaster = () => {
           city.ci_city_code.toLowerCase().includes(searchDataValue)
       );
       setAllCity(filteredData);
+      setCurrentPage(1);
     }
   };
 
@@ -289,7 +290,16 @@ const CityMaster = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {allCity &&
+                    
+                    {
+                    allCity.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="text-center">
+                          Data not available
+                        </td>
+                      </tr>
+                    ) : (
+                    allCity &&
                       currentItems.map((data, index) => {
                         return (
                           <tr key={data.ci_id}>
@@ -319,7 +329,7 @@ const CityMaster = () => {
                             </td>
                           </tr>
                         );
-                      })}
+                      }))}
                   </tbody>
                 </Table>
                 <div className="row mt-4 mt-xl-3">

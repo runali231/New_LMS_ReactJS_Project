@@ -41,7 +41,7 @@ const AddTopic = () => {
   };
   useEffect(() => {
     getAllData();
-  
+
     if (id) {
       axios({
         method: "get",
@@ -65,26 +65,18 @@ const AddTopic = () => {
     }
   }, [tId]);
 
-
   const addTopic = () => {
-    if (
-      trainingCode === "" 
-    ) {
+    if (trainingCode === "") {
       alert("Please enter training code!");
-    } 
-    else if(description === ""){
+    } else if (description === "") {
       alert("Please enter description!");
-    }
-    else if(department === ""){
+    } else if (department === "") {
       alert("Please enter department!");
-    }
-    else if(trainingType === ""){
+    } else if (trainingType === "") {
       alert("Please enter training type!");
-    }
-    else if(trainingDuration === ""){
+    } else if (trainingDuration === "") {
       alert("Please enter training duration!");
-    }
-    else {
+    } else {
       let data = {
         userId: UserId,
         t_code: trainingCode,
@@ -146,16 +138,13 @@ const AddTopic = () => {
   };
 
   const addSubject = () => {
-    if(content === ""){
-      alert("Please enter content!")
-    }
-    else if(subContent === ""){
-      alert("Please enter sub content!")
-    }
-    else if (subject === "") {
+    if (content === "") {
+      alert("Please enter content!");
+    } else if (subContent === "") {
+      alert("Please enter sub content!");
+    } else if (subject === "") {
       alert("Please enter subject!");
-    }
-    else {
+    } else {
       const newSubject = {
         s_subject: subject,
         s_content: content,
@@ -187,7 +176,7 @@ const AddTopic = () => {
       setSubjects(updatedSubjects);
       alert("Subject updated successfully!");
       resetForm();
-      setModalOpen(false)
+      setModalOpen(false);
     }
   };
 
@@ -386,7 +375,10 @@ const AddTopic = () => {
                               // data-bs-toggle="modal"
                               // data-bs-target="#exampleModal"
                               style={{ backgroundColor: "#1B5A90" }}
-                              onClick={() => {setModalOpen(true); resetForm()}}
+                              onClick={() => {
+                                setModalOpen(true);
+                                resetForm();
+                              }}
                             >
                               <Add />
                             </button>
@@ -417,48 +409,28 @@ const AddTopic = () => {
                         striped
                         hover
                         responsive
-                        className="table-bordered table text-left"
+                        className="table text-left"
                       >
                         <thead>
                           <tr>
-                            <th
-                              scope="col"
-                              className="fw-bold"
-                              style={headerCellStyle}
-                            >
+                            <th scope="col" style={headerCellStyle}>
                               Sr.No
                             </th>
-                            <th
-                              scope="col"
-                              className="fw-bold"
-                              style={headerCellStyle}
-                            >
+                            <th scope="col" style={headerCellStyle}>
                               Subject
                             </th>
-                            <th
-                              scope="col"
-                              className="fw-bold"
-                              style={headerCellStyle}
-                            >
+                            <th scope="col" style={headerCellStyle}>
                               Content
                             </th>
-                            <th
-                              scope="col"
-                              className="fw-bold"
-                              style={headerCellStyle}
-                            >
+                            <th scope="col" style={headerCellStyle}>
                               Sub Content
                             </th>
-                            <th
-                              scope="col"
-                              className="fw-bold"
-                              style={headerCellStyle}
-                            >
+                            <th scope="col" style={headerCellStyle}>
                               Action
                             </th>
                           </tr>
                         </thead>
-                        <tbody>
+                        {/* <tbody>
                           {subjects.map((data, index) => (
                             <tr key={index}>
                               <td>
@@ -471,11 +443,13 @@ const AddTopic = () => {
                                 <Edit
                                   className="text-success mr-2"
                                   // onClick={() => GetSubject(data.s_id)}
-                                  onClick={() => {editSubject(index); setModalOpen(true)}}
+                                  onClick={() => {
+                                    editSubject(index);
+                                    setModalOpen(true);
+                                  }}
                                   type="button"
                                   // data-bs-toggle="modal"
                                   // data-bs-target="#exampleModal"
-                                  
                                 />
                                 <Delete
                                   className="text-danger"
@@ -488,6 +462,42 @@ const AddTopic = () => {
                               </td>
                             </tr>
                           ))}
+                        </tbody> */}
+                        <tbody>
+                          {subjects.length === 0 ? (
+                            <tr>
+                              <td colSpan="5" className="text-center">
+                                Data not available
+                              </td>
+                            </tr>
+                          ) : (
+                            subjects.map((data, index) => (
+                              <tr key={index}>
+                                <td>
+                                  {(currentPage - 1) * itemsPerPage + index + 1}
+                                </td>
+                                <td>{data.s_subject}</td>
+                                <td>{data.s_content}</td>
+                                <td>{data.s_subcontent}</td>
+                                <td>
+                                  <Edit
+                                    className="text-success mr-2"
+                                    onClick={() => {
+                                      editSubject(index);
+                                      setModalOpen(true);
+                                    }}
+                                    type="button"
+                                  />
+                                  <Delete
+                                    className="text-danger"
+                                    type="button"
+                                    style={{ marginLeft: "0.5rem" }}
+                                    onClick={() => deleteSubject(index)}
+                                  />
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
@@ -588,12 +598,15 @@ const AddTopic = () => {
         </div>
         <Modal show={modalOpen} onHide={handleClose} backdrop="static">
           <Modal.Header closeButton>
-            <Modal.Title><h5 className="fw-bold">Add Topic</h5></Modal.Title>
+            <Modal.Title>
+              <h5 className="fw-bold">Add Topic</h5>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
               <Form.Group className="mb-3" controlId="formContent">
-                <Form.Label className="fw-bold">Content</Form.Label> <span className="text-danger">*</span>
+                <Form.Label className="fw-bold">Content</Form.Label>{" "}
+                <span className="text-danger">*</span>
                 <Form.Control
                   type="text"
                   placeholder="Enter Content"
@@ -602,7 +615,8 @@ const AddTopic = () => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formSubContent">
-                <Form.Label className="fw-bold">Sub Content</Form.Label> <span className="text-danger">*</span>
+                <Form.Label className="fw-bold">Sub Content</Form.Label>{" "}
+                <span className="text-danger">*</span>
                 <Form.Control
                   type="text"
                   placeholder="Enter Sub Content"
@@ -611,7 +625,8 @@ const AddTopic = () => {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formSubject">
-                <Form.Label className="fw-bold">Subject</Form.Label> <span className="text-danger">*</span>
+                <Form.Label className="fw-bold">Subject</Form.Label>{" "}
+                <span className="text-danger">*</span>
                 <Form.Control
                   type="text"
                   placeholder="Enter Subject"
@@ -623,11 +638,17 @@ const AddTopic = () => {
           </Modal.Body>
           <Modal.Footer>
             {editIndex !== null ? (
-              <Button style={{ backgroundColor: "#1B5A90" }} onClick={updateSubject}>
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={updateSubject}
+              >
                 Update Subject
               </Button>
             ) : (
-              <Button  style={{ backgroundColor: "#1B5A90" }} onClick={addSubject}>
+              <Button
+                style={{ backgroundColor: "#1B5A90" }}
+                onClick={addSubject}
+              >
                 Add Subject
               </Button>
             )}

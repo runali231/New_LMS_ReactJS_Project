@@ -10,15 +10,11 @@ import TrainingSchedule from './Components/ScheduleForm/TrainingSchedule';
 import TrainingFeedback from './Components/Feedback/TrainingFeedback';
 import CompetencyChart from './Components/Reports/CompetencyChart';
 import AddKPI from './Components/KPI Master/AddKPI';
-import TrainingSchedule1 from './Components/Training/TrainingSchedule1';
-import TrainingFeedback1 from './Components/Training/TrainingFeedback1';
 import Competency from './Components/Competency/CompetencyMaster';
 import employeeCompetency from './Components/Reports/EmployeeCompentency';
 import AddTrainingForm from './Components/TrainingForm/AddTrainingForm';
 import AddTrainingSchedule from './Components/ScheduleForm/AddTrainingSchedule';
 import AddTrainingFeedback from './Components/Feedback/AddFeedback';
-import Email from './Components/Training/Email';
-import ApprovalEmail from './Components/Training/ApprovalEmail';
 import DesignationMaster from './Components/DesignationMaster/DesignationMaster';
 import DepartmentMaster from './Components/DepartmentMaster/DepartmentMaster';
 import Sample from './Components/Scheduling/Sample';
@@ -59,18 +55,15 @@ const routes1=[
     { path: '/addTrainingSchedule', name: 'AddTrainingSchedule', element:AddTrainingSchedule},
     { path: '/addTrainingSchedule/:id', name: 'AddTrainingSchedule', element:AddTrainingSchedule},
     { path: '/trainingSchedule', name: 'TrainingSchedule', element:TrainingSchedule},
-    { path: '/trainingSchedule1', name: 'TrainingSchedule11', element:TrainingSchedule1},
     { path: '/addTrainingFeedback', name: 'AddTrainingFeedback', element:AddTrainingFeedback},
     { path: '/addTrainingFeedback/:id', name: 'AddTrainingFeedback', element:AddTrainingFeedback},
     { path: '/trainingFeedback', name: 'TrainingFeedback', element:TrainingFeedback},
-    { path: '/trainingFeedback1', name: 'TrainingFeedback1', element:TrainingFeedback1},
     { path: '/competencyChart', name: 'CompetencyChart', element:CompetencyChart},
     { path: '/addCompetency/:id', name: 'AddCompetencyMaster', element:AddCompetency},
     { path: '/addCompetency', name: 'AddCompetencyMaster', element:AddCompetency},
     { path: '/CompentencyMaster', name: 'CompetencyMaster', element:CompetencyMaster},
     { path: '/addEmployeeCompetency', name: 'AddEmployeeCompetency', element:AddEmployeeCompetency},
     { path: '/employeeCompetency', name: 'employeeCompetency', element:employeeCompetency},
-    { path: '/email', name: 'Email', element:Email},
 
     { path: '/designationMaster', name: 'DesignationMaster', element:DesignationMaster},
     { path: '/roleMaster', name: 'RoleMaster', element:RoleMaster},

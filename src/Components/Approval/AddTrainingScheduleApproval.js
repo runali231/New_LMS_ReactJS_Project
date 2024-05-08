@@ -733,7 +733,6 @@ const AddTrainingSchedule = () => {
                             value={selectedItemsPerPage}
                             onChange={handleChange}
                           >
-                           
                             <option value="10">10</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
@@ -804,7 +803,14 @@ const AddTrainingSchedule = () => {
                           </tr>
                         </thead>
                         <tbody className="text-start">
-                          {allSubTrainingSchedule &&
+                          {allSubTrainingSchedule.length === 0 ? (
+                            <tr>
+                              <td colSpan="9" className="text-center">
+                                Data not available
+                              </td>
+                            </tr>
+                          ) : (
+                            allSubTrainingSchedule &&
                             currentItems.map((data, index) => (
                               <tr>
                                 <td>{indexOfFirstItem + index + 1}</td>
@@ -862,7 +868,8 @@ const AddTrainingSchedule = () => {
                                 <td>{data.tss_status}</td>
                                 <td>{data.tss_remark}</td>
                               </tr>
-                            ))}
+                            ))
+                          )}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
@@ -881,16 +888,16 @@ const AddTrainingSchedule = () => {
                                   onClick={() =>
                                     setCurrentPage(currentPage - 1)
                                   }
-                                  disabled={currentPage === 1}
                                   aria-label="Previous"
+                                  disabled={currentPage === 1}
                                 >
                                   <span aria-hidden="true">&laquo;</span>
                                 </button>
                               </li>
                               {Array.from(
-                                { length: 3 }, // Display only four page number buttons
+                                { length: 5 }, // Display only five page number buttons
                                 (_, index) => {
-                                  const pageNumber = currentPage + index - 1;
+                                  const pageNumber = currentPage + index - 2;
                                   const isLastPage =
                                     pageNumber ===
                                     Math.ceil(
@@ -898,7 +905,12 @@ const AddTrainingSchedule = () => {
                                         itemsPerPage
                                     );
                                   const shouldDisplayPage =
-                                    pageNumber >= 1 && !isLastPage;
+                                    pageNumber >= 1 &&
+                                    pageNumber <=
+                                      Math.ceil(
+                                        allSubTrainingSchedule.length /
+                                          itemsPerPage
+                                      );
                                   const isCurrentPage =
                                     currentPage === pageNumber;
 

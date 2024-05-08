@@ -84,6 +84,7 @@ const TrainingSchedule = () => {
           schedule.ts_training_dept.toLowerCase().includes(searchDataValue) 
       );
       setAllTrainingSchedule(filteredData);
+      setCurrentPage(1);
     }
   };
 
