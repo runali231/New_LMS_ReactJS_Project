@@ -50,7 +50,9 @@ const UserMaster = () => {
   };
 
   useEffect(() => {
-    getData();
+    // getData();
+    GetAllDesignation();
+    getAllDepartment();
     getAllData();
     getAllRole();
     getAllEmployee();
@@ -106,10 +108,15 @@ const UserMaster = () => {
           label: item.emp_code,
         }));
         setAllEmployee(emp);
-        const desg = response.data.data.map((item, index) => ({
-          value: item.emp_des,
-        }));
-        setSelectedDesignation(desg);
+        // const desg = response.data.data.map((item, index) => ({
+        //   value: item.emp_des,
+        // }));
+        // setSelectedDesignation(desg);
+        // const desg = response.data.data.map((item, index) => ({
+        //   de_id: item.emp_des_id, // Assuming 'de_id' is the correct property name for designation ID
+        //   de_designation_name: item.emp_des, // Assuming 'desg_name' is the correct property name for designation name
+        // }));
+        // setSelectedDesignation(desg);
       })
       .catch((error) => {
         console.log(error);
@@ -170,7 +177,7 @@ const UserMaster = () => {
         um_user_name: userName,
         um_password: "",
         um_staffdepid: department.toString(),
-        um_staffdesid: designation,
+        um_staffdesid: designation.toString(),
         um_staffname: employee.label,
         um_fullname: employeeName,
         um_staffid: (employee.value).toString(),
@@ -262,18 +269,49 @@ const UserMaster = () => {
   //   setSelectedDepartment(departmentData);
   // };
 
-  const getData = async () => {
-    try {
-        const designationData = await GetAllDesignation();
-        const departmentData = await getAllDepartment();
+//   const getData = async () => {
+//     try {
+//         const designationData = await GetAllDesignation();
+//         const departmentData = await getAllDepartment();
 
-        setSelectedDesignation(designationData);
-        setSelectedDepartment(departmentData);
-    } catch (error) {
-        console.log(error);
-    }
+//         setSelectedDesignation(designationData);
+//         setSelectedDepartment(departmentData);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+
+ const GetAllDesignation = () => {
+  return axios({
+      method: "get",
+      url: new URL(UrlData + 'DesignationMaster/GetAll?status=1'),
+  })
+  .then((response) => {
+      console.log("response all designation", response.data.data);
+      // return response.data.data;
+      setSelectedDesignation(response.data.data);
+  })
+  .catch((error) => {
+      console.log(error);
+      return [];
+  });
 };
 
+ const getAllDepartment = () => {
+  return axios({
+      method: "get",
+      url: new URL(UrlData + 'DepartmentMaster/GetAll?status=1'),
+  })
+  .then((response) => {
+      console.log("response all department", response.data.data);
+      // return response.data.data;
+      setSelectedDepartment(response.data.data);
+  })
+  .catch((error) => {
+      console.log(error);
+      return [];
+  });
+};
   const handleDesignation = (e) => {
     const selectedValue = e.target.value;
     setDesignation(selectedValue);

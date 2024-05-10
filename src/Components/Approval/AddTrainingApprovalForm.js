@@ -883,7 +883,17 @@ const AddTrainingApprovalForm = () => {
                         </tbody>
                       </Table>
                       <br />
-                      <nav aria-label="Page navigation example">
+                      <div className="row">
+                        <div className="col-lg-4 col-12 mt-3">
+                          <h6 className="text-lg-start text-center">
+                            Showing {indexOfFirstItem + 1} to{" "}
+                            {Math.min(indexOfLastItem, allByDepartments.length)}{" "}
+                            of {allByDepartments.length} entries
+                          </h6>
+                        </div>
+                        <div className="col-lg-4"></div>
+                        <div className="col-lg-4 mt-3">
+                        <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -956,6 +966,8 @@ const AddTrainingApprovalForm = () => {
                               </li>
                             </ul>
                           </nav>
+                          </div>
+                     </div>
                     </div>
                   </div>
                 </div>

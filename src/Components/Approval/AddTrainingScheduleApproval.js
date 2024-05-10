@@ -875,7 +875,11 @@ const AddTrainingSchedule = () => {
                       <div className="row mt-4 mt-xl-3">
                         <div className="col-lg-4 col-12 ">
                           <h6 className="text-lg-start text-center">
-                            {/* Showing 1 to 3 of 3 entries */}
+                          <h6 className="text-lg-start text-center">
+                            Showing {indexOfFirstItem + 1} to{" "}
+                            {Math.min(indexOfLastItem, allSubTrainingSchedule.length)}{" "}
+                            of {allSubTrainingSchedule.length} entries
+                          </h6>
                           </h6>
                         </div>
                         <div className="col-lg-4 col-12"></div>

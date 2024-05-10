@@ -171,7 +171,7 @@ const AddTrainingFeedback = () => {
       method: "get",
       url: new URL(
         UrlData +
-          `Feedback/GetAllFeedback?user_id=${UserId}&fb_isactive=1&fb_id=${id}`
+          `Feedback/GetAllFeedback?fb_isactive=1&fb_id=${id}`
       ),
     })
       .then((response) => {
@@ -821,9 +821,10 @@ const AddTrainingFeedback = () => {
                         <tbody className="text-start">
                           {allSubFeedback &&
                             currentItems.map((data, index) => {
+                              const adjustedIndex = indexOfFirstItem + index;
                               return (
-                                <tr key={index}>
-                                  <td>{index + 1}</td>
+                                <tr key={adjustedIndex}>
+                                 <td>{indexOfFirstItem + index + 1}</td>
                                   <td>{data.f_trnNo}</td>
                                   <td>{data.f_trnType}</td>
                                   <td>{data.f_empCode}</td>
@@ -911,13 +912,13 @@ const AddTrainingFeedback = () => {
                                     <Edit
                                       className="text-success mr-2"
                                       type="button"
-                                      onClick={() => getSubFeedback(index)}
+                                      onClick={() => getSubFeedback(adjustedIndex)}
                                     />
                                     <Delete
                                       className="text-danger"
                                       type="button"
                                       style={{ marginLeft: "0.5rem" }}
-                                      onClick={() => deleteSubFeedback(index)}
+                                      onClick={() => deleteSubFeedback(adjustedIndex)}
                                     />
                                   </td>
                                 </tr>

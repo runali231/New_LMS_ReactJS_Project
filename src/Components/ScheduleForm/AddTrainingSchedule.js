@@ -321,6 +321,8 @@ const AddTrainingSchedule = () => {
   // };
   const getSingleHrTraining = (index, tsId) => {
     console.log("Received index:", index);
+    const adjustedIndex = indexOfFirstItem + index;
+    console.log("Received index:", adjustedIndex);
     setEditIndex(() => {
       console.log("current update editIndex1:", index);
       console.log("current update editIndex3:", editIndex);
@@ -341,6 +343,8 @@ const AddTrainingSchedule = () => {
   const getSingleHodTraining = (index, tsId) => {
     setSelectedRowIndex(index);
     console.log("Received index:", index);
+    const adjustedIndex = indexOfFirstItem + index;
+    console.log("Received index:", adjustedIndex);
     setTss_id(tsId);
     setEditIndex(() => {
       console.log("current update editIndex1:", index);
@@ -998,147 +1002,152 @@ const AddTrainingSchedule = () => {
                             </tr>
                           ) : (
                             allSubTrainingSchedule &&
-                            currentItems.map((data, index) => (
-                              <tr key={index}>
-                                <td>{indexOfFirstItem + index + 1}</td>
-                                <td>{data.tss_emp_code}</td>
-                                <td>{data.tss_emp_name}</td>
-                                <td>
-                                  {data.tss_topic
-                                    .split(/,(?=[a-zA-Z])/)
-                                    .map((item, index) => (
-                                      <React.Fragment key={index}>
-                                        {item.trim()}
-                                        <br />
-                                      </React.Fragment>
-                                    ))}
-                                </td>
-                                <td>{data.tss_traning_attend}</td>
-                                <td>{data.tss_traning_des}</td>
-                                <td>{data.tss_sch_hour}</td>
-                                <td>{data.tss_actual_attend}</td>
-                                <td>{data.tss_com_status}</td>
-                                <td>{data.tss_to_marks}</td>
-                                <td>{data.tss_marks_obt}</td>
-                                <td>{data.tss_traning_status}</td>
-                                <td>{data.tss_re_traning_req}</td>
-                                <td>
-                                  {data.tss_traning_cert !== null &&
-                                    data.tss_id && (
+                            currentItems.map((data, index) => {
+                              const adjustedIndex = indexOfFirstItem + index;
+                              return (
+                                <tr key={adjustedIndex}>
+                                  
+                                  <td>{indexOfFirstItem + index + 1}</td>
+                                  <td>{data.tss_emp_code}</td>
+                                  <td>{data.tss_emp_name}</td>
+                                  <td>
+                                    {data.tss_topic
+                                      .split(/,(?=[a-zA-Z])/)
+                                      .map((item, index) => (
+                                        <React.Fragment key={adjustedIndex}>
+                                          {item.trim()}
+                                          <br />
+                                        </React.Fragment>
+                                      ))}
+                                  </td>
+                                  <td>{data.tss_traning_attend}</td>
+                                  <td>{data.tss_traning_des}</td>
+                                  <td>{data.tss_sch_hour}</td>
+                                  <td>{data.tss_actual_attend}</td>
+                                  <td>{data.tss_com_status}</td>
+                                  <td>{data.tss_to_marks}</td>
+                                  <td>{data.tss_marks_obt}</td>
+                                  <td>{data.tss_traning_status}</td>
+                                  <td>{data.tss_re_traning_req}</td>
+                                  <td>
+                                    {data.tss_traning_cert !== null &&
+                                      data.tss_id && (
+                                        <span
+                                          type="button"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#viewModal"
+                                          onClick={() =>
+                                            ViewModal(data.tss_traning_cert)
+                                          }
+                                        >
+                                          {fileName ===
+                                          data.tss_traning_cert ? (
+                                            fileName
+                                          ) : (
+                                            <EyeFill
+                                              className="text-success"
+                                              style={{ fontSize: "23px" }}
+                                            />
+                                          )}
+                                        </span>
+                                      )}
+                                    {!data.tss_traning_cert && (
                                       <span
                                         type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#viewModal"
-                                        onClick={() =>
-                                          ViewModal(data.tss_traning_cert)
-                                        }
+                                        // data-bs-toggle="modal"
+                                        // data-bs-target="#viewModal"
                                       >
-                                        {fileName === data.tss_traning_cert ? (
-                                          fileName
-                                        ) : (
-                                          // `File uploaded`
-                                          // {fileName}
-                                          <EyeFill
-                                            className="text-success"
-                                            style={{ fontSize: "23px" }}
-                                          />
-                                        )}
+                                        File not uploaded
                                       </span>
                                     )}
-                                  {!data.tss_traning_cert && (
-                                    <span
-                                      type="button"
-                                      // data-bs-toggle="modal"
-                                      // data-bs-target="#viewModal"
-                                    >
-                                      File not uploaded
-                                    </span>
-                                  )}
-                                </td>
-                                <td>{data.tss_status}</td>
-                                <td>{data.tss_remark}</td>
+                                  </td>
+                                  <td>{data.tss_status}</td>
+                                  <td>{data.tss_remark}</td>
 
-                                <td>
-                                  {action1 === "Approved By Manager" ? (
-                                    <>
-                                      <Edit
-                                        className="text-success mr-2"
-                                        type="button"
-                                        onClick={() => {
-                                          getSingleHrTraining(
-                                            index,
-                                            data.tss_id
-                                          );
-                                          FirstHandleShow();
-                                        }}
-                                      />
-                                      <Edit
-                                        className="text-primary mr-2"
-                                        type="button"
-                                        onClick={() => {
-                                          getSingleHodTraining(
-                                            index,
-                                            data.tss_id
-                                          );
-                                          SecondHandleShow();
-                                        }}
-                                        disabled={isAddingTraining}
-                                      />
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Edit
-                                        className="text-success mr-2"
-                                        style={{
-                                          opacity: 0.5,
-                                          pointerEvents: "none",
-                                        }}
-                                        type="button"
-                                        onClick={() => {
-                                          getSingleHrTraining(
-                                            index,
-                                            data.tss_id
-                                          );
-                                          FirstHandleShow();
-                                        }}
-                                        disabled={true}
-                                      />
-                                      <Edit
-                                        className="text-primary mr-2"
-                                        type="button"
-                                        style={{
-                                          opacity: 0.5,
-                                          pointerEvents: "none",
-                                        }}
-                                        onClick={() => {
-                                          getSingleHodTraining(
-                                            index,
-                                            data.tss_id
-                                          );
-                                          SecondHandleShow();
-                                        }}
-                                        disabled={true}
-                                      />
-                                    </>
-                                  )}
-                                  <Delete
-                                    className="text-danger"
-                                    type="button"
-                                    style={{ marginLeft: "0.5rem" }}
-                                    onClick={() =>
-                                      deleteTrainingSchedule(data.tss_id)
-                                    }
-                                  />
-                                </td>
-                              </tr>
-                            ))
+                                  <td>
+                                    {action1 === "Approved By Manager" ? (
+                                      <>
+                                        <Edit
+                                          className="text-success mr-2"
+                                          type="button"
+                                          onClick={() => {
+                                            getSingleHrTraining(
+                                              adjustedIndex,
+                                              data.tss_id
+                                            );
+                                            FirstHandleShow();
+                                          }}
+                                        />
+                                        <Edit
+                                          className="text-primary mr-2"
+                                          type="button"
+                                          onClick={() => {
+                                            getSingleHodTraining(
+                                              adjustedIndex,
+                                              data.tss_id
+                                            );
+                                            SecondHandleShow();
+                                          }}
+                                          disabled={isAddingTraining}
+                                        />
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Edit
+                                          className="text-success mr-2"
+                                          style={{
+                                            opacity: 0.5,
+                                            pointerEvents: "none",
+                                          }}
+                                          type="button"
+                                          onClick={() => {
+                                            getSingleHrTraining(
+                                              adjustedIndex,
+                                              data.tss_id
+                                            );
+                                            FirstHandleShow();
+                                          }}
+                                          disabled={true}
+                                        />
+                                        <Edit
+                                          className="text-primary mr-2"
+                                          type="button"
+                                          style={{
+                                            opacity: 0.5,
+                                            pointerEvents: "none",
+                                          }}
+                                          onClick={() => {
+                                            getSingleHodTraining(
+                                              adjustedIndex,
+                                              data.tss_id
+                                            );
+                                            SecondHandleShow();
+                                          }}
+                                          disabled={true}
+                                        />
+                                      </>
+                                    )}
+                                    <Delete
+                                      className="text-danger"
+                                      type="button"
+                                      style={{ marginLeft: "0.5rem" }}
+                                      onClick={() =>
+                                        deleteTrainingSchedule(data.tss_id)
+                                      }
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            })
                           )}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
                         <div className="col-lg-4 col-12 ">
-                          <h6 className="text-lg-start text-center">
-                            {/* Showing 1 to 3 of 3 entries */}
+                        <h6 className="text-lg-start text-center">
+                            Showing {indexOfFirstItem + 1} to{" "}
+                            {Math.min(indexOfLastItem, allSubTrainingSchedule.length)}{" "}
+                            of {allSubTrainingSchedule.length} entries
                           </h6>
                         </div>
                         <div className="col-lg-4 col-12"></div>

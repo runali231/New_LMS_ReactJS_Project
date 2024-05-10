@@ -478,16 +478,11 @@ const AddTrainingForm = () => {
 
   const getSingleTraining = (index) => {
     console.log("Received index:", index);
+    const adjustedIndex = indexOfFirstItem + index;
+    console.log("Received index:", adjustedIndex);
+
     getAllTrainingTopic();
-    // Update editIndex state synchronously with the provided index
-    // setEditIndex(() => {
-    //   console.log("current update editIndex1:", index);
-    //   console.log("current update editIndex3:", editIndex);
-    //   return index;
-    // });
-    setEditIndex(index);
-    // Update editIndex state
-    // console.log("current update editIndex3:", editIndex);
+    setEditIndex(adjustedIndex);
     const formatDate = (dateString) => {
       const date = new Date(dateString);
       const year = date.getFullYear();
@@ -497,7 +492,6 @@ const AddTrainingForm = () => {
     };
 
     const trainingToEdit = allByDepartments[index];
-
     const var1 = trainingToEdit.td_date_training.split(" ")[0];
     const var2 = formatDate(var1);
     console.log(trainingToEdit.td_dept, "418");
@@ -547,6 +541,7 @@ const AddTrainingForm = () => {
     setTrainingTopic(selectedTrainingTopic1);
     console.log(selectedTrainingTopic1, "482");
   };
+
   useEffect(() => {
     console.log("before useEffect:", editIndex);
     setEditIndex(editIndex);
@@ -1034,8 +1029,9 @@ const AddTrainingForm = () => {
                           ) : (
                             allByDepartments &&
                             currentItems.map((departmentItem, index) => {
+                              const adjustedIndex = indexOfFirstItem + index;
                               return (
-                                <tr key={index}>
+                                <tr key={adjustedIndex}>
                                   <td>{indexOfFirstItem + index + 1}</td>
                                   <td>{departmentItem.td_req_dept}</td>
                                   <td>{departmentItem.td_emp_code}</td>
@@ -1099,7 +1095,7 @@ const AddTrainingForm = () => {
                                       className="text-success mr-2"
                                       type="button"
                                       onClick={() => {
-                                        getSingleTraining(index);
+                                        getSingleTraining(adjustedIndex);
                                         handleShow();
                                       }}
                                       // data-bs-toggle="modal"
@@ -1109,7 +1105,7 @@ const AddTrainingForm = () => {
                                       className="text-danger"
                                       type="button"
                                       style={{ marginLeft: "0.5rem" }}
-                                      onClick={() => deleteTraining(index)}
+                                      onClick={() => deleteTraining(adjustedIndex)}
                                     />
                                   </td>
                                 </tr>
@@ -1120,12 +1116,16 @@ const AddTrainingForm = () => {
                       </Table>
 
                       <div className="row">
-                        <div className="col-lg-4">
-                          {/* <h6>Showing 1 to 3 of 3 entries</h6> */}
+                        <div className="col-lg-4 col-12 mt-3">
+                          <h6 className="text-lg-start text-center">
+                            Showing {indexOfFirstItem + 1} to{" "}
+                            {Math.min(indexOfLastItem, allByDepartments.length)}{" "}
+                            of {allByDepartments.length} entries
+                          </h6>
                         </div>
                         <div className="col-lg-4"></div>
                         <div className="col-lg-4 mt-3">
-                        <nav aria-label="Page navigation example">
+                          <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
                               <li className="page-item">
                                 <button
@@ -1146,15 +1146,13 @@ const AddTrainingForm = () => {
                                   const isLastPage =
                                     pageNumber ===
                                     Math.ceil(
-                                      allByDepartments.length /
-                                        itemsPerPage
+                                      allByDepartments.length / itemsPerPage
                                     );
                                   const shouldDisplayPage =
                                     pageNumber >= 1 &&
                                     pageNumber <=
                                       Math.ceil(
-                                        allByDepartments.length /
-                                          itemsPerPage
+                                        allByDepartments.length / itemsPerPage
                                       );
                                   const isCurrentPage =
                                     currentPage === pageNumber;
@@ -1187,8 +1185,7 @@ const AddTrainingForm = () => {
                                   disabled={
                                     currentPage ===
                                     Math.ceil(
-                                      allByDepartments.length /
-                                        itemsPerPage
+                                      allByDepartments.length / itemsPerPage
                                     )
                                   }
                                   aria-label="Next"

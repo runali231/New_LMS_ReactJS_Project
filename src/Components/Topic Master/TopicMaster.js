@@ -215,14 +215,14 @@ const TopicMaster = () => {
                             />
                             {toggleActive === true ? (
                               <Delete
-                                className="text-danger"
+                                className="text-danger d-none"
                                 type="button"
                                 style={{ marginLeft: "0.5rem" }}
                                 onClick={() => DeleteTopics(data.t_id)}
                               />
                             ) : (
                               <Delete
-                                className="text-danger"
+                                className="text-danger d-none"
                                 type="button"
                                 // style={{ marginLeft: "0.5rem" }}
                                 style={{
