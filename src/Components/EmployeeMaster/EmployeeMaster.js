@@ -251,7 +251,7 @@ const EmployeeMaster = () => {
                               onClick={() => GetEmployee(data.emp_id)}
                             />
                             <Delete
-                              className="text-danger"
+                              className="text-danger d-none"
                               type="button"
                               style={{ marginLeft: "0.5rem" }}
                               onClick={() => DeleteEmployee(data.emp_id)}

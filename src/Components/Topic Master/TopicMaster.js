@@ -109,7 +109,7 @@ const TopicMaster = () => {
                     <h4 className="card-title fw-bold">Topic Master</h4>
                   </div>
                   <div className="col-auto d-flex flex-wrap">
-                    <div className="form-check form-switch mt-2 pt-1">
+                    <div className="form-check form-switch mt-2 pt-1 d-none">
                       <input
                         className="form-check-input"
                         type="checkbox"

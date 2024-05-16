@@ -13,6 +13,7 @@ import {
 } from "../PaginationUtils";
 import { getAllDepartment } from "../Api/DesignationAndDepartment";
 import UserId from "../UserId";
+import ErrorHandler from "../ErrorHandler";
 
 const AddTopic = () => {
   const [subjects, setSubjects] = useState([]);
@@ -30,10 +31,11 @@ const AddTopic = () => {
   const [subject, setSubject] = useState("");
   const [allSubject, setAllSubject] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(10);
   const handleClose = () => setModalOpen(false);
   const headerCellStyle = {
     backgroundColor: "rgb(27, 90, 144)", // Replace with desired background color
@@ -108,6 +110,8 @@ const AddTopic = () => {
         })
         .catch((error) => {
           console.log(error);
+          let errors = ErrorHandler(error);
+          alert(errors);
         });
     }
   };
@@ -162,6 +166,8 @@ const AddTopic = () => {
     setSubject(subjectToEdit.s_subject);
     setContent(subjectToEdit.s_content);
     setSubContent(subjectToEdit.s_subcontent);
+    const adjustedIndex = indexOfFirstItem + index;
+    console.log("Received index:", adjustedIndex);
     setEditIndex(index);
   };
 
@@ -180,6 +186,12 @@ const AddTopic = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSelectedItemsPerPage(parseInt(e.target.value)); // Update selectedItemsPerPage state
+    setItemsPerPage(parseInt(e.target.value)); // Update itemsPerPage state
+    setCurrentPage(1); // Reset currentPage to 1 when changing items per page
+  };
+
   const resetForm = () => {
     setSubject("");
     setContent("");
@@ -188,6 +200,8 @@ const AddTopic = () => {
   };
 
   const deleteSubject = (index) => {
+    const adjustedIndex = indexOfFirstItem + index;
+    console.log("Received index:", adjustedIndex);
     const updatedSubjects = [...subjects];
     updatedSubjects.splice(index, 1);
     setSubjects(updatedSubjects);
@@ -196,7 +210,7 @@ const AddTopic = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allSubject.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = subjects.slice(indexOfFirstItem, indexOfLastItem);
   return (
     <>
       <div className="container-fluid">
@@ -393,11 +407,12 @@ const AddTopic = () => {
                           <select
                             className="form-select w-auto"
                             aria-label="Default select example"
+                            value={selectedItemsPerPage}
+                            onChange={handleChange}
                           >
-                            <option defaultValue>10</option>
-                            <option value="1">10</option>
-                            <option value="2">50</option>
-                            <option value="3">100</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                           </select>
                           &nbsp;&nbsp;
                           <h6 className="mt-3">entries</h6>
@@ -471,41 +486,48 @@ const AddTopic = () => {
                               </td>
                             </tr>
                           ) : (
-                            subjects.map((data, index) => (
-                              <tr key={index}>
-                                <td>
-                                  {(currentPage - 1) * itemsPerPage + index + 1}
-                                </td>
-                                <td>{data.s_subject}</td>
-                                <td>{data.s_content}</td>
-                                <td>{data.s_subcontent}</td>
-                                <td>
-                                  <Edit
-                                    className="text-success mr-2"
-                                    onClick={() => {
-                                      editSubject(index);
-                                      setModalOpen(true);
-                                    }}
-                                    type="button"
-                                  />
-                                  <Delete
-                                    className="text-danger"
-                                    type="button"
-                                    style={{ marginLeft: "0.5rem" }}
-                                    onClick={() => deleteSubject(index)}
-                                  />
-                                </td>
-                              </tr>
-                            ))
+                            currentItems.map((data, index) => {
+                              const adjustedIndex = indexOfFirstItem + index;
+                              return (
+                                <tr key={index}>
+                                  <td>
+                                    {(currentPage - 1) * itemsPerPage +
+                                      index +
+                                      1}
+                                  </td>
+                                  <td>{data.s_subject}</td>
+                                  <td>{data.s_content}</td>
+                                  <td>{data.s_subcontent}</td>
+                                  <td>
+                                    <Edit
+                                      className="text-success mr-2"
+                                      onClick={() => {
+                                        editSubject(adjustedIndex);
+                                        setModalOpen(true);
+                                      }}
+                                      type="button"
+                                    />
+                                    <Delete
+                                      className="text-danger"
+                                      type="button"
+                                      style={{ marginLeft: "0.5rem" }}
+                                      onClick={() =>
+                                        deleteSubject(adjustedIndex)
+                                      }
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            })
                           )}
                         </tbody>
                       </Table>
                       <div className="row mt-4 mt-xl-3">
-                        <div className="col-lg-4 col-12 ">
+                        <div className="col-lg-4 col-12">
                           <h6 className="text-lg-start text-center">
                             Showing {indexOfFirstItem + 1} to{" "}
-                            {Math.min(indexOfLastItem, allSubject.length)} of{" "}
-                            {allSubject.length} entries
+                            {Math.min(indexOfLastItem, subjects.length)} of{" "}
+                            {subjects.length} entries
                           </h6>
                         </div>
                         <div className="col-lg-4 col-12"></div>
@@ -526,7 +548,7 @@ const AddTopic = () => {
                               </li>
                               {calculatePaginationRange(
                                 currentPage,
-                                allSubject,
+                                subjects,
                                 itemsPerPage
                               ).map((number) => (
                                 <li
@@ -551,14 +573,14 @@ const AddTopic = () => {
                                   onClick={() =>
                                     handleNext(
                                       currentPage,
-                                      allSubject,
+                                      subjects,
                                       itemsPerPage,
                                       setCurrentPage
                                     )
                                   }
                                   disabled={
                                     currentPage ===
-                                    Math.ceil(allSubject.length / itemsPerPage)
+                                    Math.ceil(subjects.length / itemsPerPage)
                                   }
                                   aria-label="Next"
                                 >

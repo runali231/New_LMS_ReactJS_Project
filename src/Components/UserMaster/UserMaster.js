@@ -630,7 +630,7 @@ const UserMaster = () => {
           <Row className="mt-4">
             <Col xs={12} sm={12} md={12} lg={6}>
               <div className="form-group form-group-sm">
-                <label className="control-label fw-bold">Departments:</label>{" "}
+                <label className="control-label fw-bold">Department:</label>{" "}
                 {/* <span className="text-danger fw-bold">*</span> */}
                 <select
                   className="form-select"

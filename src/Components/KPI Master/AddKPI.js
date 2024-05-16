@@ -279,7 +279,7 @@ const AddKPI = () => {
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6 mt-4 mt-lg-0">
                     <div className="form-group form-group-sm">
                       <label className="control-label fw-bold">
-                        Departments:
+                        Department:
                       </label>{" "}
                       <span className="text-danger fw-bold">*</span>
                       <select

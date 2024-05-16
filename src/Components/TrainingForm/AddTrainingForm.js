@@ -334,23 +334,51 @@ const AddTrainingForm = () => {
       });
   };
 
+  // const getAllTrainingTopic = () => {
+  //   axios
+  //     .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
+  //     .then((response) => {
+  //       console.log("response 328", response.data.data);
+  //       const trainingTopics = response.data.data.map((item, index) => ({
+  //         value: item.t_id,
+  //         label: item.t_description,
+  //       }));
+  //       setSelectedTrainingTopic(trainingTopics);
+  //       console.log(trainingTopic, "training topic 335");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   const getAllTrainingTopic = () => {
     axios
       .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
       .then((response) => {
-        console.log("response 328", response.data.data);
-        const trainingTopics = response.data.data.map((item, index) => ({
+        // Extract data from the response
+        const responseData = response.data;
+        console.log("Response Data:", responseData);
+  
+        // Extract topics from the response data
+        const topics = responseData.data;
+  
+        // Map topics to format required for selectedTrainingTopic
+        const trainingTopics = topics.map((item) => ({
           value: item.t_id,
           label: item.t_description,
         }));
+        console.log("Training Topics:", trainingTopics);
+  
+        // Update the state with the new training topics
         setSelectedTrainingTopic(trainingTopics);
-        console.log(trainingTopic, "training topic 335");
+        console.log("Selected Training Topics:", selectedTrainingTopic);
       })
       .catch((error) => {
-        console.log(error);
+        // Handle errors
+        console.log("Error:", error);
       });
   };
-
+  
+  
   const handleTopics = (selected) => {
     const selectedData = selected.map((option) => ({
       value: option.value,
