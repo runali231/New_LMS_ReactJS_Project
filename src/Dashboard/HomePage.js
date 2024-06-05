@@ -4,28 +4,8 @@ import "../assets1/plugins/morris/morris.css";
 import "../assets1/css/font-awesome.min.css";
 import "../assets1/css/line-awesome.min.css";
 import { NavLink } from "react-bootstrap";
-// import Chart from 'chart.js/auto';
-// import "../assets1/js/chart.js"
-// import "../assets1/plugins/morris/morris.min.js"
-// import "../assets1/plugins/raphael/raphael.min.js"
-// import "../assets1/js/app.js"
-// import "../assets1/js/jquery-3.5.1.min.js"
 
 const HomePage = () => {
-  // const [roleId, setRoleId] = useState("");
-  // const storedRoleId = localStorage.getItem("RoleId");
-  // console.log(storedRoleId, "StoredId");
-  // useEffect(() => {
-  //   const storedRoleId = localStorage.getItem("RoleId");
-  //   console.log(storedRoleId, "StoredId1");
-  //   if (storedRoleId) {
-  //     setRoleId(storedRoleId);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("Role ID:", roleId);
-  // }, [roleId]);
   const [roleId, setRoleId] = useState("");
   
   useEffect(() => {

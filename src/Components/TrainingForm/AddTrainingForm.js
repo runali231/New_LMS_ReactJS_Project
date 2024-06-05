@@ -26,6 +26,8 @@ const AddTrainingForm = () => {
   const [trainingDay, setTrainingDay] = useState("");
   const [action, setAction] = useState("");
   const [isEmployeeNameDisabled, setIsEmployeeNameDisabled] = useState(false);
+  const [isDesignationDisabled, setIsDesignationDisabled] = useState(false);
+  const [isDepartmentDisabled, setIsDepartmentDisabled] = useState(false);
   // const [isEmployeeNameEnabled, setIsEmployeeNameEnabled] = useState(true);
   const [departments, setDepartments] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState([]);
@@ -89,6 +91,7 @@ const AddTrainingForm = () => {
           console.log(response.data.data.tr_id, "trId");
           getAllTrainingTopic();
           getAllTraining();
+          getAllEmployee();
         })
         .catch((error) => {
           console.log(error);
@@ -229,15 +232,7 @@ const AddTrainingForm = () => {
 
   const GetAllByDepart = () => {
     console.log(departments);
-    // if (departments === "") {
-    //   alert("Please enter departments!");
-    // }
-    // else if (trainingDate === "") {
-    //   alert("Please enter training date!");
-    // } else if (trainingTopic === "") {
-    //   alert("Please enter training topic!");
-    // }
-    if (departments === "" || trainingDate === "" || trainingTopic === "") {
+    if (departments === "" || trainingTopic === "" || trainingDate === "" ) {
       alert("Please fill the details!");
     } else {
       axios
@@ -273,6 +268,54 @@ const AddTrainingForm = () => {
           // addSingleTraining()
           resetForm();
           handleClose();
+          getAllEmployee();
+        })
+        .catch((error) => {
+          console.log(error);
+          let errors = ErrorHandler(error);
+          alert(errors);
+        });
+    }
+  };
+
+  const GetAllByDepart1 = (currentTrainings) => {
+    console.log(departments);
+    if (departments === "" || trainingTopic === ""|| trainingDate === "" ) {
+      alert("Please fill the details!");
+    } else {
+      axios
+        .get(
+          new URL(
+            UrlData + `TrainingForm/GetAllByDepart?td_dept=${departments.value}`
+          )
+        )
+        .then((response) => {
+          console.log("response", response.data.data);
+          let data = response.data.data;
+          if (data.length === 0) {
+            alert("Employee not available in this department!");
+          } else {
+            const modifiedData = data.map((item) => ({
+              ...item,
+              td_req_dept: trainingDept,
+              td_date_training: trainingDate,
+              td_topic_training: trainingTopic
+                .map((item) => item.value)
+                .join(",")
+                .toString(),
+              td_topic_training_name: trainingTopic
+                .map((item) => item.label)
+                .join(",")
+                .toString(),
+              td_emp_code: item.td_emp_code.toString(),
+            }));
+            setAllByDepartments([...currentTrainings, ...modifiedData]);
+            console.log([...currentTrainings, ...modifiedData], "309");
+            alert("Training added successfully!");
+          }
+          resetForm();
+          handleClose();
+          getAllEmployee();
         })
         .catch((error) => {
           console.log(error);
@@ -286,10 +329,16 @@ const AddTrainingForm = () => {
     // const selectedValue = e.target.value;
     setDepartments(selected);
     console.log(selected);
-    setIsEmployeeNameDisabled(selected !== "");
+    // setIsEmployeeNameDisabled(selected !== "");
     getAllDepartment();
     getAllTrainingTopic();
   };
+  useEffect(() => {
+    if (departments.value !== "") {
+      GetEmployeeByDept();
+    }
+  }, [departments]);
+
   const getAllDepartment = () => {
     axios({
       method: "get",
@@ -307,6 +356,33 @@ const AddTrainingForm = () => {
         console.log(error);
       });
   };
+  const GetEmployeeByDept = () => {
+    axios
+      .get(
+        new URL(
+          UrlData + `TrainingForm/GetAllByDepart?td_dept=${departments.value}`
+        )
+      )
+      .then((response) => {
+        console.log("response GetEmployeeByDept", response.data.data);
+        const temp = response.data.data.map((employee) => ({
+          value: employee.td_emp_code,
+          label: employee.td_emp_code,
+        }));
+        // setEmpCodeOptions(temp);
+        setEmpCodeOptions([
+          { value: "select_all", label: "Select All" },
+          ...temp,
+        ]);
+        setIsDesignationDisabled(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        let errors = ErrorHandler(error);
+        alert(errors);
+      });
+  };
+
   const handleDesignation = (selectedValue) => {
     // const selectedValue = e.target.value;
     setDesignation(selectedValue);
@@ -354,21 +430,14 @@ const AddTrainingForm = () => {
     axios
       .get(new URL(UrlData + `TopicMaster/GetAllTopics?t_isactive=1`))
       .then((response) => {
-        // Extract data from the response
         const responseData = response.data;
         console.log("Response Data:", responseData);
-  
-        // Extract topics from the response data
         const topics = responseData.data;
-  
-        // Map topics to format required for selectedTrainingTopic
         const trainingTopics = topics.map((item) => ({
           value: item.t_id,
           label: item.t_description,
         }));
         console.log("Training Topics:", trainingTopics);
-  
-        // Update the state with the new training topics
         setSelectedTrainingTopic(trainingTopics);
         console.log("Selected Training Topics:", selectedTrainingTopic);
       })
@@ -377,8 +446,7 @@ const AddTrainingForm = () => {
         console.log("Error:", error);
       });
   };
-  
-  
+
   const handleTopics = (selected) => {
     const selectedData = selected.map((option) => ({
       value: option.value,
@@ -420,33 +488,208 @@ const AddTrainingForm = () => {
     }
   };
 
-  // const getByTime = () => {
-  //   console.log(trainingTopic.value, "360");
-  //   axios
-  //     .get(
-  //       new URL(
-  //         UrlData +
-  //           `TrainingForm/GetByTopic?tr_topic_training=${trainingTopic.value}`
+  // const addSingleTraining = () => {
+  //   let data = [];
+  //   if (Array.isArray(trainingTopic)) {
+  //     data = trainingTopic.map((item) => ({
+  //       value: item.value,
+  //       label: item.label,
+  //     }));
+  //   } else {
+  //     console.error("trainingTopic is not an array.");
+  //   }
+  //   console.log(designation, "499")
+  //   if (selectedOption === "" || data.length <= 0) {
+  //     alert("Please fill the details!");
+  //   } else {
+  //     const newTraining = {
+  //       td_dept: departments.value.toString(),
+  //       td_des: designation.label,
+  //       // td_emp_des: designation.value.toString(),
+  //       td_emp_des: designation ? designation.value.toString() : null,
+  //       td_emp_code: selectedOption ? selectedOption.value.toString() : null,
+  //       td_emp_name: selectedNameOption
+  //         ? selectedNameOption.value.toString()
+  //         : null,
+  //       td_req_dept: trainingDept,
+  //       td_date_training: trainingDate,
+  //       td_topic_training: data.map((item) => item.value).join(","),
+  //       td_topic_training_name: data.map((item) => item.label).join(","),
+  //     };
 
-  //       )
-  //     )
-  //     .then((response) => {
-  //       console.log("get time", response.data.data.tr_hours);
-  //       setTrainingHours(response.data.data.tr_hours);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
+  //     // Updating state with new training entry
+  //     setAllByDepartments((prevAllByDepartments) => [
+  //       ...prevAllByDepartments,
+  //       newTraining,
+  //     ]);
+  //     handleClose();
+  //     alert("Training added successfully!");
+  //     // Logging the updated allByDepartments state
+  //     console.log(allByDepartments);
+
+  //     // Resetting the form fields
+  //     resetForm();
+  //     getAllEmployee();
+  //   }
+  // };
+  // const addSingleTraining = () => {
+  //   let data = [];
+  //   if (Array.isArray(trainingTopic)) {
+  //     data = trainingTopic.map((item) => ({
+  //       value: item.value,
+  //       label: item.label,
+  //     }));
+  //   } else {
+  //     console.error("trainingTopic is not an array.");
+  //   }
+
+  //   console.log(designation, "499");
+  //   if (!selectedOption || data.length <= 0) {
+  //     alert("Please fill the details!");
+  //   } else {
+  //     const newTraining = {
+  //       td_dept: departments ? departments.value.toString() : "",
+  //       td_des: designation && designation.length > 0 ? designation.map(des => des.label).join(",") : "",
+  //       td_emp_des: designation && designation.length > 0 ? designation.map(des => des.value ? des.value.toString() : "").join(",") : null,
+  //       td_emp_code: selectedOption && selectedOption.length > 0 ? selectedOption.map(opt => opt.value ? opt.value.toString() : "").join(",") : null,
+  //       td_emp_name: selectedNameOption ? selectedNameOption.value ? selectedNameOption.value.toString() : null : null,
+  //       td_req_dept: trainingDept,
+  //       td_date_training: trainingDate,
+  //       td_topic_training: data.map((item) => item.value).join(","),
+  //       td_topic_training_name: data.map((item) => item.label).join(","),
+  //     };
+
+  //     setAllByDepartments((prevAllByDepartments) => [
+  //       ...prevAllByDepartments,
+  //       newTraining,
+  //     ]);
+  //     handleClose();
+  //     alert("Training added successfully!");
+  //     console.log(allByDepartments);
+
+  //     resetForm();
+  //     getAllEmployee();
+  //   }
+  // };
+  // const addSingleTraining = () => {
+  //   let data = [];
+  //   if (Array.isArray(trainingTopic)) {
+  //     data = trainingTopic.map((item) => ({
+  //       value: item.value,
+  //       label: item.label,
+  //     }));
+  //   } else {
+  //     console.error("trainingTopic is not an array.");
+  //   }
+
+  //   console.log(designation, "499");
+  //   if (!selectedOption || data.length <= 0) {
+  //     alert("Please fill the details!");
+  //   } else {
+  //     const newTrainings = selectedOption.map((option) => {
+  //       const empCode = option.value;
+  //       return {
+  //         td_dept: departments ? departments.value.toString() : "",
+  //         // td_des:
+  //         //   designation && designation.length > 0
+  //         //     ? designation.map((des) => des.label).join(",")
+  //         //     : "",
+  //             td_des:
+  //             designation && designation.length > 0
+  //               ? designation.map((des) => des.label)
+  //               : "",
+  //         // td_des: designation.label,
+  //         // td_emp_des:
+  //         //   designation && designation.length > 0
+  //         //     ? designation
+  //         //         .map((des) => (des.value ? des.value.toString() : ""))
+  //         //         .join(",")
+  //         //     : null,
+  //          td_emp_des:
+  //           designation && designation.length > 0
+  //             ? designation
+  //                 .map((des) => (des.value ? des.value.toString() : ""))
+
+  //             : null,
+  //         // td_emp_des: designation.value,
+  //         td_emp_code: empCode ? empCode.toString() : null,
+  //         td_emp_name: selectedNameOption
+  //           ? selectedNameOption.value
+  //             ? selectedNameOption.value.toString()
+  //             : null
+  //           : null,
+  //         td_req_dept: trainingDept,
+  //         td_date_training: trainingDate,
+  //         td_topic_training: data.map((item) => item.value).join(","),
+  //         td_topic_training_name: data.map((item) => item.label).join(","),
+  //       };
   //     });
+
+  //     setAllByDepartments((prevAllByDepartments) => [
+  //       ...prevAllByDepartments,
+  //       ...newTrainings,
+  //     ]);
+  //     handleClose();
+  //     alert("Training added successfully!");
+  //     console.log(allByDepartments);
+
+  //     resetForm();
+  //     getAllEmployee();
+  //   }
+  // };
+  // const addSingleTraining = () => {
+  //   let data = [];
+  //   if (Array.isArray(trainingTopic)) {
+  //     data = trainingTopic.map((item) => ({
+  //       value: item.value,
+  //       label: item.label,
+  //     }));
+  //   } else {
+  //     console.error("trainingTopic is not an array.");
+  //   }
+
+  //   console.log(designation, "499");
+  //   if (!selectedOption || data.length <= 0) {
+  //     alert("Please fill the details!");
+  //   } else {
+  //     const newTrainings = [];
+
+  //     selectedOption.forEach((option, index) => {
+  //       const empCode = option.value;
+  //       const des = designation[index]; // Pair the designation with the employee based on index
+  //       if (des) { // Check if there is a corresponding designation
+  //         const newTraining = {
+  //           td_dept: departments ? departments.value.toString() : "",
+  //           td_des: des.label,
+  //           td_emp_des: des.value ? des.value.toString() : "",
+  //           td_emp_code: empCode ? empCode.toString() : null,
+  //           td_emp_name: selectedNameOption
+  //             ? selectedNameOption.value
+  //               ? selectedNameOption.value.toString()
+  //               : null
+  //             : null,
+  //           td_req_dept: trainingDept,
+  //           td_date_training: trainingDate,
+  //           td_topic_training: data.map((item) => item.value).join(","),
+  //           td_topic_training_name: data.map((item) => item.label).join(","),
+  //         };
+  //         newTrainings.push(newTraining);
+  //       }
+  //     });
+
+  //     setAllByDepartments((prevAllByDepartments) => [
+  //       ...prevAllByDepartments,
+  //       ...newTrainings,
+  //     ]);
+  //     handleClose();
+  //     alert("Training added successfully!");
+  //     console.log(allByDepartments);
+
+  //     resetForm();
+  //     getAllEmployee();
+  //   }
   // };
   const addSingleTraining = () => {
-    // Logging the training topic
-    // console.log(trainingTopic);
-
-    // Mapping training topic data
-    // const data = trainingTopic.map((item) => ({
-    //   value: item.value,
-    //   label: item.label,
-    // }));
     let data = [];
     if (Array.isArray(trainingTopic)) {
       data = trainingTopic.map((item) => ({
@@ -455,47 +698,48 @@ const AddTrainingForm = () => {
       }));
     } else {
       console.error("trainingTopic is not an array.");
-      // Handle the case when trainingTopic is not an array
-      // You might want to provide a default value or handle it differently based on your requirements.
     }
-    // Check if any required field is empty
-    // if (departments === "") {
-    //   alert("Please select departments!");
-    // } else
-    // if (selectedOption === "") {
-    //   alert("Please select employee code!");
-    // } else if (trainingDate === "") {
-    //   alert("Please select training date!");
-    // } else if (data.length <= 0) {
-    //   alert("Please select topics for training required!");
-    // }
-    if (selectedOption === "" || trainingDate === "" || data.length <= 0) {
+
+    console.log(designation, "499");
+    if (!selectedOption || data.length <= 0 || trainingDate === "" ) {
       alert("Please fill the details!");
     } else {
-      const newTraining = {
-        td_dept: departments.value.toString(),
-        td_des: designation.label,
-        td_emp_des: designation.value.toString(),
-        td_emp_code: selectedOption.value.toString(),
-        td_emp_name: selectedNameOption.value.toString(),
-        td_req_dept: trainingDept,
-        td_date_training: trainingDate,
-        td_topic_training: data.map((item) => item.value).join(","),
-        td_topic_training_name: data.map((item) => item.label).join(","),
-      };
+      const newTrainings = [];
 
-      // Updating state with new training entry
+      selectedOption.forEach((option, index) => {
+        const empCode = option.value;
+        const des = designation[index]; // Pair the designation with the employee based on index
+        if (des) {
+          // Check if there is a corresponding designation
+          const empName = selectedNameOption[index]?.label || ""; // Get the corresponding employee name from selectedNameOption
+          const dpt = departments[index]?.label || "";
+          console.log(departments, "712");
+          const newTraining = {
+            // td_dept: departments ? departments.value.toString() : "",
+            td_dept: dpt,
+            td_des: des.label,
+            td_emp_des: des.value ? des.value.toString() : "",
+            td_emp_code: empCode ? empCode.toString() : null,
+            td_emp_name: empName, // Bind the employee name directly to td_emp_name
+            td_req_dept: trainingDept,
+            td_date_training: trainingDate,
+            td_topic_training: data.map((item) => item.value).join(","),
+            td_topic_training_name: data.map((item) => item.label).join(","),
+          };
+          newTrainings.push(newTraining);
+        }
+      });
+
       setAllByDepartments((prevAllByDepartments) => [
         ...prevAllByDepartments,
-        newTraining,
+        ...newTrainings,
       ]);
       handleClose();
       alert("Training added successfully!");
-      // Logging the updated allByDepartments state
       console.log(allByDepartments);
 
-      // Resetting the form fields
       resetForm();
+      getAllEmployee();
     }
   };
 
@@ -504,13 +748,133 @@ const AddTrainingForm = () => {
     console.log("Inside useEffect:", editIndex);
   }, [editIndex]);
 
+  // const getSingleTraining = (index) => {
+  //   console.log("Received index:", index);
+  //   const adjustedIndex = indexOfFirstItem + index;
+  //   console.log("Received index:", adjustedIndex);
+
+  //   getAllTrainingTopic();
+  //   setEditIndex(adjustedIndex);
+  //   const formatDate = (dateString) => {
+  //     const date = new Date(dateString);
+  //     const year = date.getFullYear();
+  //     const month = String(date.getMonth() + 1).padStart(2, "0");
+  //     const day = String(date.getDate()).padStart(2, "0");
+  //     return `${year}-${month}-${day}`;
+  //   };
+
+  //   const trainingToEdit = allByDepartments[index];
+  //   const var1 = trainingToEdit.td_date_training.split(" ")[0];
+  //   const var2 = formatDate(var1);
+  //   console.log(trainingToEdit.td_dept, "418");
+  //   setDepartments({
+  //     value: trainingToEdit.td_dept,
+  //     label: trainingToEdit.td_dept,
+  //   });
+  //   setDesignation({
+  //     value: trainingToEdit.td_des,
+  //     label: trainingToEdit.td_des,
+  //   });
+  //   setSelectedOption({
+  //     value: trainingToEdit.td_emp_code,
+  //     label: trainingToEdit.td_emp_code,
+  //   });
+  //   setSelectedNameOption({
+  //     value: trainingToEdit.td_emp_name,
+  //     label: trainingToEdit.td_emp_name,
+  //   });
+  //   setTrainingDept(trainingToEdit.td_req_dept);
+  //   setTrainingDate(var2);
+
+  //   const topicValues = trainingToEdit.td_topic_training.split(",");
+  //   const topicLabels =
+  //     trainingToEdit.td_topic_training_name.split(/,(?=[a-zA-Z])/);
+
+  //   const maxLength = Math.max(topicValues.length, topicLabels.length);
+
+  //   const selectedTrainingTopic1 = [];
+  //   for (let i = 0; i < maxLength; i++) {
+  //     selectedTrainingTopic1.push({
+  //       value: topicValues[i] || "", // Use empty string if value is undefined
+  //       label: topicLabels[i] || "", // Use empty string if label is undefined
+  //     });
+  //   }
+
+  //   setTrainingTopic(selectedTrainingTopic1);
+  //   console.log(selectedTrainingTopic1, "482");
+  // };
+  //   const getSingleTraining = (index) => {
+  //     console.log("Received index:", index);
+  //     const adjustedIndex = indexOfFirstItem + index;
+  //     console.log("Received index:", adjustedIndex);
+  //     getAllEmployee();
+  //     getAllTrainingTopic();
+  //     setEditIndex(adjustedIndex);
+  //     const formatDate = (dateString) => {
+  //       const date = new Date(dateString);
+  //       const year = date.getFullYear();
+  //       const month = String(date.getMonth() + 1).padStart(2, "0");
+  //       const day = String(date.getDate()).padStart(2, "0");
+  //       return `${year}-${month}-${day}`;
+  //     };
+
+  //     const trainingToEdit = allByDepartments[index];
+  //     console.log(trainingToEdit.td_emp_code
+  // , "820");
+  //     const var1 = trainingToEdit.td_date_training.split(" ")[0];
+  //     const var2 = formatDate(var1);
+  //     console.log(trainingToEdit.td_dept, "418");
+  //     setDepartments({
+  //       value: trainingToEdit.td_dept,
+  //       label: trainingToEdit.td_dept,
+  //     });
+  //     setDesignation({
+  //       value: trainingToEdit.td_des,
+  //       label: trainingToEdit.td_des,
+  //     });
+
+  //     // Ensure selectedOption is set to an array containing the selected employee code object
+  //     setSelectedOption({
+  //           value: trainingToEdit.td_emp_code,
+  //           label: trainingToEdit.td_emp_code,
+  //         });
+
+  //     console.log(selectedOption, "482");
+  //     setSelectedOption(trainingToEdit.td_emp_code);
+  //     console.log(selectedOption, "835");
+  //     setSelectedNameOption({
+  //       value: trainingToEdit.td_emp_name,
+  //       label: trainingToEdit.td_emp_name,
+  //     });
+  //     setTrainingDept(trainingToEdit.td_req_dept);
+  //     setTrainingDate(var2);
+
+  //     const topicValues = trainingToEdit.td_topic_training.split(",");
+  //     const topicLabels =
+  //       trainingToEdit.td_topic_training_name.split(/,(?=[a-zA-Z])/);
+
+  //     const maxLength = Math.max(topicValues.length, topicLabels.length);
+
+  //     const selectedTrainingTopic1 = [];
+  //     for (let i = 0; i < maxLength; i++) {
+  //       selectedTrainingTopic1.push({
+  //         value: topicValues[i] || "", // Use empty string if value is undefined
+  //         label: topicLabels[i] || "", // Use empty string if label is undefined
+  //       });
+  //     }
+
+  //     setTrainingTopic(selectedTrainingTopic1);
+  //     console.log(selectedTrainingTopic1, "482");
+  //   };
   const getSingleTraining = (index) => {
+    getAllEmployee();
     console.log("Received index:", index);
     const adjustedIndex = indexOfFirstItem + index;
-    console.log("Received index:", adjustedIndex);
+    console.log("Adjusted index:", adjustedIndex);
 
     getAllTrainingTopic();
     setEditIndex(adjustedIndex);
+    setIsDepartmentDisabled(true);
     const formatDate = (dateString) => {
       const date = new Date(dateString);
       const year = date.getFullYear();
@@ -519,39 +883,50 @@ const AddTrainingForm = () => {
       return `${year}-${month}-${day}`;
     };
 
-    const trainingToEdit = allByDepartments[index];
+    const trainingToEdit = allByDepartments[adjustedIndex];
+    console.log(trainingToEdit, "trainingToEdit");
     const var1 = trainingToEdit.td_date_training.split(" ")[0];
     const var2 = formatDate(var1);
-    console.log(trainingToEdit.td_dept, "418");
+
     setDepartments({
       value: trainingToEdit.td_dept,
       label: trainingToEdit.td_dept,
     });
+
     setDesignation({
       value: trainingToEdit.td_des,
       label: trainingToEdit.td_des,
     });
-    setSelectedOption({
-      value: trainingToEdit.td_emp_code,
-      label: trainingToEdit.td_emp_code,
-    });
+
+    // Convert the emp code to an array if it's not already
+    // const empCodes = Array.isArray(trainingToEdit.td_emp_code)
+    //     ? trainingToEdit.td_emp_code
+    //     : [trainingToEdit.td_emp_code];
+
+    // // Filter empCodeOptions based on empCodes and set it as selectedOption
+    // const selectedOptions = empCodeOptions.filter(option =>
+    //     empCodes.includes(option.value)
+    // );
+
+    // setSelectedOption(selectedOptions);
+    // console.log(selectedOptions, "selectedOptions");
+    const empCodes = trainingToEdit.td_emp_code.split(",");
+
+    // Filter empCodeOptions based on empCodes and set it as selectedOption
+    const selectedOptions = empCodeOptions.filter((option) =>
+      empCodes.includes(option.value)
+    );
+
+    setSelectedOption(selectedOptions);
+    console.log(selectedOptions, "selectedOptions");
     setSelectedNameOption({
       value: trainingToEdit.td_emp_name,
       label: trainingToEdit.td_emp_name,
     });
+
     setTrainingDept(trainingToEdit.td_req_dept);
     setTrainingDate(var2);
 
-    //   const topicValues = trainingToEdit.td_topic_training.split(",");
-    //   const topicLabels = trainingToEdit.td_topic_training_name.split(",");
-
-    //   const selectedTrainingTopic1 = topicValues.map((value, index) => ({
-    //     value: topicValues[index],
-    //     label: topicLabels[index],
-    //   }));
-
-    //   setTrainingTopic(selectedTrainingTopic1);
-    // };
     const topicValues = trainingToEdit.td_topic_training.split(",");
     const topicLabels =
       trainingToEdit.td_topic_training_name.split(/,(?=[a-zA-Z])/);
@@ -576,48 +951,268 @@ const AddTrainingForm = () => {
     console.log("after useEffect:", editIndex);
   }, [editIndex]);
 
+  // const updateSingleTraining = () => {
+  //   if (
+  //     editIndex !== null &&
+  //     editIndex >= 0 &&
+  //     editIndex < allByDepartments.length
+  //   ) {
+  //     const updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
+  //     updatedTrainings[editIndex] = {
+  //       // Update the training item at editIndex
+  //       td_dept: departments.value.toString(),
+  //       td_des: designation.label,
+  //       td_emp_des: designation.value.toString(),
+  //       td_emp_code: selectedOption.value.toString(),
+  //       td_emp_name: selectedNameOption.value.toString(),
+  //       td_req_dept: trainingDept,
+  //       td_date_training: trainingDate,
+  //       td_topic_training: trainingTopic
+  //         .map((item) => item.value)
+  //         .join(",")
+  //         .toString(),
+  //       td_topic_training_name: trainingTopic
+  //         .map((item) => item.label)
+  //         .join(",")
+  //         .toString(),
+  //     };
+  //     setAllByDepartments(updatedTrainings);
+  //     console.log(updatedTrainings, "update training 1");
+  //     console.log(allByDepartments, "update training 2");
+  //     alert("Training updated successfully!");
+  //     handleClose();
+  //     // Set the updated array back to state
+  //     resetForm(); // Reset the form fields
+  //   }
+  // };
+
+  // const updateSingleTraining = () => {
+  //   let updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
+
+  //   if (selectedOption.value === 'select_all') {
+  //     // Filter employees by the selected department
+  //     const departmentEmployees = allByDepartments.filter(
+  //       (training) => training.td_dept === departments.value.toString()
+  //     );
+
+  //     // Remove the training at editIndex
+  //     updatedTrainings.splice(editIndex, 1);
+
+  //     // Add new training entries for all employees in the selected department
+  //     departmentEmployees.forEach((employee) => {
+  //       updatedTrainings.push({
+  //         td_dept: departments.value.toString(),
+  //         td_des: designation.label,
+  //         td_emp_des: designation.value.toString(),
+  //         td_emp_code: employee.td_emp_code, // Keep the existing employee code
+  //         td_emp_name: employee.td_emp_name, // Keep the existing employee name
+  //         td_req_dept: trainingDept,
+  //         td_date_training: trainingDate,
+  //         td_topic_training: trainingTopic
+  //           .map((item) => item.value)
+  //           .join(",")
+  //           .toString(),
+  //         td_topic_training_name: trainingTopic
+  //           .map((item) => item.label)
+  //           .join(",")
+  //           .toString(),
+  //       });
+  //     });
+
+  //     setAllByDepartments(updatedTrainings);
+  //     console.log(updatedTrainings, "update all trainings in department");
+  //     alert("All trainings in the department updated successfully!");
+  //   } else if (
+  //     editIndex !== null &&
+  //     editIndex >= 0 &&
+  //     editIndex < allByDepartments.length
+  //   ) {
+  //     updatedTrainings[editIndex] = {
+  //       ...updatedTrainings[editIndex], // Keep the existing training item
+  //       td_dept: departments.value.toString(),
+  //       td_des: designation.label,
+  //       td_emp_des: designation.value.toString(),
+  //       td_emp_code: selectedOption.value.toString(),
+  //       td_emp_name: selectedNameOption.value.toString(),
+  //       td_req_dept: trainingDept,
+  //       td_date_training: trainingDate,
+  //       td_topic_training: trainingTopic
+  //         .map((item) => item.value)
+  //         .join(",")
+  //         .toString(),
+  //       td_topic_training_name: trainingTopic
+  //         .map((item) => item.label)
+  //         .join(",")
+  //         .toString(),
+  //     };
+
+  //     setAllByDepartments(updatedTrainings);
+  //     console.log(updatedTrainings, "update training 1");
+  //     console.log(allByDepartments, "update training 2");
+  //     alert("Training updated successfully!");
+  //   }
+  //   handleClose();
+  //   resetForm(); // Reset the form fields
+  // };
+  // const updateSingleTraining = () => {
+  //   let updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
+
+  //   if (selectedOption.value === "select_all") {
+  //     // Filter employees by the selected department
+  //     const departmentEmployees = allByDepartments.filter(
+  //       (training) => training.td_dept === departments.value.toString()
+  //     );
+
+  //     // Remove the training at editIndex
+  //     updatedTrainings.splice(editIndex, 1);
+
+  //     // Add new training entries for all employees in the selected department
+  //     departmentEmployees.forEach((employee) => {
+  //       updatedTrainings.push({
+  //         td_dept: departments.value.toString(),
+  //         td_des: designation.label,
+  //         td_emp_des: designation.value.toString(),
+  //         td_emp_code: employee.td_emp_code, // Keep the existing employee code
+  //         td_emp_name: employee.td_emp_name, // Keep the existing employee name
+  //         td_req_dept: trainingDept,
+  //         td_date_training: trainingDate,
+  //         td_topic_training: trainingTopic
+  //           .map((item) => item.value)
+  //           .join(",")
+  //           .toString(),
+  //         td_topic_training_name: trainingTopic
+  //           .map((item) => item.label)
+  //           .join(",")
+  //           .toString(),
+  //       });
+  //     });
+
+  //     setAllByDepartments(updatedTrainings);
+  //     console.log(updatedTrainings, "update all trainings in department");
+  //     alert("All trainings in the department updated successfully!");
+  //   } else if (
+  //     editIndex !== null &&
+  //     editIndex >= 0 &&
+  //     editIndex < allByDepartments.length
+  //   ) {
+  //     updatedTrainings[editIndex] = {
+  //       ...updatedTrainings[editIndex], // Keep the existing training item
+  //       td_dept: departments.value.toString(),
+  //       td_des: designation.label,
+  //       td_emp_des: designation.value.toString(),
+  //       td_emp_code: selectedOption.value.toString(),
+  //       td_emp_name: selectedNameOption.value.toString(),
+  //       td_req_dept: trainingDept,
+  //       td_date_training: trainingDate,
+  //       td_topic_training: trainingTopic
+  //         .map((item) => item.value)
+  //         .join(",")
+  //         .toString(),
+  //       td_topic_training_name: trainingTopic
+  //         .map((item) => item.label)
+  //         .join(",")
+  //         .toString(),
+  //     };
+
+  //     setAllByDepartments(updatedTrainings);
+  //     console.log(updatedTrainings, "update training 1");
+  //     console.log(allByDepartments, "update training 2");
+  //     alert("Training updated successfully!");
+  //   }
+  //   handleClose();
+  //   resetForm(); // Reset the form fields
+  // };
   const updateSingleTraining = () => {
-    if (
+    let updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
+  
+    if (selectedOption.some(option => option.value === "select_all")) {
+      // Filter employees by the selected department
+      const departmentEmployees = allByDepartments.filter(
+        (training) => training.td_dept === departments?.value?.toString()
+      );
+  
+      // Remove the training at editIndex
+      updatedTrainings.splice(editIndex, 1);
+  
+      // Add new training entries for all employees in the selected department
+      departmentEmployees.forEach((employee) => {
+        updatedTrainings.push({
+          td_dept: departments?.value?.toString(),
+          td_des: designation?.label,
+          td_emp_des: designation?.value?.toString(),
+          td_emp_code: employee.td_emp_code, // Keep the existing employee code
+          td_emp_name: employee.td_emp_name, // Keep the existing employee name
+          td_req_dept: trainingDept,
+          td_date_training: trainingDate,
+          td_topic_training: trainingTopic
+            .map((item) => item.value)
+            .join(",")
+            .toString(),
+          td_topic_training_name: trainingTopic
+            .map((item) => item.label)
+            .join(",")
+            .toString(),
+        });
+      });
+  
+      setAllByDepartments(updatedTrainings);
+      console.log(updatedTrainings, "update all trainings in department");
+      alert("All trainings in the department updated successfully!");
+    } else if (
       editIndex !== null &&
       editIndex >= 0 &&
       editIndex < allByDepartments.length
     ) {
-      const updatedTrainings = [...allByDepartments]; // Create a copy of allByDepartments
-      updatedTrainings[editIndex] = {
-        // Update the training item at editIndex
-        td_dept: departments.value.toString(),
-        td_des: designation.label,
-        td_emp_des: designation.value.toString(),
-        td_emp_code: selectedOption.value.toString(),
-        td_emp_name: selectedNameOption.value.toString(),
-        td_req_dept: trainingDept,
-        td_date_training: trainingDate,
-        td_topic_training: trainingTopic
-          .map((item) => item.value)
-          .join(",")
-          .toString(),
-        td_topic_training_name: trainingTopic
-          .map((item) => item.label)
-          .join(",")
-          .toString(),
-      };
-      setAllByDepartments(updatedTrainings);
-      console.log(updatedTrainings, "update training 1");
-      console.log(allByDepartments, "update training 2");
-      alert("Training updated successfully!");
-      handleClose();
-      // Set the updated array back to state
-      resetForm(); // Reset the form fields
+      const selectedEmpCode = selectedOption?.[0]?.value;
+      const selectedEmpName = selectedNameOption?.value;
+  
+      if (selectedEmpCode && selectedEmpName && departments && designation) {
+        updatedTrainings[editIndex] = {
+          ...updatedTrainings[editIndex], // Keep the existing training item
+          td_dept: departments?.value?.toString(),
+          td_des: designation?.label,
+          td_emp_des: designation?.value?.toString(),
+          td_emp_code: selectedEmpCode?.toString(),
+          td_emp_name: selectedEmpName?.toString(),
+          td_req_dept: trainingDept,
+          td_date_training: trainingDate,
+          td_topic_training: trainingTopic
+            .map((item) => item.value)
+            .join(",")
+            .toString(),
+          td_topic_training_name: trainingTopic
+            .map((item) => item.label)
+            .join(",")
+            .toString(),
+        };
+  
+        setAllByDepartments(updatedTrainings);
+        console.log(updatedTrainings, "update training 1");
+        console.log(allByDepartments, "update training 2");
+        alert("Training updated successfully!");
+      } else {
+        alert("Something went wrong!");
+      }
     }
+    handleClose();
+    resetForm(); // Reset the form fields
+    getAllEmployee();
   };
-
   const deleteTraining = (index) => {
     const updatedTraining = [...allByDepartments];
     updatedTraining.splice(index, 1);
     setAllByDepartments(updatedTraining);
     alert("Training deleted successfully!");
   };
+  const deleteTraining1 = (index) => {
+    const updatedTraining = allByDepartments.filter((_, i) => i !== index);
+    setAllByDepartments(updatedTraining); // Update the state
 
+    // Call GetAllByDepart1 to fetch and merge updated data
+    setTimeout(() => {
+      GetAllByDepart1(updatedTraining);
+    }, 0);
+  };
   const resetForm = () => {
     setDepartments("");
     setDesignation("");
@@ -627,55 +1222,287 @@ const AddTrainingForm = () => {
     setTrainingDate("");
     setTrainingTopic("");
     setIsEmployeeNameDisabled(false);
+    setIsDesignationDisabled(false);
+    setIsDepartmentDisabled(false);
     setEditIndex(null);
     setCode("");
     setName("");
   };
-  const handleEmpCodeChange = (selected) => {
-    setSelectedOption(selected);
-    setCode(selected);
-    axios({
-      method: "get",
-      url: new URL(
-        UrlData + `TrainingForm/GetByCode?td_emp_code=${selected.value}`
-      ),
-    })
-      .then((response) => {
-        console.log(response, "by code");
-        setSelectedNameOption({
-          value: response.data.data.td_emp_name,
-          label: response.data.data.td_emp_name,
-        });
-        // setDepartments(response.data.data.td_dept);
-        setDepartments({
-          value: response.data.data.td_dept,
-          label: response.data.data.td_dept,
-        });
-        setDesignation({
-          value: response.data.data.td_emp_des,
-          label: response.data.data.td_des,
-        });
-        // console.log(designation,"designation")
-        console.log(departments, "departments");
-
-        // setDesignation(response.data.data.td_des);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const removeDoubleQuotes = (input) => {
+    return input.replace(/"/g, "");
   };
+
+  // const handleEmpCodeChange = (selected) => {
+  //   setSelectedOption(selected);
+  //   setCode(selected);
+  //   const selectedValues = selected.map((option) => option.value);
+  //   console.log("858", selectedValues)
+  //   setSelectedOption(selectedValues);
+  //   setCode(selectedValues)
+
+  //   setIsEmployeeNameDisabled(selected.value === "select_all");
+  //   setIsDesignationDisabled(selected.value === "select_all");
+  //   axios({
+  //     method: "get",
+  //     url: new URL(
+  //       // UrlData + `TrainingForm/GetByCode?td_emp_code=${selected.value}`
+  //       UrlData + `TrainingForm/GetByCode?td_emp_code=${selectedValues.join(",")}`
+  //     ),
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data.data, "by code");
+  //       const temp = response.data.data
+  //       const newDesignations = temp.map((data) => ({
+  //         value: data.td_emp_des,
+  //         label: data.td_emp_des,
+  //       }));
+
+  //       // Log the new array of designations
+  //       console.log(newDesignations, "845");
+  //       setDesignation(newDesignations)
+  //       // setSelectedNameOption({
+  //       //   value: response.data.data.td_emp_name,
+  //       //   label: response.data.data.td_emp_name,
+  //       // });
+  //       // setDepartments(response.data.data.td_dept);
+  //       // setDepartments({
+  //       //   value: response.data.data.td_dept,
+  //       //   label: response.data.data.td_dept,
+  //       // });
+  //       // setDesignation({
+  //       //   value: response.data.data.td_emp_des,
+  //       //   label: response.data.data.td_des,
+  //       // });
+  //       // console.log(designation,"designation")
+  //       console.log(departments, "departments");
+
+  //       // setDesignation(response.data.data.td_des);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  // const handleEmpCodeChange = (selected) => {
+  //   setSelectedOption(selected);
+  //   const selectedValues = selected.map((option) => option.value);
+  //   console.log("858", selectedValues);
+  //   setCode(selectedValues);
+
+  //   const isSelectAll = selected.some(
+  //     (option) => option.value === "select_all"
+  //   );
+  //   setIsEmployeeNameDisabled(isSelectAll);
+  //   setIsDesignationDisabled(isSelectAll);
+
+  //   axios({
+  //     method: "get",
+  //     url: new URL(
+  //       UrlData +
+  //         `TrainingForm/GetByCode?td_emp_code=${selectedValues.join(",")}`
+  //     ),
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data.data, "by code");
+  //       const temp = response.data.data;
+  //       const newDesignations = temp.map((data) => ({
+  //         value: data.td_emp_des,
+  //         label: data.td_des,
+  //       }));
+
+  //       console.log(newDesignations, "845");
+  //       setDesignation(newDesignations);
+
+  //       // const newEmpName = temp.map((data) => ({
+  //       //   value: data.td_emp_name,
+  //       //   label: data.td_emp_name,
+  //       // }));
+
+  //       // const newEmpName1=newEmpName.map((data) => ({
+  //       //   value: data.td_emp_name,
+  //       //   label: data.td_emp_name,
+  //       // }));
+  //       // console.log("991",newEmpName1);
+
+  //       // setSelectedNameOption(newEmpName);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  // const handleEmpCodeChange = (selected) => {
+  //   setSelectedOption(selected);
+  //   const selectedValues = selected.map((option) => option.value);
+  //   console.log("858", selectedValues);
+  //   setCode(selectedValues);
+
+  //   const isSelectAll = selected.some(
+  //     (option) => option.value === "select_all"
+  //   );
+  //   setIsEmployeeNameDisabled(isSelectAll);
+  //   setIsDesignationDisabled(isSelectAll);
+
+  //   axios({
+  //     method: "get",
+  //     url: new URL(
+  //       UrlData +
+  //         `TrainingForm/GetByCode?td_emp_code=${selectedValues.join(",")}`
+  //     ),
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data.data, "by code");
+  //       const temp = response.data.data;
+
+  //       const newDesignations = temp.map((data) => ({
+  //         value: data.td_emp_des,
+  //         label: data.td_des,
+  //       }));
+  //       console.log(temp,"temp")
+  //       const newEmpNames = temp.map((data) => ({
+  //         value: data.td_emp_name,
+  //         label: data.td_emp_name,
+  //       }));
+
+  //       const newDepartments = temp.map((data) => ({
+  //         value: data.td_dept,
+  //         label: data.td_dept,
+  //       }));
+
+  //       console.log(newDesignations, "845");
+  //       console.log(newEmpNames, "846");
+  //       // console.log(newDepartments, "847");
+
+  //       setDesignation(newDesignations);
+  //       setSelectedNameOption(newEmpNames);
+  //       setDepartments(newDepartments);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  // const handleEmpCodeChange = (selected) => {
+  //   // Combine the newly selected options with the previously selected ones
+  //   const combinedSelectedOptions = [...selectedOption, ...selected];
+
+  //   setSelectedOption(combinedSelectedOptions);
+  //   const selectedValues = combinedSelectedOptions.map(
+  //     (option) => option.value
+  //   );
+  //   console.log("858", selectedValues);
+  //   setCode(selectedValues);
+
+  //   // const isSelectAll = combinedSelectedOptions.some(
+  //   //   (option) => option.value === "select_all"
+  //   // );
+  //   setIsEmployeeNameDisabled(true);
+  //   setIsDesignationDisabled(true);
+  //   setIsDepartmentDisabled(true);
+
+  //   axios({
+  //     method: "get",
+  //     url: new URL(
+  //       UrlData +
+  //         `TrainingForm/GetByCode?td_emp_code=${selectedValues.join(",")}`
+  //     ),
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data.data, "by code");
+  //       const temp = response.data.data;
+
+  //       const newDesignations = temp.map((data) => ({
+  //         value: data.td_emp_des,
+  //         label: data.td_des,
+  //       }));
+  //       console.log(temp, "temp");
+  //       const newEmpNames = temp.map((data) => ({
+  //         value: data.td_emp_name,
+  //         label: data.td_emp_name,
+  //       }));
+
+  //       const newDepartments = temp.map((data) => ({
+  //         value: data.td_dept,
+  //         label: data.td_dept,
+  //       }));
+
+  //       console.log(newDesignations, "845");
+  //       console.log(newEmpNames, "846");
+  //       // console.log(newDepartments, "847");
+
+  //       setDesignation(newDesignations);
+  //       setSelectedNameOption(newEmpNames);
+  //       // setDepartments(newDepartments)
+  //       // Do not update departments here as it may cause undesired behavior
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+  const handleEmpCodeChange = (selected) => {
+    // Directly set the selected options
+    setSelectedOption(selected);
+    const selectedValues = selected.map((option) => option.value);
+    console.log("Selected values:", selectedValues);
+    setCode(selectedValues);
+
+    // Disable the fields as required
+    setIsEmployeeNameDisabled(true);
+    setIsDesignationDisabled(true);
+    setIsDepartmentDisabled(true);
+
+    // Fetch data based on the selected employee codes
+    axios({
+        method: "get",
+        url: new URL(
+            UrlData + `TrainingForm/GetByCode?td_emp_code=${selectedValues.join(",")}`
+        ),
+    })
+    .then((response) => {
+        console.log("Response data by code:", response.data.data);
+        const temp = response.data.data;
+
+        const newDesignations = temp.map((data) => ({
+            value: data.td_emp_des,
+            label: data.td_des,
+        }));
+
+        const newEmpNames = temp.map((data) => ({
+            value: data.td_emp_name,
+            label: data.td_emp_name,
+        }));
+
+        const newDepartments = temp.map((data) => ({
+            value: data.td_dept,
+            label: data.td_dept,
+        }));
+
+        console.log("New Designations:", newDesignations);
+        console.log("New Employee Names:", newEmpNames);
+
+        // Update the states with the fetched data
+        setDesignation(newDesignations);
+        setSelectedNameOption(newEmpNames);
+        // Optionally update departments if needed
+        // setDepartments(newDepartments);
+    })
+    .catch((error) => {
+        console.error("Error fetching data by code:", error);
+    });
+};
+
   useEffect(() => {
     console.log(designation, "designation");
-    GetAllTopicsDes();
+    // GetAllTopicsDes();
   }, [designation]);
 
   const handleEmpNameChange = (selected) => {
     setSelectedNameOption(selected);
+
     setName(selected);
     axios({
       method: "get",
       url: new URL(
         UrlData + `TrainingForm/GetByName?td_emp_name=${selected.value}`
+        // UrlData + `TrainingForm/GetByName?td_emp_name=${selectedValues.join(",")}`
       ),
     })
       .then((response) => {
@@ -699,29 +1526,29 @@ const AddTrainingForm = () => {
       });
   };
 
-  const GetAllTopicsDes = () => {
-    console.log(designation, "designation 666");
-    console.log(designation.value, "designation 667");
-    axios({
-      method: "get",
-      url: new URL(
-        UrlData +
-          `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
-      ),
-    })
-      .then((response) => {
-        console.log(response, "get all topics des");
-        // setDesignation(response.data.data.td_des);
-        const trainingTopics = response.data.data.map((item, index) => ({
-          value: item.t_id,
-          label: item.t_description,
-        }));
-        setSelectedTrainingTopic(trainingTopics);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const GetAllTopicsDes = () => {
+  //   console.log(designation, "designation 666");
+  //   console.log(designation.value, "designation 667");
+  //   axios({
+  //     method: "get",
+  //     url: new URL(
+  //       UrlData +
+  //         `CompentencyMaster/GetAllTopicsDes?designation=${designation.value}`
+  //     ),
+  //   })
+  //     .then((response) => {
+  //       console.log(response, "get all topics des");
+  //       // setDesignation(response.data.data.td_des);
+  //       const trainingTopics = response.data.data.map((item, index) => ({
+  //         value: item.t_id,
+  //         label: item.t_description,
+  //       }));
+  //       setSelectedTrainingTopic(trainingTopics);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   useEffect(() => {
     console.log(selectedOption);
@@ -730,7 +1557,7 @@ const AddTrainingForm = () => {
     axios
       .get(new URL(UrlData + `EmployeeMaster/GetAll?status=1`))
       .then((response) => {
-        console.log("response", response.data.data);
+        console.log("response get all employee", response.data.data);
         // setAllEmployee(response.data.data);
         const emp = response.data.data.map((item, index) => ({
           value: item.emp_code,
@@ -954,6 +1781,7 @@ const AddTrainingForm = () => {
                               // getAllTrainingTopic();
                               // resetForm();
                               // navigate("/addTopic");
+                              getAllEmployee()
                             }}
                           >
                             <button
@@ -1133,7 +1961,9 @@ const AddTrainingForm = () => {
                                       className="text-danger"
                                       type="button"
                                       style={{ marginLeft: "0.5rem" }}
-                                      onClick={() => deleteTraining(adjustedIndex)}
+                                      onClick={() =>
+                                        deleteTraining(adjustedIndex)
+                                      }
                                     />
                                   </td>
                                 </tr>
@@ -1308,6 +2138,7 @@ const AddTrainingForm = () => {
                       value={departments}
                       onChange={handleDepartment}
                       className="mt-2"
+                      isDisabled={isDepartmentDisabled}
                     />
                   </Form.Group>
                 </Col>
@@ -1319,6 +2150,7 @@ const AddTrainingForm = () => {
                       value={designation}
                       onChange={handleDesignation}
                       className="mt-2"
+                      isDisabled={isDesignationDisabled}
                     />
                   </Form.Group>
                 </Col>
@@ -1328,11 +2160,24 @@ const AddTrainingForm = () => {
                   <Form.Group className="mb-3" controlId="employeeCode">
                     <Form.Label className="fw-bold">Employee Code:</Form.Label>{" "}
                     <span className="text-danger fw-bold">*</span>
-                    <Select
+                    {/* <Select
+                      // options={empCodeOptions}
+                      // value={selectedOption}
+                      // onChange={handleEmpCodeChange}
+                      // isDisabled={isEmployeeNameDisabled}
+                      isMulti
                       options={empCodeOptions}
-                      value={selectedOption}
+                      value={empCodeOptions.filter((option) =>
+                        code.includes(option.value)
+                      )}
                       onChange={handleEmpCodeChange}
-                      isDisabled={isEmployeeNameDisabled}
+                      className="mt-2"
+                    /> */}
+                    <Select
+                      isMulti
+                      options={empCodeOptions}
+                      value={selectedOption} // Ensure this directly binds to selectedOption state
+                      onChange={handleEmpCodeChange}
                       className="mt-2"
                     />
                   </Form.Group>
@@ -1345,7 +2190,8 @@ const AddTrainingForm = () => {
                       options={empNameOptions}
                       value={selectedNameOption}
                       onChange={handleEmpNameChange}
-                      isDisabled={isEmployeeNameDisabled}
+                      // isDisabled={isEmployeeNameDisabled}
+                      isDisabled
                       className="mt-2"
                     />
                   </Form.Group>
@@ -1428,7 +2274,16 @@ const AddTrainingForm = () => {
               </Button>
             )
             } */}
-            {editIndex !== null ? (
+            {editIndex !== null && code.value === "select_all" ? (
+              <Button
+                onClick={() => deleteTraining1(editIndex)}
+                type="button"
+                className="btn text-white"
+                style={{ backgroundColor: "#1B5A90" }}
+              >
+                 Add Training
+              </Button>
+            ) : editIndex !== null ? (
               <Button
                 style={{ backgroundColor: "#1B5A90" }}
                 onClick={updateSingleTraining}
@@ -1442,14 +2297,23 @@ const AddTrainingForm = () => {
                 className="btn text-white"
                 style={{ backgroundColor: "#1B5A90" }}
               >
-                Add Training
+                 Add Training
+              </Button>
+            ) : code[0] === "select_all" ? (
+              <Button
+                onClick={GetAllByDepart}
+                type="button"
+                className="btn text-white"
+                style={{ backgroundColor: "#1B5A90" }}
+              >
+                 Add Training
               </Button>
             ) : (
               <Button
                 style={{ backgroundColor: "#1B5A90" }}
                 onClick={addSingleTraining}
               >
-                Add Training
+                 Add Training
               </Button>
             )}
 
@@ -1465,20 +2329,6 @@ const AddTrainingForm = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-        {/* <Alert
-          header={"Header"}
-          btnText={"Close"}
-          text={alert.text}
-          type={alert.type}
-          show={alert.show}
-          onClosePress={onCloseAlert}
-          pressCloseOnOutsideClick={true}
-          showBorderBottom={true}
-          alertStyles={{}}
-          headerStyles={{}}
-          textStyles={{}}
-          buttonStyles={{}}
-        /> */}
       </div>
     </>
   );
